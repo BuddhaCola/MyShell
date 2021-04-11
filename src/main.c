@@ -10,9 +10,18 @@ void	printenv(char **env)
 	}
 }
 
+void	ft_pwd()
+{
+		char	*pwd;
+
+		pwd = NULL;
+		getwd(pwd);
+		printf("pwd:%s\n", pwd);
+}
+
 int		main(int argc, char **argv, char **env)
 {
-	printf("minishell$ ");
+	write(1, "minishell 👉 ", 15);
 	// parse(argc, argv);
 	// printenv(env);
 	return (0);

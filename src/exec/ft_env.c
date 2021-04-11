@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 18:15:43 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 18:28:46 by wtaylor          ###   ########.fr       */
+/*   Created: 2021/04/11 18:20:40 by wtaylor           #+#    #+#             */
+/*   Updated: 2021/04/11 18:20:49 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-int		main(int argc, char **argv, char **env)
+void	printenv(char **env)
 {
-	write(1, "minishell 👉 ", 15);
-	// parse(argc, argv);
-	// printenv(env);
-	return (0);
-}
+	int i = 0;
+	while (env[i])
+	{
+		printf("%s\n", env[i]);
+		i++;
+	}
+}å

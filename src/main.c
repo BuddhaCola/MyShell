@@ -1,5 +1,8 @@
 #include "minishell.h"
 
+/*
+SOME CHANGES BY RAFAEL IN LINE 3,4,5
+*/
 void	printenv(char **env)
 {
 	int i = 0;

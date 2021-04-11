@@ -4,9 +4,37 @@
 #include <stdlib.h>
 #include "./utils/get_next_line/get_next_line.h"
 
-typedef	struct {
+typedef struct  s_simple_command
+{
+    int         number_of_available_arguments;
+    int         number_of_arguments;
+    char        **arguments;
+}               t_simple_command;
 
-}		todo;
+typedef struct          s_command
+{
+    int                 number_of_available_simle_commands;
+    int                 number_of_simple_commands;
+	t_simple_command    **simple_commands;
+    char                *out_file;
+    char                *input_file;
+    char                *err_file;
+    int                 background;
+}                       t_command;
+
+typedef	struct s_exec
+{
+	char				**env;
+}						t_exec;
+
+
+typedef	struct  s_todo
+{
+    t_simple_command    simple_command;
+    t_command           command;
+	t_exec				exec;
+}               t_todo;
 
 // builtins
 void	ft_pwd();
+void	printenv(char **env);

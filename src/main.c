@@ -6,13 +6,13 @@
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 18:15:43 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 21:22:10 by wtaylor          ###   ########.fr       */
+/*   Updated: 2021/04/11 21:41:37 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		shell(char **env)
+int		shell(t_todo *all)
 {
 	char	*buf;
 	
@@ -28,14 +28,15 @@ int		shell(char **env)
 int		main(int argc, char **argv, char **env)
 {
 	int		ret;
-	char	*buf;
+	t_todo	all;
 
 	ret = fork();
 	if (!ret)
-		shell(env);
+	{
+		all.exec.env = env;
+		shell(&all);
+	}
 	else
 		wait(&ret);
-	// parse(argc, argv);
-	// printenv(env);
 	return (0);
 }

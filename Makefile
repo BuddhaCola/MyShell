@@ -6,17 +6,17 @@
 #    By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/11 15:54:29 by wtaylor           #+#    #+#              #
-#    Updated: 2021/04/11 17:50:38 by wtaylor          ###   ########.fr        #
+#    Updated: 2021/04/11 21:20:21 by wtaylor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC = src/main.c src/utils/utils.c
+SRC = src/main.c src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c
 
 NAME	=	minishell
 
 OBJ		=	$(SRC:.c=.o)
 
-FLAGS	=	#-Wall -Werror -Wextra
+FLAGS	=	-Wall -Werror -Wextra
 
 all:		$(NAME)
 

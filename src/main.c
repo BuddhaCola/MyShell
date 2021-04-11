@@ -6,15 +6,35 @@
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 18:15:43 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 18:28:46 by wtaylor          ###   ########.fr       */
+/*   Updated: 2021/04/11 21:22:10 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int		shell(char **env)
+{
+	char	*buf;
+	
+	while (1)
+	{
+		write(1, "minishell 👉 ", 15);
+		get_next_line(0, &buf);
+		// parse(buf);
+	}
+	return (0);
+}
+
 int		main(int argc, char **argv, char **env)
 {
-	write(1, "minishell 👉 ", 15);
+	int		ret;
+	char	*buf;
+
+	ret = fork();
+	if (!ret)
+		shell(env);
+	else
+		wait(&ret);
 	// parse(argc, argv);
 	// printenv(env);
 	return (0);

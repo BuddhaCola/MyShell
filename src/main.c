@@ -10,14 +10,7 @@ void	printenv(char **env)
 	}
 }
 
-void	ft_pwd()
-{
-		char	*pwd;
 
-		pwd = NULL;
-		getwd(pwd);
-		printf("pwd:%s\n", pwd);
-}
 
 int		main(int argc, char **argv, char **env)
 {

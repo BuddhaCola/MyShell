@@ -7,5 +7,9 @@ typedef	struct {
 
 }		todo;
 
-int		ft_strlen(char *str);
+size_t	ft_strlen(char *str);
 char	*ft_strjoin(char *org, char *append);
+size_t	ft_strlcat(char *dst, char *src, size_t dsize);
+
+// builtins
+void	ft_pwd()

@@ -12,4 +12,4 @@ char	*ft_strjoin(char *org, char *append);
 size_t	ft_strlcat(char *dst, char *src, size_t dsize);
 
 // builtins
-void	ft_pwd()
+void	ft_pwd();

@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRC = src/main.c src/utils.c
+SRC = src/main.c src/utils/utils.c
 
 NAME	=	minishell
 

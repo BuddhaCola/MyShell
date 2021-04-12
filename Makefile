@@ -6,13 +6,13 @@
 #    By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/11 15:54:29 by wtaylor           #+#    #+#              #
-#    Updated: 2021/04/11 21:30:49 by wtaylor          ###   ########.fr        #
+#    Updated: 2021/04/12 14:24:48 by wtaylor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c \
-src/exec/ft_env.c src/exec/ft_pwd.c 
+src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c
 
 NAME	=	minishell
 

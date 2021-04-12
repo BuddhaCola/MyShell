@@ -38,3 +38,7 @@ typedef	struct  s_todo
 // builtins
 void	ft_pwd();
 void	printenv(char **env);
+int		ft_echo(char *str, t_todo *all);
+
+// utils
+char	*ft_dollarsign(char	*str, t_todo *all);

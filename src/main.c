@@ -6,7 +6,7 @@
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 18:15:43 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 21:41:37 by wtaylor          ###   ########.fr       */
+/*   Updated: 2021/04/12 14:54:44 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,17 @@ int		main(int argc, char **argv, char **env)
 	int		ret;
 	t_todo	all;
 
-	ret = fork();
-	if (!ret)
-	{
-		all.exec.env = env;
-		shell(&all);
-	}
-	else
-		wait(&ret);
+	all.exec.env = env;
+	char *envp = ft_dollarsign(" ", &all);
+	printf("%s\n", envp);
+
+	// ret = fork();
+	// if (!ret)
+	// {
+	// 	all.exec.env = env;
+	// 	shell(&all);
+	// }
+	// else
+	// 	wait(&ret);
 	return (0);
 }

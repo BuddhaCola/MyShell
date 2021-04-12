@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
+
 #include "./utils/get_next_line/get_next_line.h"
+#include "utils/libft/libft.h"
 
 typedef struct  s_simple_command
 {

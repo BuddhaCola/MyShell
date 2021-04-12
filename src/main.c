@@ -12,6 +12,26 @@
 
 #include "minishell.h"
 
+void test_parse(char *buf, t_todo *all)
+{
+	int i = -1;
+	while (buf[++i])
+	{
+		if (buf[i] == '$')
+		{
+			i++;
+			char *envp;
+			if (!(envp = ft_dollarsign(&buf[i], all)))
+				envp = "";
+			printf("%s\n", envp);
+		}
+		else if (buf[i] == 'c')
+		{
+			if(ft_strncmp(buf[i], ""))
+		}
+	}
+}
+
 int		shell(t_todo *all)
 {
 	char	*buf;
@@ -20,27 +40,28 @@ int		shell(t_todo *all)
 	{
 		write(1, "minishell 👉 ", 15);
 		get_next_line(0, &buf);
-		// parse(buf);
+		test_parse(buf, all);
 	}
 	return (0);
 }
 
 int		main(int argc, char **argv, char **env)
 {
-	int		ret;
+	pid_t		ret;
 	t_todo	all;
 
-	all.exec.env = env;
-	char *envp = ft_dollarsign(" ", &all);
-	printf("%s\n", envp);
+	 ret = fork();
 
-	// ret = fork();
-	// if (!ret)
-	// {
-	// 	all.exec.env = env;
-	// 	shell(&all);
-	// }
-	// else
-	// 	wait(&ret);
+	 if (!ret)
+	 {
+	 	all.exec.env = env;
+	 	shell(&all);
+	 }
+	 else
+	 {
+	 	write(1, "⌚️ I'm waiting.\n", 20);
+	 	wait(&ret);
+	 }
+	 write(1, "👋 exiting\n", 13);
 	return (0);
 }

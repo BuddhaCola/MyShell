@@ -12,7 +12,7 @@
 
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c \
-src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c
+src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c \
 
 NAME	=	minishell
 
@@ -26,7 +26,7 @@ $(NAME): $(OBJ) src/minishell.h
 	$(CC) $(OBJ) -o $(NAME)
 
 .c.o:
-	gcc $(FLAGS) -c $< -o $(<:.c=.o)
+	gcc $(FLAGS) -g -c $< -o $(<:.c=.o) src/utils/libft.a #убрать либфт!
 
 clean:
 	rm -f $(OBJ)

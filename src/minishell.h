@@ -27,6 +27,7 @@ typedef struct          s_command
 typedef	struct s_exec
 {
 	char				**env;
+	int 				errno;
 }						t_exec;
 
 
@@ -44,3 +45,4 @@ int		ft_echo(char *str, t_todo *all);
 
 // utils
 char	*ft_dollarsign(char	*str, t_todo *all);
+int		exec_bin(char *path, t_todo *all);

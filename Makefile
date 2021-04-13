@@ -12,9 +12,11 @@
 
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c \
-src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c \
+src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c src/exec/exec_bin.c\
 
 NAME	=	minishell
+
+LIBFT	=	src/utils/libft/libft.a
 
 OBJ		=	$(SRC:.c=.o)
 
@@ -23,10 +25,10 @@ FLAGS	=	#-Wall -Werror -Wextra
 all:		$(NAME)
 
 $(NAME): $(OBJ) src/minishell.h
-	$(CC) $(OBJ) -o $(NAME)
+	$(CC) $(OBJ) $(LIBFT) -o $(NAME)
 
 .c.o:
-	gcc $(FLAGS) -g -c $< -o $(<:.c=.o) src/utils/libft.a #убрать либфт!
+	gcc $(FLAGS) -g -c $< -o $(<:.c=.o)
 
 clean:
 	rm -f $(OBJ)

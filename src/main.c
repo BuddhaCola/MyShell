@@ -25,10 +25,10 @@ void test_parse(char *buf, t_todo *all)
 				envp = "";
 			printf("%s\n", envp);
 		}
-		else if (buf[i] == 'c')
-		{
-			if(ft_strncmp(buf[i], ""))
-		}
+		else if (buf[i] == '!')
+			exec_bin(&buf[i+1], all);
+		else if (buf[i] == '?')
+			printf("%d\n", all->exec.errno);
 	}
 }
 

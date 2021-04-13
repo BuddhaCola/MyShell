@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include "./utils/get_next_line/get_next_line.h"
 #include "utils/libft/libft.h"
@@ -27,7 +28,7 @@ typedef struct          s_command
 typedef	struct s_exec
 {
 	char				**env;
-	int 				errno;
+	int 				err;
 }						t_exec;
 
 

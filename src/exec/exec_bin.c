@@ -18,7 +18,7 @@ int	exec_bin(char *path, t_todo *all)
 
 	pid = fork();
 	if (!pid)
-		all->exec.errno = execve(path, NULL, NULL);
+		all->exec.err = execve(path, NULL, NULL);
 	else
 		wait(&pid);
 	return (1);

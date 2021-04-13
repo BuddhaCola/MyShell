@@ -28,7 +28,7 @@ void test_parse(char *buf, t_todo *all)
 		else if (buf[i] == '!')
 			exec_bin(&buf[i+1], all);
 		else if (buf[i] == '?')
-			printf("%d\n", all->exec.errno);
+			printf("%d\n", all->exec.err);
 	}
 }
 
@@ -48,7 +48,7 @@ int		shell(t_todo *all)
 int		main(int argc, char **argv, char **env)
 {
 	pid_t		ret;
-	t_todo	all;
+	t_todo		all;
 
 	 ret = fork();
 

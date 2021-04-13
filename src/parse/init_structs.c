@@ -2,7 +2,7 @@
 
 void	init_simplecommand()
 {
-	
+
 }
 
-void
+void	

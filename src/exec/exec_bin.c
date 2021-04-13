@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   exec_bin.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.21-school>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 17:59:47 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 18:01:58 by wtaylor          ###   ########.fr       */
+/*   Created: 2021/04/13 17:34:48 by wtaylor           #+#    #+#             */
+/*   Updated: 2021/04/13 17:34:49 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	ft_pwd()
+int	exec_bin(char *path, t_todo *all)
 {
-		char	*pwd;
+	pid_t pid;
 
-		pwd = NULL;
-		getwd(pwd);
-		printf("pwd:%s\n", pwd);
+	pid = fork();
+	if (!pid)
+		all->exec.errno = execve(path, NULL, NULL);
+	else
+		wait(&pid);
+	return (1);
 }

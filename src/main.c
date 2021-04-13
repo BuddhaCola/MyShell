@@ -6,42 +6,62 @@
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 18:15:43 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 18:28:46 by wtaylor          ###   ########.fr       */
+/*   Updated: 2021/04/12 14:54:44 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	dumb_parse(t_todo todo)
+void test_parse(char *buf, t_todo *all)
 {
-	printf("dumb_parse\n");
+	int i = -1;
+	while (buf[++i])
+	{
+		if (buf[i] == '$')
+		{
+			i++;
+			char *envp;
+			if (!(envp = ft_dollarsign(&buf[i], all)))
+				envp = "";
+			printf("%s\n", envp);
+		}
+		else if (buf[i] == '!')
+			exec_bin(&buf[i+1], all);
+		else if (buf[i] == '?')
+			printf("%d\n", all->exec.errno);
+	}
 }
 
-void	dumb_exec(t_todo todo)
+int		shell(t_todo *all)
 {
-	printf("dumb_exec\n");
-}
-
-void	dumb_destroy(t_todo todo)
-{
-	printf("dumb_destroy\n");
+	char	*buf;
+	
+	while (1)
+	{
+		write(1, "minishell 👉 ", 15);
+		get_next_line(0, &buf);
+		test_parse(buf, all);
+	}
+	return (0);
 }
 
 int		main(int argc, char **argv, char **env)
 {
-	t_todo todo;
+	pid_t		ret;
+	t_todo	all;
 
-	//declare foo pointers
-	void (*parse) (t_todo todo);
-	void (*exec) (t_todo todo);
-	void (*destroy) (t_todo todo);
-	//init foo pointers
-	parse = dumb_parse;
-	exec = dumb_exec;
-	destroy = dumb_destroy;
-	//call foo's
-	parse(todo);
-	exec(todo);
-	destroy(todo);
+	 ret = fork();
+
+	 if (!ret)
+	 {
+	 	all.exec.env = env;
+	 	shell(&all);
+	 }
+	 else
+	 {
+	 	write(1, "⌚️ I'm waiting.\n", 20);
+	 	wait(&ret);
+	 }
+	 write(1, "👋 exiting\n", 13);
 	return (0);
 }

@@ -6,10 +6,11 @@
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 18:20:40 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 18:20:49 by wtaylor          ###   ########.fr       */
+/*   Updated: 2021/04/11 21:31:07 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../minishell.h"
 void	printenv(char **env)
 {
 	int i = 0;
@@ -18,4 +19,4 @@ void	printenv(char **env)
 		printf("%s\n", env[i]);
 		i++;
 	}
-}å
+}

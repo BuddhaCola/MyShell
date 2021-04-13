@@ -6,17 +6,18 @@
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/11 18:18:16 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 18:19:07 by wtaylor          ###   ########.fr       */
+/*   Updated: 2021/04/11 21:36:01 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	ft_pwd()
 {
 		char	*pwd;
+		int		len;
 
 		pwd = NULL;
-		getwd(pwd);
-		printf("pwd:%s\n", pwd);
+		pwd = getcwd(pwd, len);
+		printf("%s\n", pwd);
 }

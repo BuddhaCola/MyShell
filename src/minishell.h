@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include "parse/parse.h"
 
+#include "./utils/get_next_line/get_next_line.h"
+#include "utils/libft/libft.h"
+
 typedef struct  s_simple_command
 {
     int         number_of_available_arguments;
@@ -22,15 +25,25 @@ typedef struct          s_command
     int                 background;
 }                       t_command;
 
+typedef	struct s_exec
+{
+	char				**env;
+	int 				errno;
+}						t_exec;
+
+
 typedef	struct  s_todo
 {
     t_simple_command    simple_command;
     t_command           command;
+	t_exec				exec;
 }               t_todo;
 
-size_t	ft_strlen(char *str);
-char	*ft_strjoin(char *org, char *append);
-size_t	ft_strlcat(char *dst, char *src, size_t dsize);
-
 // builtins
-void	ft_pwd()
+void	ft_pwd();
+void	printenv(char **env);
+int		ft_echo(char *str, t_todo *all);
+
+// utils
+char	*ft_dollarsign(char	*str, t_todo *all);
+int		exec_bin(char *path, t_todo *all);

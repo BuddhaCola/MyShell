@@ -160,16 +160,23 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 		i++;
 	}
 
+	// count tokens, strip if quotes, save into k
 	token = lexer_list->tok_list;
 	k = 0;
 	while (token != NULL)
 	{
 		if (token->type == TOKEN)
 		{
-			
+			stripped = malloc(ft_strlen(token->data) + 1);
+			strip_quotes(token->data, stripped);
+			free(token->data);
+			token->data = stripped;
+			k++;
 		}
+		token = token->next;
 	}
-	
+	lexer_list->num_of_tokens = k;
+	return k;
 }
 
 void		lexer_destroi(t_lexer *list)

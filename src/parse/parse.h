@@ -44,7 +44,10 @@ typedef struct	s_lexer
 }				t_lexer;
 
 int		get_num_of_type(char c);
+void	tok_init(t_tok *tok, int data_size);
+void	tok_destroy(t_tok *tok);
 int		lexer_build(t_todo *all);
+void	lexer_destroi(t_lexer *list);
 int		strip_quotes(char *src, char *dest);
 
 #endif

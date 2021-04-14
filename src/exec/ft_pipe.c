@@ -11,13 +11,14 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-int ft_pipe(char *program1, char *program2)
+int	ft_pipe(char *program1, char *program2)
 {
-	int pipes[2];
+	int	pipes[2];
 	int	process1;
-	int process2;
+	int	process2;
 
-	pipe(pipes);
+	if (pipe(pipes) == -1)
+		return (2);
 	process1 = fork();
 	if (process1 == 0)
 	{
@@ -26,6 +27,8 @@ int ft_pipe(char *program1, char *program2)
 		close(pipes[1]);
 		execve(program1, 0, 0);
 	}
+	else if (process1 == -1)
+		return (1);
 	process2 = fork();
 	if (process2 == 0)
 	{
@@ -34,6 +37,8 @@ int ft_pipe(char *program1, char *program2)
 		close(pipes[1]);
 		execve(program2, 0, 0);
 	}
+	else if (process2 == -1)
+		return (1);
 	close(pipes[0]);
 	close(pipes[1]);
 	waitpid(process1, 0, 0);

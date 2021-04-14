@@ -29,6 +29,11 @@ void test_parse(char *buf, t_todo *all)
 			exec_bin(&buf[i+1], all);
 		else if (buf[i] == '?')
 			printf("%d\n", all->exec.err);
+		else if (buf[i] == '|')
+		{
+			char **args = ft_split(&buf[i+1], ' ');
+			ft_pipe(args[0], args[1]);
+		}
 	}
 }
 

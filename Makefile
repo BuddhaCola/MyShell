@@ -12,7 +12,7 @@
 
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c \
-src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c src/exec/exec_bin.c\
+src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c src/exec/exec_bin.c src/exec/ft_pipe.c\
 
 NAME	=	minishell
 

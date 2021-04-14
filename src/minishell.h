@@ -43,6 +43,7 @@ typedef	struct  s_todo
 void	ft_pwd();
 void	printenv(char **env);
 int		ft_echo(char *str, t_todo *all);
+int		ft_pipe(char *p1, char *p2);
 
 // utils
 char	*ft_dollarsign(char	*str, t_todo *all);

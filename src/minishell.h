@@ -7,6 +7,16 @@
 #include "./utils/get_next_line/get_next_line.h"
 #include "utils/libft/libft.h"
 
+#define PROBE printf("here!\n"); //убрать на продакшне!
+
+#define PROMT "minishell 👉"
+
+typedef struct	s_env
+{
+	char *name;
+	char *value;
+}				t_env;
+
 typedef struct  s_simple_command
 {
     int         number_of_available_arguments;
@@ -29,6 +39,7 @@ typedef	struct s_exec
 {
 	char				**env;
 	int 				err;
+	t_env 				*environments;
 }						t_exec;
 
 
@@ -39,12 +50,16 @@ typedef	struct  s_todo
 	t_exec				exec;
 }               t_todo;
 
+int collect_env(t_todo *all, char **env);
+void 	handle_signals();
+
 // builtins
-void	ft_pwd();
-void	printenv(char **env);
-int		ft_echo(char *str, t_todo *all);
-int		ft_pipe(char *p1, char *p2);
+void	ft_pwd(void);
+int		ft_export(t_todo *all, char **args);
+int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
+int		ft_echo(int argc, char **argv);
+int 	ft_env(t_todo *all);
 
 // utils
-char	*ft_dollarsign(char	*str, t_todo *all);
 int		exec_bin(char *path, t_todo *all);
+int		redirection(char *filepath, char *program, char **args, int append);

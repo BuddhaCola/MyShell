@@ -10,43 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../minishell.h"
 
-char	*ft_envpsearch(const char *haystack, const char *needle)
+int 	ft_echo(int argc, char **argv)
 {
-	int	len;
-	int	i;
-
-	i = 0;
-	len = ft_strlen(needle);
-
-	while(i < len && needle[i])
-	{
-		if (needle[i] == haystack[i])
-				i++;
-		else
-			return (NULL);
-	}
-	if (haystack[i] == '=')
-		return(ft_strdup(&haystack[++i]));
-	return (NULL);
-}
-
-char	*ft_dollarsign(char	*str, t_todo *all)
-{
+	char	endsymbol;
 	int		i;
-	int		len;
-	char	*envp;
 
-	i = 0;
-	if (!*str || !(len = ft_strlen(str)) || *str < 33 || *str > 126)
-		return("$");
-	while (all->exec.env[i])
+	endsymbol = '\n';
+	if (argc > 1)
 	{
-		if ((envp = ft_envpsearch(all->exec.env[i], str)))
-			return (envp);
-		i++;
+		i = 1;
+		if (!(ft_strncmp(argv[1], "-n", 3)))
+		{
+			endsymbol = 0;
+			i++;
+		}
+		while (i < argc)
+		{
+			write(1, argv[i], ft_strlen(argv[i]));
+			i++;
+			if (i != argc)
+				write(1, " ", 1);
+		}
 	}
-	return(NULL);
+	write(1, &endsymbol, 1);
+	return (0);
 }

@@ -12,12 +12,13 @@
 
 #include "../minishell.h"
 
-void	ft_pwd()
+void	ft_pwd(void)
 {
-		char	*pwd;
-		int		len;
+	char	*pwd;
 
-		pwd = NULL;
-		pwd = getcwd(pwd, len);
-		printf("%s\n", pwd);
+	pwd = NULL;
+	pwd = getcwd(pwd, 0);
+	write(1, pwd, ft_strlen(pwd));
+	write(1, "\n", 1);
+	free(pwd);
 }

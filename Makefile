@@ -12,7 +12,8 @@
 
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c \
-src/exec/ft_env.c src/exec/ft_pwd.c src/exec/ft_echo.c src/exec/exec_bin.c src/exec/ft_pipe.c\
+src/exec/signals.c src/exec/ft_export.c src/exec/ft_pwd.c src/exec/ft_env.c src/exec/env_functions.c src/exec/ft_echo.c src/exec/exec_bin.c src/exec/ft_pipe.c src/exec/redirection.c\
+src/utils/new_compile.c
 
 NAME	=	minishell
 
@@ -25,7 +26,8 @@ FLAGS	=	#-Wall -Werror -Wextra
 all:		$(NAME)
 
 $(NAME): $(OBJ) src/minishell.h
-	$(CC) $(OBJ) $(LIBFT) -o $(NAME)
+	$(CC) -g $(OBJ) $(LIBFT) -o $(NAME)
+
 
 .c.o:
 	gcc $(FLAGS) -g -c $< -o $(<:.c=.o)

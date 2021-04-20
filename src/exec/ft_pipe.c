@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   ft_pipe.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wtaylor <wtaylor@student.21-school>        +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/14 15:24:57 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/14 15:25:00 by wtaylor          ###   ########.fr       */
+/*   Updated: 2021/04/18 21:53:48 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-int	ft_pipe(char *program1, char *program2)
+int	ft_pipe(char *program1, char **arg1, char *program2, char **arg2)
 {
 	int	pipes[2];
 	int	process1;

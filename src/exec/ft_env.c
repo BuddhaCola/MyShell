@@ -1,22 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 18:20:40 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/11 21:31:07 by wtaylor          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
-void	printenv(char **env)
+int ft_env(t_todo *all)
 {
-	int i = 0;
-	while (env[i])
+	while (*all->exec.env)
 	{
-		printf("%s\n", env[i]);
-		i++;
+		printf("%s\n", *all->exec.env);
+		all->exec.env++;
 	}
+	return (0);
 }

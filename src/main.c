@@ -82,6 +82,15 @@ void test_parse(char *buf, t_todo *all)
 	free(buf);
 }
 
+void go_through_buf(t_todo *all)
+{
+//	while (all->lex_buf->tok_list)
+//	{
+		printf("|%c\n", *all->lex_buf->tok_list->data + 2);
+//		all->lex_buf->tok_list = all->lex_buf->tok_list->next;
+//	}
+}
+
 int		shell(t_todo *all)
 {
 	char	*buf;
@@ -90,7 +99,9 @@ int		shell(t_todo *all)
 	{
 		ft_putstr_fd(PROMT, 1);
 		get_next_line(0, &buf);
-		test_parse(buf, all);
+		lexer_build(buf, ft_strlen(buf), all->lex_buf);
+		go_through_buf(all);
+//		test_parse(buf, all);
 	}
 	return (0);
 }
@@ -99,8 +110,9 @@ int		main(int argc, char **argv, char **env)
 {
 	t_todo		all;
 
-	collect_env(&all, env);
+	all.exec.env = env;
+//	collect_env(&all, env);
 //	ft_export(&all, 0);
-//	shell(&all);
+	shell(&all);
 	return (0);
 }

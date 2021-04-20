@@ -4,5 +4,3 @@ void	init_simplecommand()
 {
 
 }
-
-void	

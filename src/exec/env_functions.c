@@ -2,49 +2,49 @@
 
 int sort_env(t_todo *all, int listlen)
 {
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while(i < listlen)
-	{
-		j = 0;
-		if (ft_strncmp(all->exec.environments[i].name, all->exec.environments[i + 1].name, ft_strlen(all->exec.environments[i].name))
-		{
-			i++;
-		}
-	}
+//	int i;
+//	int j;
+//
+//	i = 0;
+//	j = 0;
+//	while(i < listlen)
+//	{
+//		j = 0;
+//		if (ft_strncmp(all->exec.environments[i].name, all->exec.environments[i + 1].name, ft_strlen(all->exec.environments[i].name))
+//		{
+//			i++;
+//		}
+//	}
 	return (0);
 }
 
-void sprites()
-{
-t_sprite tmp;
-int i;
-int unsorted;
-int left;
-
-unsorted = 1;
-left = all->spritecount - 1;
-while (unsorted)
-{
-unsorted = 0;
-i = 0;
-while (i < left)
-{
-i++;
-if (all->sprites[i - 1].dist < all->sprites[i].dist)
-{
-tmp = all->sprites[i];
-all->sprites[i] = all->sprites[i - 1];
-all->sprites[i - 1] =
-tmp;
-unsorted = 1;
-}
-}
-left--;
-}}
+//void sprites()
+//{
+//t_sprite tmp;
+//int i;
+//int unsorted;
+//int left;
+//
+//unsorted = 1;
+//left = all->spritecount - 1;
+//while (unsorted)
+//{
+//unsorted = 0;
+//i = 0;
+//while (i < left)
+//{
+//i++;
+//if (all->sprites[i - 1].dist < all->sprites[i].dist)
+//{
+//tmp = all->sprites[i];
+//all->sprites[i] = all->sprites[i - 1];
+//all->sprites[i - 1] =
+//tmp;
+//unsorted = 1;
+//}
+//}
+//left--;
+//}}
 
 int collect_env(t_todo *all, char **env)
 {

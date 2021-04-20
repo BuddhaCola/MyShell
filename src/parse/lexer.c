@@ -1,6 +1,6 @@
-#include "parse.h"
+#include "../minishell.h"
 
-static int	get_num_of_type(char c)
+int	get_num_of_type(char c)
 {
 	if (c == ' ')
 		return (CHAR_WHITESPACE);
@@ -96,12 +96,12 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 				token->data[j++] = line[++i];
 				token->type = TOKEN;
 			}
-			else if (chtype = CHAR_GENERAL)
+			else if (chtype == CHAR_GENERAL)
 			{
 				token->data[j++] = c;
 				token->type = TOKEN;
 			}
-			else if (chtype = CHAR_WHITESPACE)
+			else if (chtype == CHAR_WHITESPACE)
 			{
 				if (j > 0)
 				{
@@ -113,7 +113,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 				}
 			}
 			else if ((chtype == CHAR_SEMICOLON) || (chtype == CHAR_GREATER) || (chtype == CHAR_LESSER) || (chtype == CHAR_AMPERSAND))
-				0;
+				;
 			else if (chtype == CHAR_PIPE)
 			{
 				if (j > 0)
@@ -144,7 +144,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 		{
 			token->data[j++] = c;
 			if (chtype == CHAR_QUOTE)
-				state == STATE_GENERAL;
+				state = STATE_GENERAL;
 		}
 		if (state == CHAR_NULL)
 		{

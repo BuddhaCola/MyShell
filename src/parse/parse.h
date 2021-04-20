@@ -33,7 +33,7 @@ typedef struct s_tok
 {
 	char	*data;
 	int		type;
-	t_tok	*next;
+	s_tok	*next;
 }				t_tok;
 
 typedef struct s_lexer

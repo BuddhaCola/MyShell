@@ -6,7 +6,7 @@
 #    By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/11 15:54:29 by wtaylor           #+#    #+#              #
-#    Updated: 2021/04/12 14:24:48 by wtaylor          ###   ########.fr        #
+#    Updated: 2021/04/20 21:36:09 by wtaylor          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ FLAGS	=	#-Wall -Werror -Wextra
 
 all:		$(NAME)
 
-$(NAME): $(OBJ) src/minishell.h src/parse/parse.h
+$(NAME): $(OBJ) src/minishell.h
 	$(CC) -g $(OBJ) $(LIBFT) -o $(NAME)
 
 

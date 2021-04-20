@@ -1,4 +1,4 @@
-#include "parse.h"
+#include "../minishell.h"
 
 static int	check_len(int str_len, char *src, char *dst)
 {

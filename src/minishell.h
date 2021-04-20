@@ -3,12 +3,11 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <errno.h>
-
+#include "parse/parse.h"
 #include "./utils/get_next_line/get_next_line.h"
 #include "utils/libft/libft.h"
 
 #define PROBE printf("here!\n"); //убрать на продакшне!
-
 #define PROMT "minishell 👉"
 
 typedef struct	s_env

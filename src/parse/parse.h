@@ -1,10 +1,9 @@
 #ifndef PARSE_H
 # define PARSE_H
 
-#include "../minishell.h"
+# include "../minishell.h"
 
-
-enum	e_token_type
+enum e_token_type
 {
 	CHAR_WHITESPACE = ' ',
 	CHAR_SEMICOLON = ';',
@@ -22,7 +21,7 @@ enum	e_token_type
 	TOKEN = -1,
 };
 
-enum
+enum e_states
 {
 	STATE_IN_DQUOTE,
 	STATE_IN_QUOTE,
@@ -30,14 +29,14 @@ enum
 	STATE_GENERAL,
 };
 
-typedef struct	s_tok
+typedef struct s_tok
 {
-	char*	data;
+	char	*data;
 	int		type;
 	t_tok	*next;
 }				t_tok;
 
-typedef struct	s_lexer
+typedef struct s_lexer
 {
 	t_tok	*tok_list;
 	int		num_of_tokens;

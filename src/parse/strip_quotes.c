@@ -10,7 +10,7 @@ static int	check_len(int str_len, char *src, char *dst)
 	return (0);
 }
 
-void		strip_quotes(char *src, char *dst)
+void	strip_quotes(char *src, char *dst)
 {
 	char	quote;
 	int		str_len;

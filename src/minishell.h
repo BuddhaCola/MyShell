@@ -39,20 +39,6 @@ typedef	struct  s_todo
 	t_exec				exec;
 }               t_todo;
 
-typedef	struct	s_cmdline
-{
-	// char		**cmds;
-	int			pipe;
-	t_cmdline	*next;
-}				t_cmdline;
-
-typedef	struct s_job
-{
-	char		**token;
-}				t_job;
-
-
-
 // builtins
 void	ft_pwd();
 void	printenv(char **env);

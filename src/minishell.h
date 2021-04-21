@@ -55,7 +55,6 @@ typedef	struct s_exec
 {
 	char				**env;
 	int 				err;
-	t_env 				*environments;
 }						t_exec;
 
 typedef	struct			s_todo
@@ -64,6 +63,8 @@ typedef	struct			s_todo
     t_command           command;
 	t_exec				exec;
 	t_lexer				*lex_buf;
+	t_env 				*environments;
+	int 				env_count;
 }						t_todo;
 
 enum e_token_type
@@ -112,5 +113,6 @@ int 	ft_env(t_todo *all);
 // utils
 int		exec_bin(char *path, t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
+int		count_environments(t_todo *all);
 
 #endif

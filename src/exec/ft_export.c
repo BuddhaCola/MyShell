@@ -48,24 +48,15 @@ static int	print_env(t_todo *all)
 	return (0);
 }
 
-//int is_var_exist(t_todo *all, char **args)
-//{
-//	int i;
-//	int j;
-//	char **tmp;
-//
-//	i = 0;
-//	while(args[i])
-//	{
-//		j = 0;
-//		while(all->environments[j].name)
-//		{
-//			if (ft_strncmp(args[i], all->environments[j].name, ft_strlen(args[i])))
-//				if (ft_strc)
-//		}
-//		i++;
-//	}
-//}
+int is_var_exist(t_todo *all, char **args)
+{
+	int i;
+	int j;
+	char **tmp;
+
+	i = 0;
+	return (0);
+}
 
 int	set_env(t_todo *all, char **args)
 {
@@ -75,33 +66,24 @@ int	set_env(t_todo *all, char **args)
 
 	i = 0;
 	count_environments(all);
-//	is_var_exist(all, args[0]);
 	if (ft_strchr(args[0], '='))
 	{
-		tmp = ft_split(args[0], '=');
+		tmp = ft_split(tmp, '=');
 		all->environments[all->env_count].name = tmp[0];
 		all->environments[all->env_count].value = tmp[1];
-		all->environments[all->env_count + 1].name = NULL;
-		all->environments[all->env_count + 1].value = NULL;
 		free(tmp);
 	}
 	else
-	{
 		all->environments[all->env_count].name = args[0];
-		all->environments[all->env_count].value = NULL;
-	}
-
-//	while (all->environments[i].name)
-//	{
-//		if (ft_stncmp(all->environments[i].name, args[]))
-//		i++;
-//	}
 	return (0);
 }
 
 int ft_export(t_todo *all, char **args)
 {
-	if (!args[0])
+	char **lol;
+	args = lol;
+	args[0] = "foo=bar";
+	if (!args)
 		return (print_env(all));
 	else
 		set_env(all, args);

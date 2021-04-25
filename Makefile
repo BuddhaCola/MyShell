@@ -18,7 +18,7 @@ src/parse/init_structs.c src/parse/lexer.c src/parse/parse.c src/parse/parser.c 
 
 NAME	=	minishell
 
-LIBFT	=	src/utils/libft/libft.a
+LIBFT	=	src/utils/libft
 
 OBJ		=	$(SRC:.c=.o)
 
@@ -27,7 +27,8 @@ FLAGS	=	#-Wall -Werror -Wextra
 all:		$(NAME)
 
 $(NAME): $(OBJ) src/minishell.h
-	$(CC) -g $(OBJ) $(LIBFT) -o $(NAME)
+	make bonus -C $(LIBFT)
+	$(CC) -g $(OBJ) $(LIBFT)/libft.a -o $(NAME)
 
 
 .c.o:
@@ -35,9 +36,11 @@ $(NAME): $(OBJ) src/minishell.h
 
 clean:
 	rm -f $(OBJ)
+	make clean -C $(LIBFT)
 
 fclean: clean
 	rm -f $(NAME)
+	make fclean -C $(LIBFT)
 
 re: fclean all
 

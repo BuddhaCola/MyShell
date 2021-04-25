@@ -11,7 +11,7 @@
 #include "utils/get_next_line/get_next_line.h"
 #include "utils/libft/libft.h"
 
-#define PROBE printf("here!\n"); //убрать на продакшне!
+#define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
 #define PROMT "minishell 👉"
 
 typedef struct s_tok
@@ -100,8 +100,9 @@ int		lexer_build(char *line, int size, t_lexer *lexer_list);
 void	lexer_destroi(t_lexer *list);
 void	strip_quotes(char *src, char *dst);
 
-int collect_env(t_todo *all, char **env);
+int		collect_env(t_todo *all, char **env);
 void 	handle_signals();
+int		print_env(t_todo *all);
 
 // builtins
 void	ft_pwd(void);

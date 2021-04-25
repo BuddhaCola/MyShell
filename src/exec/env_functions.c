@@ -5,7 +5,7 @@ int	count_environments(t_todo *all)
 	all->env_count = 0;
 	while (all->environments[all->env_count].name)
 		all->env_count++;
-	return (0);
+	return (all->env_count);
 }
 
 int collect_env(t_todo *all, char **env)

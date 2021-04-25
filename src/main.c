@@ -55,15 +55,15 @@ void test_parse(char *buf, t_todo *all)
 	int i = -1;
 	while (buf[++i])
 	{
-		if (buf[i] == '$')
-		{
-			i++;
-			char *envp;
-			if (!(envp = ft_dollarsign(&buf[i], all)))
-				envp = "";
-			printf("%s\n", envp);
-		}
-		else if (buf[i] == '!')
+//		if (buf[i] == '$')
+//		{
+//			i++;
+//			char *envp;
+//			if (!(envp = ft_dollarsign(&buf[i], all)))
+//				envp = "";
+//			printf("%s\n", envp);
+//		}
+		if (buf[i] == '!')
 			exec_bin(&buf[i+1], all);
 		else if (buf[i] == '?')
 			printf("%d\n", all->exec.err);
@@ -75,9 +75,11 @@ void test_parse(char *buf, t_todo *all)
 		else if (buf[i] == '>')
 			redirection("./test", "/bin/cat", 0, 2);
 		else if (buf[i] == 'x')
-			ft_export(all, 0);
+			ft_export(all, buf + 2);
 		else if (buf[i] == 'e')
 			ft_env(all);
+		else if (buf[i] == 'p')
+			print_env(all);
 	}
 	free(buf);
 }

@@ -80,6 +80,10 @@ void test_parse(char *buf, t_todo *all)
 			ft_env(all);
 		else if (buf[i] == 'p')
 			print_env(all);
+		else if (buf[i] == 'w')
+		{
+			printf("%s\n", buf = path_parse(all, "ls"));
+		}
 	}
 	free(buf);
 }

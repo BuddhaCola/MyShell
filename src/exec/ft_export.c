@@ -139,7 +139,7 @@ int	set_env(t_todo *all, char *args)
 	return (0);
 }
 
-int ft_export(t_todo *all, char **args)
+int ft_export(t_todo *all, char *args)
 {
 //	args = malloc(sizeof(char *));
 //	args[0] = "wow";

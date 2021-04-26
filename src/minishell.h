@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <dirent.h>
 // #include "parse.h"
 // #include "structs.h"
 #include "utils/get_next_line/get_next_line.h"
@@ -106,14 +107,17 @@ int		print_env(t_todo *all);
 
 // builtins
 void	ft_pwd(void);
-int		ft_export(t_todo *all, char **args);
+int		ft_export(t_todo *all, char *args);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int		ft_echo(int argc, char **argv);
 int 	ft_env(t_todo *all);
 
 // utils
+void	i_want_to_be_freed(char **arr);
 int		exec_bin(char *path, t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
 int		count_environments(t_todo *all);
+char	*get_env_value(t_todo *all, char *name);
+char	*path_parse(t_todo *all, char *arg);
 
 #endif

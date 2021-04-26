@@ -8,6 +8,20 @@ int	count_environments(t_todo *all)
 	return (all->env_count);
 }
 
+char *get_env_value(t_todo *all, char *name)
+{
+	char *value;
+	int i;
+
+	i = -1;
+	while (all->environments[++i].name)
+	{
+		if (!(ft_strncmp(all->environments[i].name, name, ft_strlen(all->environments[i].name))))
+			return (all->environments[i].value);
+	}
+	return (NULL);
+}
+
 int collect_env(t_todo *all, char **env)
 {
 	all->env_count = 0; //убрать в инициализацию
@@ -16,7 +30,7 @@ int collect_env(t_todo *all, char **env)
 	all->env_count = 0;
 	while (env[all->env_count])
 		all->env_count++;
-	all->environments = ft_calloc(all->env_count + 80, sizeof(t_env));
+	all->environments = ft_calloc(all->env_count + 100, sizeof(t_env));
 	if (all->environments == NULL)
 		return (1);
 	all->env_count = 0;

@@ -106,9 +106,10 @@ int		shell(t_todo *all)
 	{
 		ft_putstr_fd(PROMT, 1);
 		get_next_line(0, &buf);
-//		lexer_build(buf, ft_strlen(buf), all->lex_buf);
+		lexer_build(buf, ft_strlen(buf), all->lex_buf);
+		parse(all);
 //		go_through_buf(all);
-		test_parse(buf, all);
+//		test_parse(buf, all);
 	}
 	return (0);
 }

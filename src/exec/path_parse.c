@@ -15,8 +15,7 @@ char *check_here(char *path, char *bin)
 			ft_strlcpy(found, path, ft_strlen(path) + 1);
 			ft_strlcat(found, "/", ft_strlen(found) + 2);
 			ft_strlcat(found, bin, ft_strlen(found) + ft_strlen(bin) + 1);
-			printf("found:|%s|\n", found);
-			return (ft_strjoin(path, lol->d_name));
+			return (found);
 		}
 	closedir(directory);
 	return (NULL);

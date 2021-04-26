@@ -15,6 +15,27 @@
 #define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
 #define PROMT "minishell 👉"
 
+//parser
+typedef struct s_cmd
+{
+	char					*cmd_str;
+	char					**args;
+	int						flg_pipe_left;
+	int						flg_pipe_right;
+	int						flg_redir_in;
+	int						flg_redir_out;
+	char					**input;
+	char					**output;
+	struct s_cmd		    *next;
+}				t_cmd;
+
+typedef struct s_custom_list
+{
+	t_cmd		            *cmd;
+    struct s_custom_list    *next;
+}				t_custom_list;
+
+//lexer
 typedef struct s_tok
 {
 	char			*data;
@@ -34,24 +55,6 @@ typedef struct	s_env
 	char *value;
 }				t_env;
 
-typedef struct  s_simple_command
-{
-	int         number_of_available_arguments;
-	int         number_of_arguments;
-	char        **arguments;
-}               t_simple_command;
-
-typedef struct          s_command
-{
-	int                 number_of_available_simle_commands;
-	int                 number_of_simple_commands;
-	t_simple_command    **simple_commands;
-	char                *out_file;
-	char                *input_file;
-	char                *err_file;
-	int                 background;
-}                       t_command;
-
 typedef	struct s_exec
 {
 	char				**env;
@@ -60,8 +63,9 @@ typedef	struct s_exec
 
 typedef	struct			s_todo
 {
-    t_simple_command    simple_command;
-    t_command           command;
+    t_custom_list 		*simple_command_list;
+    t_tok               *cur_tok_list;
+    t_custom_list 		*cur_simple_command_list;
 	t_exec				exec;
 	t_lexer				*lex_buf;
 	t_env 				*environments;
@@ -94,6 +98,15 @@ enum e_states
 	STATE_GENERAL,
 };
 
+//parse
+void parse(t_todo *all);
+static void parse_build(t_todo *all);
+static void init_cmd(t_todo *all);
+static int  check_non_general(t_todo *all);
+static void destroy_parser(t_todo *all);
+
+
+//lexer
 int		get_num_of_type(char c);
 void	tok_init(t_tok *tok, int data_size);
 void	tok_destroy(t_tok *tok);

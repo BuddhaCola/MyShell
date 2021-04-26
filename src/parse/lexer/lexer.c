@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../minishell.h"
 
 int	get_num_of_type(char c)
 {
@@ -155,7 +155,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 				j = 0;
 			}
 		}
-		if (c != '\0')
+		if (c == '\0')
 			break ;
 		i++;
 	}

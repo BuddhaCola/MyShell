@@ -15,10 +15,13 @@
 int	exec_bin(char *path, t_todo *all)
 {
 	pid_t pid;
+//	int i = 0;
+//    while (all->simple_command_list->cmd->args[i])
+//        printf("|%s|\n", all->simple_command_list->cmd->args[i++]);
 
 	pid = fork();
 	if (!pid)
-		all->exec.err = execve(path, NULL, NULL);
+		all->exec.err = execve(all->simple_command_list->cmd->cmd_str, all->simple_command_list->cmd->args, NULL);
 	else
 		wait(&pid);
 	return (1);

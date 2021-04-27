@@ -100,6 +100,8 @@ void go_through_buf(t_todo *all)
 int		shell(t_todo *all)
 {
 	char	*buf;
+	t_tok   *ttc;
+
 	handle_signals();
 	all->lex_buf = malloc(sizeof(t_lexer));
 	while (1)
@@ -107,10 +109,20 @@ int		shell(t_todo *all)
 		ft_putstr_fd(PROMT, 1);
 		get_next_line(0, &buf);
 		lexer_build(buf, ft_strlen(buf), all->lex_buf);
+		ttc = all->lex_buf->tok_list;
+//		while (ttc)
+//        {
+//		    printf("s: %s\n", ttc->data);
+//		    ttc = ttc->next;
+//        }
 		parse(all);
+        exec_bin(all->simple_command_list->cmd->cmd_str, all);
+		//after execve DO RESET PARSE
+        reset_parser(all);
 //		go_through_buf(all);
 //		test_parse(buf, all);
 	}
+	//at the end of program clean all.
 	return (0);
 }
 

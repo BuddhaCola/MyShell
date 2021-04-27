@@ -103,7 +103,8 @@ void parse(t_todo *all);
 static void parse_build(t_todo *all);
 static void init_cmd(t_todo *all);
 static int  check_non_general(t_todo *all);
-static void destroy_parser(t_todo *all);
+void destroy_parser(t_todo *all);
+void reset_parser(t_todo *all);
 
 
 //lexer

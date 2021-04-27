@@ -32,7 +32,7 @@ int	get_num_of_type(char c)
 void		tok_init(t_tok *tok, int data_size)
 {
 	tok->data = malloc(data_size + 1);
-	tok->data[0] = 0;
+//	tok->data[0] = 0;
 	tok->type = CHAR_NULL;
 	tok->next = NULL;
 }
@@ -146,7 +146,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 			if (chtype == CHAR_QUOTE)
 				state = STATE_GENERAL;
 		}
-		if (state == CHAR_NULL)
+		if (chtype == CHAR_NULL)
 		{
 			if (j > 0)
 			{
@@ -162,20 +162,20 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 
 	// count tokens, strip if quotes, save into k
 	token = lexer_list->tok_list;
-	k = 0;
-	while (token != NULL)
-	{
-		if (token->type == TOKEN)
-		{
-			stripped = malloc(ft_strlen(token->data) + 1);
-			strip_quotes(token->data, stripped);
-			free(token->data);
-			token->data = stripped;
-			k++;
-		}
-		token = token->next;
-	}
-	lexer_list->num_of_tokens = k;
+//	k = 0;
+//	while (token != NULL)
+//	{
+//		if (token->type == TOKEN)
+//		{
+//			stripped = malloc(ft_strlen(token->data) + 1);
+//			strip_quotes(token->data, stripped);
+//			free(token->data);
+//			token->data = stripped;
+//			k++;
+//		}
+//		token = token->next;
+//	}
+//	lexer_list->num_of_tokens = k;
 	return k;
 }
 

@@ -2,7 +2,8 @@
 
 int	get_num_of_type(char c)
 {
-	if (c == ' ')
+
+    if (c == ' ')
 		return (CHAR_WHITESPACE);
 	else if (c == ';')
 		return (CHAR_SEMICOLON);
@@ -32,7 +33,6 @@ int	get_num_of_type(char c)
 void		tok_init(t_tok *tok, int data_size)
 {
 	tok->data = malloc(data_size + 1);
-//	tok->data[0] = 0;
 	tok->type = CHAR_NULL;
 	tok->next = NULL;
 }
@@ -52,9 +52,8 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 	t_tok	*token;
 	int		i;
 	int		j;
-	int		ntemptok;
+	char    *save_tok_data_ptr;
 	char	c;
-	char	*stripped;
 	int		state;
 	int		chtype;
 	int		k;
@@ -71,7 +70,6 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 	tok_init(token, size);
 	i = 0;
 	j = 0;
-	ntemptok = 0;
 	state = STATE_GENERAL;
 	while (1)
 	{
@@ -127,7 +125,6 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 				token->data[0] = chtype;
 				token->data[1] = 0;
 				token->type = chtype;
-
 				token->next = malloc(sizeof(t_tok));
 				token = token->next;
 				tok_init(token, size - i);
@@ -151,7 +148,6 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 			if (j > 0)
 			{
 				token->data[j] = 0;
-				ntemptok++;
 				j = 0;
 			}
 		}
@@ -160,22 +156,21 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 		i++;
 	}
 
-	// count tokens, strip if quotes, save into k
+	// count tokens
 	token = lexer_list->tok_list;
-//	k = 0;
-//	while (token != NULL)
-//	{
-//		if (token->type == TOKEN)
-//		{
-//			stripped = malloc(ft_strlen(token->data) + 1);
-//			strip_quotes(token->data, stripped);
-//			free(token->data);
-//			token->data = stripped;
-//			k++;
-//		}
-//		token = token->next;
-//	}
-//	lexer_list->num_of_tokens = k;
+	k = 0;
+	while (token != NULL)
+	{
+		if (token->type == TOKEN)
+		{
+		    strip_quotes(&save_tok_data_ptr, token->data);
+		    free(token->data);
+		    token->data = save_tok_data_ptr;
+		    k++;
+		}
+		token = token->next;
+	}
+	lexer_list->num_of_tokens = k;
 	return k;
 }
 

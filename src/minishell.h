@@ -98,6 +98,9 @@ enum e_states
 	STATE_GENERAL,
 };
 
+//strip quotes
+void    strip_quotes(char **dst, char *src);
+
 //parse
 void parse(t_todo *all);
 static void parse_build(t_todo *all);
@@ -113,7 +116,6 @@ void	tok_init(t_tok *tok, int data_size);
 void	tok_destroy(t_tok *tok);
 int		lexer_build(char *line, int size, t_lexer *lexer_list);
 void	lexer_destroi(t_lexer *list);
-void	strip_quotes(char *src, char *dst);
 
 int		collect_env(t_todo *all, char **env);
 void 	handle_signals();

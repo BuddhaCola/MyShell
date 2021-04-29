@@ -27,7 +27,7 @@ all:		$(NAME)
 
 $(NAME): $(OBJ) src/minishell.h
 	make bonus -C $(LIBFT)
-	$(CC) -g $(OBJ) $(LIBFT)/libft.a -o $(NAME)
+	$(CC) -g -ltermcap $(OBJ) $(LIBFT)/libft.a -o $(NAME)
 
 
 .c.o:

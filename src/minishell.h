@@ -7,8 +7,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <dirent.h>
-// #include "parse.h"
-// #include "structs.h"
+#include <term.h>
+
+
 #include "utils/get_next_line/get_next_line.h"
 #include "utils/libft/libft.h"
 
@@ -70,6 +71,8 @@ typedef	struct			s_todo
 	t_lexer				*lex_buf;
 	t_env 				*environments;
 	int 				env_count;
+	struct termios		saved_attributes;
+	char 				terminfo_buffer[2048];
 }						t_todo;
 
 enum e_token_type
@@ -133,5 +136,8 @@ int		redirection(char *filepath, char *program, char **args, int append);
 int		count_environments(t_todo *all);
 char	*get_env_value(t_todo *all, char *name);
 char	*path_parse(t_todo *all, char *arg);
+
+int ft_strcmp(char *str1, char *str2);
+int ft_putchar(int c);
 
 #endif

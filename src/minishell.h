@@ -102,8 +102,6 @@ void    strip_quotes(char **dst, char *src);
 //parse
 void parse(t_todo *all);
 void destroy_parser(t_todo *all);
-void reset_parser(t_todo *all);
-
 
 //lexer
 int		get_num_of_type(char c);

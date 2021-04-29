@@ -217,14 +217,38 @@ void parse(t_todo *all)
     }
 }
 
-//reset parser after reading
-void reset_parser(t_todo *all)
-{
+static void destroy_2d(char ***str) {
+    char **ptr;
 
+    if (*str != NULL)
+    {
+        ptr = *str;
+        while (ptr) {
+            free(ptr);
+            ptr++;
+        }
+        free(*str);
+    }
+}
+
+//destroy cmd_list
+void destroy_cmd_list(t_cmd *list)
+{
+    if (list != NULL)
+    {
+        free(list->cmd_str);
+        destroy_2d(&list->args);
+        destroy_2d(&list->input_files);
+        destroy_2d(&list->output_files);
+        destroy_2d(&list->double_greater_output_files);
+        destroy_cmd_list(list->next);
+        free(list);
+    }
 }
 
 //destroy parser at the end of the program
 void destroy_parser(t_todo *all)
 {
-
+    destroy_cmd_list(all->to_execute->cmd);
+    free(all->to_execute);
 }

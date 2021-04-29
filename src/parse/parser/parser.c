@@ -1,55 +1,39 @@
 #include "../../minishell.h"
 
-//update cur_simple_cmd_list
-//and update cur_tok_list
-static void iterate_simple_cmd_list(t_todo *all)
-{
-
-}
-
-//update cur_tok_list
-static void iterate_token_list(t_todo *all)
-{
-
-}
-
+//DONE
 static void init_cmd(t_todo *all)
 {
-    all->simple_command_list->cmd->cmd_str = NULL;
-    all->simple_command_list->cmd->args = NULL;
-    all->simple_command_list->cmd->flg_pipe_left = 0;
-    all->simple_command_list->cmd->flg_pipe_right = 0;
-    all->simple_command_list->cmd->flg_redir_in = 0;
-    all->simple_command_list->cmd->flg_redir_out = 0;
-    all->simple_command_list->cmd->input = 0;
-    all->simple_command_list->cmd->output = 0;
-    all->simple_command_list->cmd->next = NULL;
+    all->to_execute->cmd->cmd_str = NULL;
+    all->to_execute->cmd->args = NULL;
+    all->to_execute->cmd->flg_pipe = 0;
+    all->to_execute->cmd->input_files = NULL;
+    all->to_execute->cmd->output_files = NULL;
+    all->to_execute->cmd->double_greater_output_files = NULL;
+    all->to_execute->cmd->next = NULL;
 }
 
+//DONE
 static void parse_build(t_todo *all)
 {
-    all->simple_command_list = malloc(sizeof(t_custom_list));
-    all->simple_command_list->cmd = (void *)malloc(sizeof(t_cmd));
-    all->simple_command_list->next = NULL;
+    all->to_execute = malloc(sizeof(t_to_execute));
+    all->to_execute->cmd = (void *)malloc(sizeof(t_cmd));
     init_cmd(all);
     all->cur_tok_list = all->lex_buf->tok_list;
-    all->cur_simple_command_list = all->simple_command_list;
+    all->cur_cmd_list = all->to_execute->cmd;
 }
 
+//DONE
 static int  try_get_cmd_str(t_todo *all)
 {
     if (all->cur_tok_list && (all->cur_tok_list->type == CHAR_GENERAL))
-    {
-        all->cur_simple_command_list->cmd->cmd_str = path_parse(all, all->cur_tok_list->data);
-//        all->cur_simple_command_list->cmd->cmd_str = ft_strdup(all->cur_tok_list->data);
-    }
+        all->to_execute->cmd->cmd_str = path_parse(all, all->cur_tok_list->data);
     else
-    {
         return (-1);
-    }
     return (0);
 }
 
+//DONE
+//get args from tokens
 static int  try_get_args(t_todo *all)
 {
     size_t  i;
@@ -59,82 +43,141 @@ static int  try_get_args(t_todo *all)
     tok_list_cpy = all->cur_tok_list;
     i = 0;
     k = 0;
+    //count tokens
     while (tok_list_cpy && tok_list_cpy->type == CHAR_GENERAL)
     {
         i++;
         tok_list_cpy = tok_list_cpy->next;
     }
-    if (i != 0)
+    //if i > write them to 2d str array
+    if (i > 0)
     {
-        all->cur_simple_command_list->cmd->args = malloc(sizeof(char *) * (i + 1));
-        all->cur_simple_command_list->cmd->args[k] = path_parse(all, all->cur_tok_list->data);
+        all->cur_cmd_list->args = malloc(sizeof(char *) * (i + 1));
+        all->cur_cmd_list->args[k] = path_parse(all, all->cur_tok_list->data);
         all->cur_tok_list = all->cur_tok_list->next;
         k++;
         i--;
-        //copy toks to 2d
+        //copy tokens to 2d array if exist
         while (i--)
         {
-            all->cur_simple_command_list->cmd->args[k] = ft_strdup(all->cur_tok_list->data);
+            all->cur_cmd_list->args[k] = ft_strdup(all->cur_tok_list->data);
             k++;
             all->cur_tok_list = all->cur_tok_list->next;
         }
-        all->cur_simple_command_list->cmd->args[k] = NULL;
+        //terminate 2d cmd array
+        all->cur_cmd_list->args[k] = NULL;
     }
     return (0);
 }
 
-static void go_next_simple_cmd_list_elem(t_todo *all)
+//DONE
+//iter cmd list
+static void iter_to_new_cmd_list(t_todo *all)
 {
-    all->cur_simple_command_list->next = malloc(sizeof(t_custom_list));
-    all->cur_simple_command_list = all->cur_simple_command_list->next;
-    all->cur_simple_command_list->cmd = malloc(sizeof(t_cmd));
-    all->cur_simple_command_list->next = NULL;
-    all->cur_simple_command_list->cmd->cmd_str = NULL;
-    all->cur_simple_command_list->cmd->args = NULL;
-    all->cur_simple_command_list->cmd->flg_pipe_left = 0;
-    all->cur_simple_command_list->cmd->flg_pipe_right = 0;
-    all->cur_simple_command_list->cmd->flg_redir_in = 0;
-    all->cur_simple_command_list->cmd->flg_redir_out = 0;
-    all->cur_simple_command_list->cmd->input = 0;
-    all->cur_simple_command_list->cmd->output = 0;
-    all->cur_simple_command_list->cmd->next = NULL;
+    all->cur_cmd_list->next = malloc(sizeof(t_cmd));
+    all->cur_cmd_list = all->cur_cmd_list->next;
+    all->cur_cmd_list->cmd_str = NULL;
+    all->cur_cmd_list->args = NULL;
+    all->cur_cmd_list->flg_pipe = 0;
+    all->cur_cmd_list->input_files = NULL;
+    all->cur_cmd_list->output_files = NULL;
+    all->cur_cmd_list->double_greater_output_files = NULL;
+    all->cur_cmd_list->next = NULL;
 }
 
-// add new cmd list and switch to them
-static void go_next_cmd_list_elem(t_todo *all)
+//DONE
+static void init_2d_file_array(char ***str)
 {
-    all->cur_simple_command_list->cmd->next = malloc(sizeof(char));
+    *str = malloc (sizeof(char *));
+    **str = NULL;
 }
 
-static void try_to_get_filenames(t_todo *all, int io_mode)
+//write
+static void write_to_2d_filename(char ***str)
 {
-    if (io_mode == 0){} //write to **input
-    if (io_mode == 1){} //write to **output
+    char **str_ptr;
+
+    str_ptr = *str;
+    while (str_ptr)
+    {
+
+    }
+
+}
+
+//write files to the 2d array
+static int try_to_get_filename(t_todo *all, int io_mode)
+{
+    //write to **input
+    if (io_mode == 0)
+    {
+        if (all->cur_tok_list->type == CHAR_GENERAL)
+        {
+            init_2d_file_array(&all->cur_cmd_list->input_files);
+            all->cur_tok_list = all->cur_tok_list->next;
+        }
+        else
+        {
+            //print error type
+            return (-1);
+        }
+    }
+    //write to **output
+    if (io_mode == 1)
+    {
+        if (all->cur_tok_list->type == CHAR_GENERAL)
+        {
+            init_2d_file_array(&all->cur_cmd_list->output_files);
+            all->cur_tok_list = all->cur_tok_list->next;
+        }
+        else
+        {
+            //print error type
+            return (-1);
+        }
+    }
+    //write to **double_greater_output_files
+    if (io_mode = 2)
+    {
+        if (all->cur_tok_list->type == CHAR_GENERAL)
+        {
+            init_2d_file_array(&all->cur_cmd_list->double_greater_output_files);
+            all->cur_tok_list = all->cur_tok_list->next;
+        }
+        else
+        {
+            //print error type
+            return (-1);
+        }
+    }
+    return (0);
 }
 
 //дописать правило для ">>"
 static int check_non_general(t_todo *all)
 {
-    if (all->cur_tok_list && all->cur_tok_list->type != CHAR_GENERAL)
+    while (all->cur_tok_list && (all->cur_tok_list->type == CHAR_GENERAL || all->cur_tok_list->type == CHAR_GREATER
+    || all->cur_tok_list->type == CHAR_LESSER || all->cur_tok_list == CHAR_DGREATER))
     {
-        if (all->cur_tok_list->type == CHAR_GREATER)
+        if (all->cur_tok_list && all->cur_tok_list->type != CHAR_GENERAL)
         {
-            all->cur_simple_command_list->cmd->flg_redir_out = 1;
-            try_to_get_filenames(all,1);
-            all->cur_tok_list = all->cur_tok_list->next;
+            if (all->cur_tok_list->type == CHAR_GREATER)
+            {
+                all->cur_tok_list = all->cur_tok_list->next;
+                try_to_get_filename(all, 1);
+            }
+            else if (all->cur_tok_list->type == CHAR_LESSER)
+            {
+                all->cur_tok_list = all->cur_tok_list->next;
+                try_to_get_filename(all, 0);
+            }
+            else if (all->cur_tok_list->type == CHAR_DGREATER)
+            {
+                all->cur_tok_list = all->cur_tok_list->next;
+                try_to_get_filename(all, 2);
+            }
+            return (1);
         }
-        else if (all->cur_tok_list->type == CHAR_LESSER)
-        {
-            all->cur_simple_command_list->cmd->flg_redir_in = 1;
-            try_to_get_filenames(all,0);
-            all->cur_tok_list = all->cur_tok_list->next;
-        }
-        else if (all->cur_tok_list->type == CHAR_PIPE)
-        {
-            go_next_cmd_list_elem(all);
-//            all->cur_simple_command_list->cmd;
-        }
-        return (1);
     }
     return (0);
 }

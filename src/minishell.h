@@ -20,20 +20,17 @@ typedef struct s_cmd
 {
 	char					*cmd_str;
 	char					**args;
-	int						flg_pipe_left;
-	int						flg_pipe_right;
-	int						flg_redir_in;
-	int						flg_redir_out;
-	char					**input;
-	char					**output;
+	int						flg_pipe;
+	char					**input_files;
+	char					**output_files;
+	char                    **double_greater_output_files;
 	struct s_cmd		    *next;
 }				t_cmd;
 
-typedef struct s_custom_list
+typedef struct s_to_execute
 {
 	t_cmd		            *cmd;
-    struct s_custom_list    *next;
-}				t_custom_list;
+}				t_to_execute;
 
 //lexer
 typedef struct s_tok
@@ -63,9 +60,9 @@ typedef	struct s_exec
 
 typedef	struct			s_todo
 {
-    t_custom_list 		*simple_command_list;
+    t_to_execute		*to_execute;
     t_tok               *cur_tok_list;
-    t_custom_list 		*cur_simple_command_list;
+    t_cmd               *cur_cmd_list;
 	t_exec				exec;
 	t_lexer				*lex_buf;
 	t_env 				*environments;
@@ -85,6 +82,7 @@ enum e_token_type
 	CHAR_NEWLINE = '\n',
 	CHAR_GREATER = '>',
 	CHAR_LESSER = '<',
+	CHAR_DGREATER = -2,
 	CHAR_NULL = 0,
 	CHAR_GENERAL = -1,
 	TOKEN = -1,
@@ -103,9 +101,6 @@ void    strip_quotes(char **dst, char *src);
 
 //parse
 void parse(t_todo *all);
-static void parse_build(t_todo *all);
-static void init_cmd(t_todo *all);
-static int  check_non_general(t_todo *all);
 void destroy_parser(t_todo *all);
 void reset_parser(t_todo *all);
 

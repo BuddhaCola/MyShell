@@ -2,8 +2,7 @@
 
 int	get_num_of_type(char c)
 {
-
-    if (c == ' ')
+	if (c == ' ')
 		return (CHAR_WHITESPACE);
 	else if (c == ';')
 		return (CHAR_SEMICOLON);
@@ -74,10 +73,17 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 	while (1)
 	{
 		c = line[i];
-		chtype = get_num_of_type(c);
+		//if ">>" get type
+        if (line[i + 1] && ((line[i] == '>') && (line[i + 1] == '>')))
+        {
+            chtype = CHAR_DGREATER;
+            i++;
+        }
+        else
+		    chtype = get_num_of_type(c);
 		if (state == STATE_GENERAL)
 		{
-			if (chtype == CHAR_QUOTE)
+		    if (chtype == CHAR_QUOTE)
 			{
 				state = STATE_IN_QUOTE;
 				token->data[j++] = CHAR_QUOTE;
@@ -110,9 +116,8 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 					j = 0;
 				}
 			}
-			else if ((chtype == CHAR_SEMICOLON) || (chtype == CHAR_GREATER) || (chtype == CHAR_LESSER) || (chtype == CHAR_AMPERSAND))
-				;
-			else if (chtype == CHAR_PIPE)
+			else if ((chtype == CHAR_SEMICOLON) || (chtype == CHAR_GREATER) || (chtype == CHAR_LESSER) || (chtype == CHAR_AMPERSAND)
+			|| (chtype == CHAR_PIPE))
 			{
 				if (j > 0)
 				{
@@ -128,8 +133,25 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 				token->next = malloc(sizeof(t_tok));
 				token = token->next;
 				tok_init(token, size - i);
-				break ;
 			}
+			else if ((chtype == CHAR_DGREATER))
+            {
+                if (j > 0)
+                {
+                    token->data[j] = 0;
+                    token->next = malloc(sizeof(t_tok));
+                    token = token->next;
+                    tok_init(token, size - i);
+                    j = 0;
+                }
+                token->data[0] = '>';
+                token->data[1] = '>';
+                token->data[2] = '\0';
+                token->type = chtype;
+                token->next = malloc(sizeof(t_tok));
+                token = token->next;
+                tok_init(token, size - i);
+            }
 		}
 		else if (state == STATE_IN_DQUOTE)
 		{

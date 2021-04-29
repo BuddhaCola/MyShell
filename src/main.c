@@ -110,11 +110,12 @@ int		shell(t_todo *all)
 		get_next_line(0, &buf);
 		lexer_build(buf, ft_strlen(buf), all->lex_buf);
 		ttc = all->lex_buf->tok_list;
-//		while (ttc)
-//        {
-//		    printf("s: %s\n", ttc->data);
-//		    ttc = ttc->next;
-//        }
+		while (ttc)
+        {
+		    printf("s: %s ", ttc->data);
+		    printf("t: %d\n", ttc->type);
+		    ttc = ttc->next;
+        }
 		parse(all);
         exec_bin(all->simple_command_list->cmd->cmd_str, all);
 		//after execve DO RESET PARSE

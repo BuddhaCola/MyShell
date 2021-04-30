@@ -73,6 +73,7 @@ typedef	struct			s_todo
 	int 				env_count;
 	struct termios		saved_attributes;
 	char 				terminfo_buffer[2048];
+	int 				exit_code;
 }						t_todo;
 
 enum e_token_type
@@ -128,6 +129,7 @@ int		ft_export(t_todo *all, char *args);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int		ft_echo(int argc, char **argv);
 int 	ft_env(t_todo *all);
+int		ft_exit(char **args, t_todo *all);
 
 // utils
 void	i_want_to_be_freed(char **arr);

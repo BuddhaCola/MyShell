@@ -70,6 +70,17 @@ char *path_parse(t_todo *all, char *arg)
 		else
 			return NULL;
 	}
+	if (arg[ft_strlen(arg) - 1] == '/')
+	{
+		ft_putstr_fd(arg, 1);
+		ft_putstr_fd("is a directory!\n", 1);
+		return (NULL);
+	}
+	if (!(ft_strcmp(arg, ".")))
+	{
+		ft_putstr_fd("bitch, \".\", seriously!?\n", 1);
+		return (NULL);
+	}
 	else if (!getenv("PATH"))
 	{
 		if ((bin = (check_here(".", arg))))

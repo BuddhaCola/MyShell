@@ -34,7 +34,7 @@ static int is_builtin(char *path)
 	return (0);
 }
 
-static int do_builtin(char *path)
+static int do_builtin(char *path, t_todo *all)
 {
 	if (!(ft_strcmp(path, "echo")))
 		ft_putstr_fd(path, 1);
@@ -49,7 +49,7 @@ static int do_builtin(char *path)
 	else if (!(ft_strcmp(path, "env")))
 		ft_putstr_fd(path, 1);
 	else if (!(ft_strcmp(path, "exit")))
-		ft_putstr_fd(path, 1);
+		ft_exit(all->simple_command_list->cmd->args, all);
 	else
 		return (-1);
 	ft_putstr_fd(" under construction! 🚧\n", 1);
@@ -78,7 +78,7 @@ int	exec_bin(char *path, t_todo *all)
 
 	if (is_builtin(path))
 	{
-		do_builtin(path);
+		do_builtin(path, all);
 		return (0);
 	}
 	if (!path)

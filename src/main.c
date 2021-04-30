@@ -80,13 +80,13 @@ char	*ft_dollarsign(char	*str, t_todo *all)
 //	free(buf);
 //}
 
-int     ft_exit(t_todo *all)
-{
-	all->saved_attributes.c_lflag &= ~(ECHO);
-	all->saved_attributes.c_lflag &= ~(ICANON);
-	tcsetattr(0, TCSANOW, &all->saved_attributes);
-	return (0);
-}
+//int     ft_exit(t_todo *all)
+//{
+//	all->saved_attributes.c_lflag &= ~(ECHO);
+//	all->saved_attributes.c_lflag &= ~(ICANON);
+//	tcsetattr(0, TCSANOW, &all->saved_attributes);
+//	return (0);
+//}
 
 int     termcap_stuff(t_todo *all)
 {
@@ -129,7 +129,7 @@ void	ft_backspace(char *str)
 		str[len - 1] = '\0';
 	}
 }
-int 	check_input(char *buf, char **line)
+int 	check_input(char *buf, char **line, t_todo *all)
 {
 	if (!(ft_strncmp(buf, "\n", 1)))
 		return (write(1, "\n", 1));
@@ -138,7 +138,7 @@ int 	check_input(char *buf, char **line)
 	else if (*buf == '\3')
 		ft_putstr_fd("you pressed ctrl+C\n", 1);
 	else if (*buf == '\4')
-		exit(0);
+		ft_exit(0, all);
 	else if (!(ft_strcmp(buf, "\e[A")))
 	{
 		ft_putstr_fd("you pressed UP   | Great job! 👍", 1);
@@ -175,7 +175,7 @@ int		promt(t_todo *all)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			if (check_input(buf, &line))
+			if (check_input(buf, &line, all))
 				break;
 		}
 		if (*line)
@@ -198,6 +198,7 @@ int		main(int argc, char **argv, char **env)
 {
 	t_todo		all;
 
+	ft_bzero(&all, sizeof(all));
 	collect_env(&all, env);
 	if (argc > 1)
 		debug_promt(&all); //убрать 🚧

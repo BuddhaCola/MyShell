@@ -50,69 +50,41 @@ char	*ft_dollarsign(char	*str, t_todo *all)
 	return(NULL);
 }
 
-void test_parse(char *buf, t_todo *all)
-{
-	int i = -1;
-	while (buf[++i])
-	{
-		if (buf[i] == '!')
-			exec_bin(&buf[i+1], all);
-		else if (buf[i] == '?')
-			printf("%d\n", all->exec.err);
-		else if (buf[i] == '|')
-		{
-			char **args = ft_split(&buf[i+1], ' ');
-			ft_pipe(args[0], 0, args[1], 0);
-		}
-		else if (buf[i] == '>')
-			redirection("./test", "/bin/cat", 0, 2);
-		else if (buf[i] == 'x')
-			ft_export(all, buf + 2);
-		else if (buf[i] == 'e')
-			ft_env(all);
-		else if (buf[i] == 'p')
-			print_env(all);
-		else if (buf[i] == 'w')
-		{
-			printf("%s\n", buf = path_parse(all, "ls"));
-		}
-	}
-	free(buf);
-}
+//void test_parse(char *buf, t_todo *all)
+//{
+//	int i = -1;
+//	while (buf[++i])
+//	{
+//		if (buf[i] == '!')
+//			exec_bin(&buf[i+1], all);
+//		else if (buf[i] == '?')
+//			printf("%d\n", all->exec.err);
+//		else if (buf[i] == '|')
+//		{
+//			char **args = ft_split(&buf[i+1], ' ');
+//			ft_pipe(args[0], 0, args[1], 0);
+//		}
+//		else if (buf[i] == '>')
+//			redirection("./test", "/bin/cat", 0, 2);
+//		else if (buf[i] == 'x')
+//			ft_export(all, buf + 2);
+//		else if (buf[i] == 'e')
+//			ft_env(all);
+//		else if (buf[i] == 'p')
+//			print_env(all);
+//		else if (buf[i] == 'w')
+//		{
+//			printf("%s\n", buf = path_parse(all, "ls"));
+//		}
+//	}
+//	free(buf);
+//}
 
 int     ft_exit(t_todo *all)
 {
 	all->saved_attributes.c_lflag &= ~(ECHO);
 	all->saved_attributes.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &all->saved_attributes);
-	return (0);
-}
-
-int		shell(t_todo *all)
-{
-	char	*buf;
-	t_tok   *ttc;
-
-	handle_signals();
-	all->lex_buf = malloc(sizeof(t_lexer));
-	while (1)
-	{
-		ft_putstr_fd(PROMT, 1);
-		tputs(save_cursor, 1, ft_putchar);
-		get_next_line(0, &buf);
-		lexer_build(buf, ft_strlen(buf), all->lex_buf);
-		ttc = all->lex_buf->tok_list;
-//		while (ttc)
-//        {
-//		    printf("s: %s\n", ttc->data);
-//		    ttc = ttc->next;
-//        }
-		parse(all);
-		exec_bin(all->simple_command_list->cmd->cmd_str, all);
-		//after execve DO RESET PARSE
-		reset_parser(all);
-	}
-	//at the end of program clean all.
 	return (0);
 }
 
@@ -129,6 +101,7 @@ int     termcap_stuff(t_todo *all)
 	tcgetattr(0, &new_attributes);
 	ft_memcpy(&new_attributes, &all->saved_attributes, sizeof(new_attributes));
 	new_attributes.c_lflag &= ~(ECHO);
+	new_attributes.c_lflag &= ~(ISIG);
 	new_attributes.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &new_attributes);
 	if (tgetent(0, termtype) != 1)
@@ -156,13 +129,26 @@ void	ft_backspace(char *str)
 		str[len - 1] = '\0';
 	}
 }
-
 int 	check_input(char *buf, char **line)
 {
 	if (!(ft_strncmp(buf, "\n", 1)))
 		return (write(1, "\n", 1));
 	else if (*buf == '\177')
 		ft_backspace(*line);
+	else if (*buf == '\3')
+		ft_putstr_fd("you pressed ctrl+C\n", 1);
+	else if (*buf == '\4')
+		exit(0);
+	else if (!(ft_strcmp(buf, "\e[A")))
+	{
+		ft_putstr_fd("you pressed UP   | Great job! 👍", 1);
+					tputs(restore_cursor, 1, ft_putchar);
+	}
+	else if (!(ft_strcmp(buf, "\e[B")))
+	{
+		ft_putstr_fd("you pressed DOWN | Great job! 👍", 1);
+					tputs(restore_cursor, 1, ft_putchar);
+	}
 	else if (ft_isprint(*buf))
 	{
 		get_line(buf, line);
@@ -172,7 +158,7 @@ int 	check_input(char *buf, char **line)
 	return (0);
 }
 
-int		experiment(t_todo *all)
+int		promt(t_todo *all)
 {
 	char	buf[100];
 	int 	ret;
@@ -187,16 +173,18 @@ int		experiment(t_todo *all)
 		line = ft_strdup("");
 		while (1)
 		{
-			termcap_stuff(all);
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
 			if (check_input(buf, &line))
 				break;
-//			tputs(restore_cursor, 1, ft_putchar);
 		}
-		lexer_build(line, ft_strlen(buf), all->lex_buf);
-		parse(all);
-		exec_bin(all->simple_command_list->cmd->cmd_str, all);
+		if (*line)
+		{
+			tcsetattr(0, TCSANOW, &all->saved_attributes);
+			lexer_build(line, ft_strlen(buf), all->lex_buf);
+			parse(all);
+			exec_bin(all->simple_command_list->cmd->cmd_str, all);
+		}
 		free(line);
 //		reset_parser(all);
 	}
@@ -204,14 +192,35 @@ int		experiment(t_todo *all)
 	return (0);
 }
 
+int		debug_promt(t_todo *all); //убрать 🚧
+
 int		main(int argc, char **argv, char **env)
 {
 	t_todo		all;
 
 	collect_env(&all, env);
-//	if ((termcap_stuff(&all)) == -1)
-//		printf("something wrong with the terminal\n");
-	experiment(&all);
-//	shell(&all);
+	if (argc > 1)
+		debug_promt(&all); //убрать 🚧
+	else
+		promt(&all);
+	return (0);
+}
+
+//убрать 🚧
+int		debug_promt(t_todo *all)
+{
+	char	buf[1000];
+	int 	ret;
+
+	all->lex_buf = malloc(sizeof(t_lexer));
+	while (all->environments)
+	{
+		ft_putstr_fd(PROMT, 1);
+		ret = read(0, &buf, 1000);
+		buf[ret] = '\0';
+		lexer_build(buf, ret, all->lex_buf);
+		parse(all);
+		exec_bin(all->simple_command_list->cmd->cmd_str, all);
+	}
 	return (0);
 }

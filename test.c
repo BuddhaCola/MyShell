@@ -1,6 +1,6 @@
 #include <unistd.h>
 
-int main()
+int main(int argc, char **argv)
 {
-	write(1, "Hello\n", 6);
+		write(1, "Hello\n", 6);
 }

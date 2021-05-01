@@ -35,22 +35,25 @@ int	count_environments(t_todo *all)
 	return (all->env_count);
 }
 
-int collect_env(t_todo *all, char **env)
+char **clone_env(char **env)
 {
-	all->env_count = 0;
-	while (env[all->env_count])
-		all->env_count++;
-	all->environments = malloc(sizeof(char *) * all->env_count + 1);
-	if (all->environments == NULL)
-		return (-1);
-	all->env_count = 0;
-	while (env[all->env_count])
+	int i;
+	char **clone;
+
+	i = 0;
+	while (env[i])
+		i++;
+	clone = malloc(sizeof(char *) * i + 1);
+	if (clone == NULL)
+		return (NULL);
+	i = 0;
+	while (env[i])
 	{
-		all->environments[all->env_count] = ft_strdup(env[all->env_count]);
-		all->env_count++;
+		clone[i] = ft_strdup(env[i]);
+		i++;
 	}
-	all->environments[all->env_count] = NULL;
-	return (0);
+	clone[i] = NULL;
+	return (clone);
 }
 
 //int collect_env(t_todo *all, char **env)

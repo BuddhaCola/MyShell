@@ -12,58 +12,6 @@
 //	return (0);
 //}
 //
-//static int sort_env(t_todo *all)
-//{
-//	t_env tmp;
-//	int	i;
-//	int	unsorted;
-//	int	remain;
-//	remain = count_environments(all);;
-//
-//	while (unsorted)
-//	{
-//		unsorted = 0;
-//		i = 0;
-//		while (i < remain - 1)
-//		{
-//			i++;
-//			if (ft_strncmp(all->environments[i - 1].name, all->environments[i].name, ft_strlen(all->environments[i - 1].name)) > 0)
-//			{
-//				tmp = all->environments[i];
-//				all->environments[i] = all->environments[i - 1];
-//				all->environments[i - 1] =	tmp;
-//				unsorted = 1;
-//			}
-//		}
-//		remain--;
-//	}
-//	return (0);
-//}
-//
-//int	print_env(t_todo *all)
-//{
-//	int i;
-//
-//	i = 0;
-//	sort_env(all);
-//	while (all->environments[i].name)
-//	{
-////		printf("|%d|", i);
-////		fflush(stdout);
-//		ft_putstr_fd("declare -x " ,1);
-//		ft_putstr_fd(all->environments[i].name ,1);
-//		if (all->environments[i].value)
-//		{
-//			write(1, "=", 1);
-//			write(1, "\"", 1);
-//			ft_putstr_fd(all->environments[i].value, 1);
-//			write(1, "\"", 1);
-//		}
-//		write(1, "\n", 1);
-//		i++;
-//	}
-//	return (0);
-//}
 //
 //int is_var_exist(t_todo *all, char **newenv)
 //{
@@ -139,13 +87,75 @@
 //	return (0);
 //}
 
-int ft_export(t_todo *all, char *args)
+char	**sort_env(char **env)
 {
-//	args = malloc(sizeof(char *));
-//	args[0] = "wow";
-//	if (!args)
-//		return (print_env(all));
+	int		i;
+	int		unsorted;
+	int		remain;
+	char	*tmp;
+
+	remain = 0;
+	while (env[remain])
+		remain++;
+	unsorted = 1;
+	while (unsorted)
+	{
+		unsorted = 0;
+		i = 0;
+		while (i < remain - 1)
+		{
+			i++;
+			if (ft_strncmp(env[i - 1], env[i], ft_strlen(env[i - 1])) > 0)
+			{
+				tmp = env[i];
+				env[i] = env[i - 1];
+				env[i - 1] = tmp;
+				unsorted = 1;
+			}
+		}
+		remain--;
+	}
+	return (env);
+}
+
+void print_one(char *clone)
+{
+	if (ft_strncmp(clone, "_=", 2))
+	{
+		ft_putstr_fd("declare -x ", 1);
+		{
+			while (*clone && *clone != '=')
+				write(1, clone++, 1);
+			if (*clone == '=') {
+				ft_putstr_fd("=\"", 1);
+				while (*(++clone))
+					write(1, clone, 1);
+				ft_putstr_fd("\"", 1);
+			}
+		}
+		write(1, "\n", 1);
+	}
+}
+
+int	print_env(t_todo *all)
+{
+	int		i;
+	char	**clone;
+
+	i = 0;
+	clone = clone_env(all->environments);
+	clone = sort_env(clone);
+	while (clone[i])
+		print_one(clone[i++]);
+	i_want_to_be_freed(clone);
+	return (1);
+}
+
+int ft_export(t_todo *all)
+{
+	if (!all->simple_command_list->cmd->args[1])
+		return (print_env(all));
 //	else
-//		set_env(all, args);
-	return (0);
+//		set_env(all);
+	return (1);
 }

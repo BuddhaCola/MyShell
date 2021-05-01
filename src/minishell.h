@@ -119,13 +119,13 @@ int		lexer_build(char *line, int size, t_lexer *lexer_list);
 void	lexer_destroi(t_lexer *list);
 void	strip_quotes(char *src, char *dst);
 
-int		collect_env(t_todo *all, char **env);
-void 	handle_signals();
+char	**clone_env(char **env);
+void	handle_signals();
 int		print_env(t_todo *all);
 
 // builtins
 void	ft_pwd(void);
-int		ft_export(t_todo *all, char *args);
+int		ft_export(t_todo *all);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int		ft_echo(int argc, char **argv);
 int		ft_env(t_todo *all);

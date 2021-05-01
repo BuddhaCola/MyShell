@@ -43,13 +43,12 @@ static int do_builtin(char *path, t_todo *all)
 	else if (!(ft_strcmp(path, "pwd")))
 		ft_putstr_fd(path, 1);
 	else if (!(ft_strcmp(path, "export")))
-		ft_putstr_fd(path, 1);
+		return (ft_export(all));
 	else if (!(ft_strcmp(path, "unset")))
 		ft_putstr_fd(path, 1);
 	else if (!(ft_strcmp(path, "env")))
 	{
-		all->exit_code = ft_env(all);
-		return (all->exit_code);
+		return (ft_env(all));
 	}
 	else if (!(ft_strcmp(path, "exit")))
 		ft_exit(all->simple_command_list->cmd->args, all);
@@ -80,7 +79,9 @@ int	exec_bin(char *path, t_todo *all)
 	pid_t pid;
 
 	if (do_builtin(path, all) != 0)
+	{
 		return (all->exit_code);
+	}
 	if (!path)
 	{
 		ft_putstr_fd("bash: ", 1);
@@ -88,12 +89,10 @@ int	exec_bin(char *path, t_todo *all)
 		ft_putstr_fd(": command not found 😑\n", 1);
 		return (-1);
 	}
+	free(path);
 	pid = fork();
 	if (!pid)
 	{
-		ft_putstr_fd("|executing |", 1);
-//		ft_putstr_fd(path, 1);
-//		ft_putstr_fd("|!🏋️‍\n ", 1);
 		all->exec.err = execve(all->simple_command_list->cmd->cmd_str,
 						all->simple_command_list->cmd->args, NULL);
 	}

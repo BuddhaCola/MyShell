@@ -17,5 +17,5 @@ int ft_env(t_todo *all)
 		}
 		i++;
 	}
-	return (0);
+	return (1);
 }

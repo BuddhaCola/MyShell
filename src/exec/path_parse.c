@@ -61,13 +61,19 @@ char *path_parse(t_todo *all, char *arg)
 	int i;
 
 	bin = NULL;
-	if (!(ft_strncmp(arg, "./", 2)))
+	if ((ft_strchr("./", *arg)))
 	{
-		if ((bin = (check_here(".", &arg[2]))))
+		i = open(arg, O_RDONLY);
+		if (i != -1)
 		{
-			ft_putstr_fd("|found by relative path\n", 1);
-			return (bin);
+			close(i);
+			return (arg);
 		}
+//		if ((bin = (check_here(".", &arg[2]))))
+//		{
+//			ft_putstr_fd("|found by relative path\n", 1);
+//			return (bin);
+//		}
 		else
 			return NULL;
 	}
@@ -106,11 +112,12 @@ char *path_parse(t_todo *all, char *arg)
 			if (bin)
 			{
 //				ft_putstr_fd("|found in PATH 👍\n", 1);
+				i_want_to_be_freed(path);
 				return (bin);
 			}
 			i++;
 		}
-		i_want_to_be_freed(path);
 	}
+	i_want_to_be_freed(path);
 	return (NULL);
 }

@@ -54,14 +54,38 @@ void	ft_backspace(char *str)
 }
 int 	check_input(char *buf, char **line, t_todo *all)
 {
-	if (*buf == '\n')
-		return (write(1, "\n", 1));
+	static int quote;
+
+	if (ft_isprint(*buf))
+	{
+//		if (ft_strchr("/'/", *buf))
+//			quote = 1;
+		get_line(buf, line);
+		ft_putstr_fd(buf, 1);
+		return (0);
+	}
+	else if (*buf == '\n')
+	{
+//		if (quote == 1)
+//			return (write(1, "\n", 1));
+//		else
+		{
+			return (write(1, "\n", 1));
+		}
+	}
 	else if (*buf == '\177')
 		ft_backspace(*line);
 	else if (*buf == '\3')
-		ft_putstr_fd("you pressed ctrl+C\n", 1);
+	{
+		free(*line);
+		*line = ft_strdup("");
+		return (write(1, "\n", 1));
+	}
 	else if (*buf == '\4')
-		ft_exit(NULL, all);
+	{
+			if (**line == '\0')
+				ft_exit(NULL, all);
+	}
 	else if (!(ft_strcmp(buf, "\e[A")))
 	{
 		ft_putstr_fd("you pressed UP   | Great job! 👍", 1);
@@ -69,14 +93,8 @@ int 	check_input(char *buf, char **line, t_todo *all)
 	}
 	else if (!(ft_strcmp(buf, "\e[B")))
 	{
-		ft_putstr_fd("you pressed DOWN | Great job! 👍", 1);
-					tputs(restore_cursor, 1, ft_putchar);
-	}
-	else if (ft_isprint(*buf))
-	{
-		get_line(buf, line);
-		ft_putstr_fd(buf, 1);
-		return (0);
+			ft_putstr_fd("you pressed DOWN | Great job! 👍", 1);
+						tputs(restore_cursor, 1, ft_putchar);
 	}
 	return (0);
 }
@@ -106,9 +124,11 @@ int		promt(t_todo *all)
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
 			lexer_build(line, ft_strlen(line), all->lex_buf);
 			parse(all);
+//			free(line);
 			exec_bin(all->simple_command_list->cmd->cmd_str, all);
 		}
-		free(line);
+		if (*line)
+			free(line);
 //		reset_parser(all);
 	}
 	//at the end of program clean all.
@@ -122,8 +142,9 @@ int		main(int argc, char **argv, char **env)
 	t_todo		all;
 
 	ft_bzero(&all, sizeof(all));
-	if (collect_env(&all, env) != 0)
+	if (!(all.environments = clone_env(env)))
 		return (-1);
+
 	if (argc > 1)
 		debug_promt(&all); //убрать 🚧
 	else

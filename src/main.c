@@ -109,15 +109,15 @@ int		shell(t_todo *all)
 		ft_putstr_fd(PROMT, 1);
 		get_next_line(0, &buf);
 		lexer_build(buf, ft_strlen(buf), all->lex_buf);
-//		ttc = all->lex_buf->tok_list;
-//		while (ttc)
-//        {
-//		    printf("s: %s ", ttc->data);
-//		    printf("t: %d\n", ttc->type);
-//		    ttc = ttc->next;
-//        }
+		ttc = all->lex_buf->tok_list;
+		while (ttc)
+        {
+		    printf("s: %s ", ttc->data);
+		    printf("t: %d\n", ttc->type);
+		    ttc = ttc->next;
+        }
 		parse(all);
-        exec_bin(all->simple_command_list->cmd->cmd_str, all);
+        exec_bin(all->to_execute->cmd->cmd_str, all);
 		//after execve DO RESET PARSE
         destroy_parser(all);
 //		go_through_buf(all);

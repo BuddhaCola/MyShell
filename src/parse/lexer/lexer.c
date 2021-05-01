@@ -24,6 +24,8 @@ int	get_num_of_type(char c)
 		return (CHAR_GREATER);
 	else if (c == '<')
 		return (CHAR_LESSER);
+	else if (c == '$')
+        return (CHAR_DOLLAR);
 	else if (c == 0)
 		return (CHAR_NULL);
 	return (CHAR_GENERAL);
@@ -81,19 +83,33 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
         }
         else
 		    chtype = get_num_of_type(c);
-		if (state == STATE_GENERAL)
+		if (state == STATE_GENERAL || state == STATE_IN_DQUOTE)
 		{
 		    if (chtype == CHAR_QUOTE)
 			{
-				state = STATE_IN_QUOTE;
-				token->data[j++] = CHAR_QUOTE;
-				token->type = TOKEN;
+		        if ((i != 0) && (line[i - 1] == '\\'))
+                {
+                    token->data[j++] = CHAR_QUOTE;
+                    token->type = TOKEN;
+                }
+		        else
+                {
+                    state = STATE_IN_QUOTE;
+                    token->type = TOKEN;
+                }
 			}
 			else if (chtype == CHAR_DQUOTE)
 			{
-				state = STATE_IN_DQUOTE;
-				token->data[j++] = CHAR_DQUOTE;
-				token->type = TOKEN;
+			    if((i != 0) && (line[i - 1] == '\\'))
+                {
+                    token->data[j++] = CHAR_DQUOTE;
+                    token->type = TOKEN;
+                }
+			    else
+                {
+                    state = STATE_IN_DQUOTE;
+                    token->type = TOKEN;
+                }
 			}
 			else if (chtype == CHAR_ESCAPESEQ)
 			{
@@ -107,7 +123,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 			}
 			else if (chtype == CHAR_WHITESPACE)
 			{
-				if (j > 0)
+				if (j > 0 && state != STATE_IN_DQUOTE)
 				{
 					token->data[j] = 0;
 					token->next = malloc(sizeof(t_tok));
@@ -115,6 +131,10 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 					tok_init(token, size - i);
 					j = 0;
 				}
+				else
+                {
+                    token->data[j++] = c;
+                }
 			}
 			else if ((chtype == CHAR_SEMICOLON) || (chtype == CHAR_GREATER) || (chtype == CHAR_LESSER) || (chtype == CHAR_AMPERSAND)
 			|| (chtype == CHAR_PIPE))
@@ -134,7 +154,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 				token = token->next;
 				tok_init(token, size - i);
 			}
-			else if ((chtype == CHAR_DGREATER))
+			else if (chtype == CHAR_DGREATER)
             {
                 if (j > 0)
                 {
@@ -152,12 +172,19 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
                 token = token->next;
                 tok_init(token, size - i);
             }
-		}
-		else if (state == STATE_IN_DQUOTE)
-		{
-			token->data[j++] = c;
-			if (chtype == CHAR_DQUOTE)
-				state = STATE_GENERAL;
+			else if (chtype == CHAR_DOLLAR)
+			{
+                if ((i != 0) && (line[i - 1] != '\\'))
+                {
+                    dereference_the_value(line, &i);
+                    token->type = TOKEN;
+                }
+                else
+                {
+                    token->data[j++] = c;
+                    token->type = TOKEN;
+                }
+            }
 		}
 		else if (state == STATE_IN_QUOTE)
 		{
@@ -185,9 +212,9 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 	{
 		if (token->type == TOKEN)
 		{
-		    strip_quotes(&save_tok_data_ptr, token->data);
-		    free(token->data);
-		    token->data = save_tok_data_ptr;
+//		    strip_quotes(&save_tok_data_ptr, token->data);
+//		    free(token->data);
+//		    token->data = save_tok_data_ptr;
 		    k++;
 		}
 		token = token->next;

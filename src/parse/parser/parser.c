@@ -93,16 +93,16 @@ static void init_2d_file_array(char ***str)
 }
 
 //write
-static void write_to_2d_filename(char ***str)
+static void write_to_2d_filename(t_todo *all, char ***str)
 {
     char **str_ptr;
 
     str_ptr = *str;
     while (str_ptr)
     {
-
+        str_ptr++;
     }
-
+    *str_ptr = ft_strdup(all->cur_tok_list->data);
 }
 
 //write files to the 2d array
@@ -137,7 +137,7 @@ static int try_to_get_filename(t_todo *all, int io_mode)
         }
     }
     //write to **double_greater_output_files
-    if (io_mode = 2)
+    if (io_mode == 2)
     {
         if (all->cur_tok_list->type == CHAR_GENERAL)
         {
@@ -153,11 +153,11 @@ static int try_to_get_filename(t_todo *all, int io_mode)
     return (0);
 }
 
-//дописать правило для ">>"
+
 static int check_non_general(t_todo *all)
 {
     while (all->cur_tok_list && (all->cur_tok_list->type == CHAR_GENERAL || all->cur_tok_list->type == CHAR_GREATER
-    || all->cur_tok_list->type == CHAR_LESSER || all->cur_tok_list == CHAR_DGREATER))
+    || all->cur_tok_list->type == CHAR_LESSER || all->cur_tok_list->type == CHAR_DGREATER))
     {
         if (all->cur_tok_list && all->cur_tok_list->type != CHAR_GENERAL)
         {
@@ -223,9 +223,9 @@ static void destroy_2d(char ***str) {
     if (*str != NULL)
     {
         ptr = *str;
-        while (ptr) {
-            free(ptr);
-            ptr++;
+        while (*ptr) {
+            free(*ptr);
+            (*ptr)++;
         }
         free(*str);
     }

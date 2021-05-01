@@ -82,6 +82,7 @@ enum e_token_type
 	CHAR_NEWLINE = '\n',
 	CHAR_GREATER = '>',
 	CHAR_LESSER = '<',
+	CHAR_DOLLAR = '$',
 	CHAR_DGREATER = -2,
 	CHAR_NULL = 0,
 	CHAR_GENERAL = -1,
@@ -95,6 +96,9 @@ enum e_states
 	STATE_IN_ESCAPEDSEQ,
 	STATE_GENERAL,
 };
+
+//dereference the value
+void dereference_the_value(char *line, int *i);
 
 //strip quotes
 void    strip_quotes(char **dst, char *src);

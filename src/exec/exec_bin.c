@@ -37,9 +37,9 @@ static int is_builtin(char *path)
 static int do_builtin(char *path, t_todo *all)
 {
 	if (!(ft_strcmp(path, "echo")))
-		ft_putstr_fd(path, 1);
+		ft_putstr_fd("echo", 1);
 	else if (!(ft_strcmp(path, "cd")))
-		ft_putstr_fd(path, 1);
+		ft_putstr_fd("cd", 1);
 	else if (!(ft_strcmp(path, "pwd")))
 		ft_putstr_fd(path, 1);
 	else if (!(ft_strcmp(path, "export")))
@@ -47,11 +47,14 @@ static int do_builtin(char *path, t_todo *all)
 	else if (!(ft_strcmp(path, "unset")))
 		ft_putstr_fd(path, 1);
 	else if (!(ft_strcmp(path, "env")))
-		ft_putstr_fd(path, 1);
+	{
+		all->exit_code = ft_env(all);
+		return (all->exit_code);
+	}
 	else if (!(ft_strcmp(path, "exit")))
 		ft_exit(all->simple_command_list->cmd->args, all);
 	else
-		return (-1);
+		return (0);
 	ft_putstr_fd(" under construction! 🚧\n", 1);
 	return (0);
 }
@@ -76,22 +79,21 @@ int	exec_bin(char *path, t_todo *all)
 {
 	pid_t pid;
 
-	if (is_builtin(path))
-	{
-		do_builtin(path, all);
-		return (0);
-	}
+	if (do_builtin(path, all) != 0)
+		return (all->exit_code);
 	if (!path)
 	{
-		ft_putstr_fd("command not found 😑\n", 1);
+		ft_putstr_fd("bash: ", 1);
+		ft_putstr_fd("|здесь должен быть запрос|", 1);
+		ft_putstr_fd(": command not found 😑\n", 1);
 		return (-1);
 	}
 	pid = fork();
 	if (!pid)
 	{
 		ft_putstr_fd("|executing |", 1);
-		ft_putstr_fd(path, 1);
-		ft_putstr_fd("|!🏋️‍\n ", 1);
+//		ft_putstr_fd(path, 1);
+//		ft_putstr_fd("|!🏋️‍\n ", 1);
 		all->exec.err = execve(all->simple_command_list->cmd->cmd_str,
 						all->simple_command_list->cmd->args, NULL);
 	}

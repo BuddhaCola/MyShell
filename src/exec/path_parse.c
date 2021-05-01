@@ -18,7 +18,7 @@ static int is_builtin(char *path)
 	{
 		if (!(ft_strcmp(path, builtins[i++])))
 		{
-			ft_putstr_fd("|is_builtin| It's builtin! 🎉\n", 1);
+//			ft_putstr_fd("|is_builtin| It's builtin! 🎉\n", 1);
 			return (1);
 		}
 	}
@@ -60,6 +60,7 @@ char *path_parse(t_todo *all, char *arg)
 	char *bin;
 	int i;
 
+	bin = NULL;
 	if (!(ft_strncmp(arg, "./", 2)))
 	{
 		if ((bin = (check_here(".", &arg[2]))))
@@ -104,7 +105,7 @@ char *path_parse(t_todo *all, char *arg)
 			bin = check_here(path[i], arg);
 			if (bin)
 			{
-				ft_putstr_fd("|found in PATH 👍\n", 1);
+//				ft_putstr_fd("|found in PATH 👍\n", 1);
 				return (bin);
 			}
 			i++;

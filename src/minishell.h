@@ -14,7 +14,7 @@
 #include "utils/libft/libft.h"
 
 #define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
-#define PROMT "minishell 👉"
+#define PROMT "Minihell!🔥"
 
 //parser
 typedef struct s_cmd
@@ -50,11 +50,11 @@ typedef struct s_lexer
 	int		num_of_tokens;
 }				t_lexer;
 
-typedef struct	s_env
-{
-	char *name;
-	char *value;
-}				t_env;
+//typedef struct	s_env
+//{
+//	char *name;
+//	char *value;
+//}				t_env;
 
 typedef	struct s_exec
 {
@@ -69,7 +69,7 @@ typedef	struct			s_todo
     t_custom_list 		*cur_simple_command_list;
 	t_exec				exec;
 	t_lexer				*lex_buf;
-	t_env 				*environments;
+	char 				**environments;
 	int 				env_count;
 	struct termios		saved_attributes;
 	char 				terminfo_buffer[2048];
@@ -128,7 +128,7 @@ void	ft_pwd(void);
 int		ft_export(t_todo *all, char *args);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int		ft_echo(int argc, char **argv);
-int 	ft_env(t_todo *all);
+int		ft_env(t_todo *all);
 int		ft_exit(char **args, t_todo *all);
 
 // utils

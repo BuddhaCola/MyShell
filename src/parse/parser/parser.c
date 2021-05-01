@@ -67,7 +67,7 @@ static int  try_get_args(t_todo *all)
 	if (i != 0)
 	{
 		all->cur_simple_command_list->cmd->args = malloc(sizeof(char *) * (i + 1));
-		all->cur_simple_command_list->cmd->args[k] = path_parse(all, all->cur_tok_list->data);
+		all->cur_simple_command_list->cmd->args[k] = ft_strdup(all->cur_simple_command_list->cmd->cmd_str);
 		all->cur_tok_list = all->cur_tok_list->next;
 		k++;
 		i--;

@@ -17,7 +17,7 @@ int ft_exit(char **args, t_todo *all)
 	unsigned char	exit_code;
 	int 			code;
 
-	if (args)
+	if (args && args[1])
 	{
 		if (ft_checkforbiddensymbols(args[1]))
 		{
@@ -34,10 +34,8 @@ int ft_exit(char **args, t_todo *all)
 	}
 	else
 		code = all->exit_code; //проинициализировать!
+	tcsetattr(0, TCSANOW, &all->saved_attributes);
 	exit_code = 0 + (unsigned char)code;
-//	all->saved_attributes.c_lflag &= ~(ECHO);
-//	all->saved_attributes.c_lflag &= ~(ICANON);
-//	tcsetattr(0, TCSANOW, &all->saved_attributes);
-	ft_putstr_fd("exit 👋\n", 1);
+	ft_putstr_fd("exit 🚜\n", 1);
 	exit((int)exit_code);
 }

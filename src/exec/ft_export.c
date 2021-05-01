@@ -1,16 +1,5 @@
 #include "../minishell.h"
 
-//static int		ft_checkforbiddensymbols(char *str)
-//{
-//	while (*str != '=' && *str)
-//	{
-//		if (ft_isalnum(*str) || ft_strchr("_=", *str))
-//			str++;
-//		else
-//			return (1);
-//	}
-//	return (0);
-//}
 //
 //
 //int is_var_exist(t_todo *all, char **newenv)
@@ -27,21 +16,7 @@
 //	return (0);
 //}
 //
-//static int validate_arg(t_todo *all, char *newenv)
-//{
-//	char *underscore; // export _ ничего не записывает в экспорт
-//	if ((underscore = ft_strchr(newenv, '_')) && (!(ft_strchr("\0=", *underscore+1))))
-//		return (0);
-//	count_environments(all);
-//	if (newenv[0] == '=' || (ft_isdigit(newenv[0])) || ft_checkforbiddensymbols(newenv))  //ошибка
-//	{
-//		ft_putstr_fd("bash: export: `", 1);
-//		ft_putstr_fd(newenv, 1);
-//		ft_putstr_fd("': not a valid identifier\n", 1);
-//		return (1);
-//	}
-//	return (0);
-//}
+
 //
 //int	set_env(t_todo *all, char *args)
 //{
@@ -151,11 +126,53 @@ int	print_env(t_todo *all)
 	return (1);
 }
 
+static int	ft_checkforbiddensymbols(char *str)
+{
+	while (*str && *str != '=')
+	{
+		if (ft_isalnum(*str) || ft_strchr("_=", *str))
+			str++;
+		else
+			return (1);
+	}
+	return (0);
+}
+
+static int	validate_arg(char *newenv)
+{
+	if (newenv[0] == '=' || (ft_isdigit(newenv[0])) || ft_checkforbiddensymbols(newenv))  //ошибка
+	{
+		ft_putstr_fd("bash: export: `", 1);
+		ft_putstr_fd(newenv, 1);
+		ft_putstr_fd("': not a valid identifier\n", 1);
+		return (1);
+	}
+	return (0);
+}
+
+static void new_env(t_todo *all, char *new_env)
+{
+	count_environments(all);
+}
+
+int			set_env(t_todo *all)
+{
+	int i;
+
+	i = 1;
+	while (all->simple_command_list->cmd->args[i])
+	{
+		if (!validate_arg(all->simple_command_list->cmd->args[i++]))
+			new_env(all, all->simple_command_list->cmd->args[i - 1]);
+	}
+	return (0);
+}
+
 int ft_export(t_todo *all)
 {
 	if (!all->simple_command_list->cmd->args[1])
 		return (print_env(all));
-//	else
-//		set_env(all);
+	else
+		set_env(all);
 	return (1);
 }

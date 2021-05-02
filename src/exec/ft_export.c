@@ -118,7 +118,7 @@ int	print_env(t_todo *all)
 	char	**clone;
 
 	i = 0;
-	clone = clone_env(all->environments);
+	clone = clone_env(all->environments, NULL);
 	clone = sort_env(clone);
 	while (clone[i])
 		print_one(clone[i++]);
@@ -152,7 +152,11 @@ static int	validate_arg(char *newenv)
 
 static void new_env(t_todo *all, char *new_env)
 {
-	count_environments(all);
+	char	**clone;
+
+	clone = clone_env(all->environments, new_env);
+	i_want_to_be_freed(all->environments);
+	all->environments = clone;
 }
 
 int			set_env(t_todo *all)

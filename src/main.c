@@ -142,9 +142,9 @@ int		main(int argc, char **argv, char **env)
 	t_todo		all;
 
 	ft_bzero(&all, sizeof(all));
-	if (!(all.environments = clone_env(env)))
+	if (!(all.environments = clone_env(env, NULL)))
 		return (-1);
-
+	env = all.environments;
 	if (argc > 1)
 		debug_promt(&all); //убрать 🚧
 	else

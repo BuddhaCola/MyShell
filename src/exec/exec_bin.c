@@ -41,7 +41,11 @@ static int do_builtin(char *path, t_todo *all)
 	else if (!(ft_strcmp(path, "cd")))
 		ft_putstr_fd("cd", 1);
 	else if (!(ft_strcmp(path, "pwd")))
-		ft_putstr_fd(path, 1);
+	{
+		ft_putstr_fd(getenv("PWD"), 1);
+		ft_putstr_fd("\n", 1);
+		return (1);
+	}
 	else if (!(ft_strcmp(path, "export")))
 		return (ft_export(all));
 	else if (!(ft_strcmp(path, "unset")))
@@ -58,21 +62,21 @@ static int do_builtin(char *path, t_todo *all)
 	return (0);
 }
 
-int is_it_in_curdir(char *path)
-{
-	DIR				*current_dir;
-	struct dirent	*current_file;
-
-	current_dir = opendir(".");
-	while ((current_file = readdir(current_dir)))
-	{
-		ft_putstr_fd("|", 1);
-		ft_putstr_fd(current_file->d_name, 1);
-		ft_putstr_fd("| ", 1);
-	}
-	ft_putstr_fd("\n", 1);
-//		if (ft_strcmp(path, current_file->d_name))
-}
+//int is_it_in_curdir(char *path)
+//{
+//	DIR				*current_dir;
+//	struct dirent	*current_file;
+//
+//	current_dir = opendir(".");
+//	while ((current_file = readdir(current_dir)))
+//	{
+//		ft_putstr_fd("|", 1);
+//		ft_putstr_fd(current_file->d_name, 1);
+//		ft_putstr_fd("| ", 1);
+//	}
+//	ft_putstr_fd("\n", 1);
+////		if (ft_strcmp(path, current_file->d_name))
+//}
 
 int	exec_bin(char *path, t_todo *all)
 {
@@ -94,7 +98,7 @@ int	exec_bin(char *path, t_todo *all)
 	if (!pid)
 	{
 		all->exec.err = execve(all->simple_command_list->cmd->cmd_str,
-						all->simple_command_list->cmd->args, NULL);
+						all->simple_command_list->cmd->args, all->environments);
 	}
 	else
 		wait(&pid);

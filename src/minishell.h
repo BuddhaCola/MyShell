@@ -119,7 +119,7 @@ int		lexer_build(char *line, int size, t_lexer *lexer_list);
 void	lexer_destroi(t_lexer *list);
 void	strip_quotes(char *src, char *dst);
 
-char	**clone_env(char **env);
+char	**clone_env(char **env, const char *new_env);
 void	handle_signals();
 int		print_env(t_todo *all);
 

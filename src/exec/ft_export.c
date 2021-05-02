@@ -1,8 +1,134 @@
 #include "../minishell.h"
 
-static int		ft_checkforbiddensymbols(char *str)
+//
+//
+//int is_var_exist(t_todo *all, char **newenv)
+//{
+//	int i;
+//
+//	i = 0;
+//	while (all->environments[i].name)
+//	{
+//		if (!(ft_strncmp(all->environments[i].name, newenv[0], ft_strlen(all->environments[i].name))))
+//			all->environments[i].value = ft_strdup(newenv[1]);
+//		i++;
+//	}
+//	return (0);
+//}
+//
+
+//
+//int	set_env(t_todo *all, char *args)
+//{
+//	int		i;
+//	char 	**tmp;
+//	t_env	income_env;
+//
+//	if (validate_arg(all, args))
+//		return (1);
+//	if (ft_strchr(args, '='))
+//	{
+//		tmp = ft_split(args, '=');
+//		income_env.name = ft_strdup(tmp[0]);
+//		income_env.value = ft_strdup(tmp[1]);
+//		free(tmp[0]);
+//		free(tmp[1]);
+//		free(tmp);
+//	}
+//	else
+//	{
+//		income_env.name = ft_strdup(args);
+//		income_env.value = NULL;
+//	}
+//	i = 0;
+//	while (i <= all->env_count)
+//	{
+//		if (!all->environments[i].name)
+//		{
+//			all->environments[i].name = ft_strdup(income_env.name);
+//			all->environments[i].value = ft_strdup(income_env.value);
+//			break;
+//		}
+//		if (!(ft_strncmp(all->environments[i].name, income_env.name, ft_strlen(all->environments[i].name))))
+//			if (all->environments[i].value)
+//			{
+//				all->environments[i].value = ft_strdup(income_env.value);
+//				break;
+//			}
+//		i++;
+//	}
+//	free(income_env.name);
+//	free(income_env.value);
+//	return (0);
+//}
+
+char	**sort_env(char **env)
 {
-	while (*str != '=' && *str)
+	int		i;
+	int		unsorted;
+	int		remain;
+	char	*tmp;
+
+	remain = 0;
+	while (env[remain])
+		remain++;
+	unsorted = 1;
+	while (unsorted)
+	{
+		unsorted = 0;
+		i = 0;
+		while (i < remain - 1)
+		{
+			i++;
+			if (ft_strncmp(env[i - 1], env[i], ft_strlen(env[i - 1])) > 0)
+			{
+				tmp = env[i];
+				env[i] = env[i - 1];
+				env[i - 1] = tmp;
+				unsorted = 1;
+			}
+		}
+		remain--;
+	}
+	return (env);
+}
+
+void print_one(char *clone)
+{
+	if (ft_strncmp(clone, "_=", 2))
+	{
+		ft_putstr_fd("declare -x ", 1);
+		{
+			while (*clone && *clone != '=')
+				write(1, clone++, 1);
+			if (*clone == '=') {
+				ft_putstr_fd("=\"", 1);
+				while (*(++clone))
+					write(1, clone, 1);
+				ft_putstr_fd("\"", 1);
+			}
+		}
+		write(1, "\n", 1);
+	}
+}
+
+int	print_env(t_todo *all)
+{
+	int		i;
+	char	**clone;
+
+	i = 0;
+	clone = clone_env(all->environments, NULL);
+	clone = sort_env(clone);
+	while (clone[i])
+		print_one(clone[i++]);
+	i_want_to_be_freed(clone);
+	return (1);
+}
+
+static int	ft_checkforbiddensymbols(char *str)
+{
+	while (*str && *str != '=')
 	{
 		if (ft_isalnum(*str) || ft_strchr("_=", *str))
 			str++;
@@ -12,79 +138,8 @@ static int		ft_checkforbiddensymbols(char *str)
 	return (0);
 }
 
-static int sort_env(t_todo *all)
+static int	validate_arg(char *newenv)
 {
-	t_env tmp;
-	int	i;
-	int	unsorted;
-	int	remain;
-	remain = count_environments(all);;
-
-	while (unsorted)
-	{
-		unsorted = 0;
-		i = 0;
-		while (i < remain - 1)
-		{
-			i++;
-			if (ft_strncmp(all->environments[i - 1].name, all->environments[i].name, ft_strlen(all->environments[i - 1].name)) > 0)
-			{
-				tmp = all->environments[i];
-				all->environments[i] = all->environments[i - 1];
-				all->environments[i - 1] =	tmp;
-				unsorted = 1;
-			}
-		}
-		remain--;
-	}
-	return (0);
-}
-
-int	print_env(t_todo *all)
-{
-	int i;
-
-	i = 0;
-	sort_env(all);
-	while (all->environments[i].name)
-	{
-//		printf("|%d|", i);
-//		fflush(stdout);
-		ft_putstr_fd("declare -x " ,1);
-		ft_putstr_fd(all->environments[i].name ,1);
-		if (all->environments[i].value)
-		{
-			write(1, "=", 1);
-			write(1, "\"", 1);
-			ft_putstr_fd(all->environments[i].value, 1);
-			write(1, "\"", 1);
-		}
-		write(1, "\n", 1);
-		i++;
-	}
-	return (0);
-}
-
-int is_var_exist(t_todo *all, char **newenv)
-{
-	int i;
-
-	i = 0;
-	while (all->environments[i].name)
-	{
-		if (!(ft_strncmp(all->environments[i].name, newenv[0], ft_strlen(all->environments[i].name))))
-			all->environments[i].value = ft_strdup(newenv[1]);
-		i++;
-	}
-	return (0);
-}
-
-static int validate_arg(t_todo *all, char *newenv)
-{
-	char *underscore; // export _ ничего не записывает в экспорт
-	if ((underscore = ft_strchr(newenv, '_')) && (!(ft_strchr("\0=", *underscore+1))))
-		return (0);
-	count_environments(all);
 	if (newenv[0] == '=' || (ft_isdigit(newenv[0])) || ft_checkforbiddensymbols(newenv))  //ошибка
 	{
 		ft_putstr_fd("bash: export: `", 1);
@@ -95,57 +150,33 @@ static int validate_arg(t_todo *all, char *newenv)
 	return (0);
 }
 
-int	set_env(t_todo *all, char *args)
+static void new_env(t_todo *all, char *new_env)
 {
-	int		i;
-	char 	**tmp;
-	t_env	income_env;
+	char	**clone;
 
-	if (validate_arg(all, args))
-		return (1);
-	if (ft_strchr(args, '='))
+	clone = clone_env(all->environments, new_env);
+	i_want_to_be_freed(all->environments);
+	all->environments = clone;
+}
+
+int			set_env(t_todo *all)
+{
+	int i;
+
+	i = 1;
+	while (all->simple_command_list->cmd->args[i])
 	{
-		tmp = ft_split(args, '=');
-		income_env.name = ft_strdup(tmp[0]);
-		income_env.value = ft_strdup(tmp[1]);
-		free(tmp[0]);
-		free(tmp[1]);
-		free(tmp);
+		if (!validate_arg(all->simple_command_list->cmd->args[i++]))
+			new_env(all, all->simple_command_list->cmd->args[i - 1]);
 	}
-	else
-	{
-		income_env.name = ft_strdup(args);
-		income_env.value = NULL;
-	}
-	i = 0;
-	while (i <= all->env_count)
-	{
-		if (!all->environments[i].name)
-		{
-			all->environments[i].name = ft_strdup(income_env.name);
-			all->environments[i].value = ft_strdup(income_env.value);
-			break;
-		}
-		if (!(ft_strncmp(all->environments[i].name, income_env.name, ft_strlen(all->environments[i].name))))
-			if (all->environments[i].value)
-			{
-				all->environments[i].value = ft_strdup(income_env.value);
-				break;
-			}
-		i++;
-	}
-	free(income_env.name);
-	free(income_env.value);
 	return (0);
 }
 
-int ft_export(t_todo *all, char *args)
+int ft_export(t_todo *all)
 {
-//	args = malloc(sizeof(char *));
-//	args[0] = "wow";
-	if (!args)
+	if (!all->simple_command_list->cmd->args[1])
 		return (print_env(all));
 	else
-		set_env(all, args);
-	return (0);
+		set_env(all);
+	return (1);
 }

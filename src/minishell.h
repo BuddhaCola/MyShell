@@ -7,13 +7,14 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <dirent.h>
-// #include "parse.h"
-// #include "structs.h"
+#include <term.h>
+
+
 #include "utils/get_next_line/get_next_line.h"
 #include "utils/libft/libft.h"
 
 #define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
-#define PROMT "minishell 👉"
+#define PROMT "Minihell!🔥"
 
 //parser
 typedef struct s_cmd
@@ -46,11 +47,11 @@ typedef struct s_lexer
 	int		num_of_tokens;
 }				t_lexer;
 
-typedef struct	s_env
-{
-	char *name;
-	char *value;
-}				t_env;
+//typedef struct	s_env
+//{
+//	char *name;
+//	char *value;
+//}				t_env;
 
 typedef	struct s_exec
 {
@@ -65,8 +66,11 @@ typedef	struct			s_todo
     t_cmd               *cur_cmd_list;
 	t_exec				exec;
 	t_lexer				*lex_buf;
-	t_env 				*environments;
+	char 				**environments;
 	int 				env_count;
+	struct termios		saved_attributes;
+	char 				terminfo_buffer[2048];
+	int 				exit_code;
 }						t_todo;
 
 enum e_token_type
@@ -114,23 +118,27 @@ void	tok_destroy(t_tok *tok);
 int		lexer_build(char *line, int size, t_lexer *lexer_list);
 void	lexer_destroi(t_lexer *list);
 
-int		collect_env(t_todo *all, char **env);
-void 	handle_signals();
+char	**clone_env(char **env, const char *new_env);
+void	handle_signals();
 int		print_env(t_todo *all);
 
 // builtins
 void	ft_pwd(void);
-int		ft_export(t_todo *all, char *args);
+int		ft_export(t_todo *all);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int		ft_echo(int argc, char **argv);
-int 	ft_env(t_todo *all);
+int		ft_env(t_todo *all);
+int		ft_exit(char **args, t_todo *all);
 
 // utils
 void	i_want_to_be_freed(char **arr);
 int		exec_bin(char *path, t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
 int		count_environments(t_todo *all);
-char	*get_env_value(t_todo *all, char *name);
+//char	*get_env_value(t_todo *all, char *name);
 char	*path_parse(t_todo *all, char *arg);
+
+int ft_strcmp(char *str1, char *str2);
+int ft_putchar(int c);
 
 #endif

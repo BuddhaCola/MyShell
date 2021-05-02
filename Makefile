@@ -12,7 +12,7 @@
 
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c src/utils/utils.c\
-src/exec/signals.c src/exec/ft_export.c src/exec/ft_pwd.c src/exec/path_parse.c src/exec/ft_env.c src/exec/env_functions.c src/exec/ft_echo.c src/exec/exec_bin.c src/exec/ft_pipe.c src/exec/redirection.c\
+src/exec/ft_export.c src/exec/ft_pwd.c src/exec/path_parse.c src/exec/ft_env.c src/exec/env_functions.c src/exec/ft_echo.c src/exec/exec_bin.c src/exec/ft_pipe.c src/exec/redirection.c src/exec/ft_exit.c\
 src/parse/lexer/lexer.c src/parse/parser/parser.c src/parse/lexer/strip_quotes/strip_quotes.c src/parse/dereferencing_dollar/dereference_the_value.c
 
 NAME	=	minishell
@@ -27,8 +27,11 @@ all:		$(NAME)
 
 $(NAME): $(OBJ) src/minishell.h
 	make bonus -C $(LIBFT)
-	$(CC) -g $(OBJ) $(LIBFT)/libft.a -o $(NAME)
+	$(CC) -g -ltermcap  $(OBJ) $(LIBFT)/libft.a -o $(NAME)
 
+address_sanitize:	$(OBJ) src/minishell.h #убрать! 🚧
+	make bonus -C $(LIBFT)
+	$(CC) -ggdb -fsanitize=address -fno-omit-frame-pointer -g -ltermcap  $(OBJ) $(LIBFT)/libft.a -o $(NAME)
 
 .c.o:
 	gcc $(FLAGS) -g -c $< -o $(<:.c=.o)

@@ -12,16 +12,94 @@
 
 #include "../minishell.h"
 
+static int is_builtin(char *path)
+{
+	char *builtins[8];
+	int i;
+
+	i = 0;
+	builtins[0] = "echo";
+	builtins[1] = "cd";
+	builtins[2] = "pwd";
+	builtins[3] = "export";
+	builtins[4] = "unset";
+	builtins[5] = "env";
+	builtins[6] = "exit";
+	builtins[7] = NULL;
+	while (builtins[i])
+	{
+		if (!(ft_strcmp(path, builtins[i++])))
+		{ return (1); }
+	}
+	return (0);
+}
+
+static int do_builtin(char *path, t_todo *all)
+{
+	if (!(ft_strcmp(path, "echo")))
+		ft_putstr_fd("echo", 1);
+	else if (!(ft_strcmp(path, "cd")))
+		ft_putstr_fd("cd", 1);
+	else if (!(ft_strcmp(path, "pwd")))
+	{
+		ft_putstr_fd(getenv("PWD"), 1);
+		ft_putstr_fd("\n", 1);
+		return (1);
+	}
+	else if (!(ft_strcmp(path, "export")))
+		return (ft_export(all));
+	else if (!(ft_strcmp(path, "unset")))
+		ft_putstr_fd(path, 1);
+	else if (!(ft_strcmp(path, "env")))
+	{
+		return (ft_env(all));
+	}
+	else if (!(ft_strcmp(path, "exit")))
+		ft_exit(all->simple_command_list->cmd->args, all);
+	else
+		return (0);
+	ft_putstr_fd(" under construction! 🚧\n", 1);
+	return (0);
+}
+
+//int is_it_in_curdir(char *path)
+//{
+//	DIR				*current_dir;
+//	struct dirent	*current_file;
+//
+//	current_dir = opendir(".");
+//	while ((current_file = readdir(current_dir)))
+//	{
+//		ft_putstr_fd("|", 1);
+//		ft_putstr_fd(current_file->d_name, 1);
+//		ft_putstr_fd("| ", 1);
+//	}
+//	ft_putstr_fd("\n", 1);
+////		if (ft_strcmp(path, current_file->d_name))
+//}
+
 int	exec_bin(char *path, t_todo *all)
 {
 	pid_t pid;
-//	int i = 0;
-//    while (all->simple_command_list->cmd->args[i])
-//        printf("|%s|\n", all->simple_command_list->cmd->args[i++]);
 
+	if (do_builtin(path, all) != 0)
+	{
+		return (all->exit_code);
+	}
+	if (!path)
+	{
+		ft_putstr_fd("bash: ", 1);
+		ft_putstr_fd("|здесь должен быть запрос|", 1);
+		ft_putstr_fd(": command not found 😑\n", 1);
+		return (-1);
+	}
+	free(path);
 	pid = fork();
 	if (!pid)
-		all->exec.err = execve(all->simple_command_list->cmd->cmd_str, all->simple_command_list->cmd->args, NULL);
+	{
+		all->exec.err = execve(all->simple_command_list->cmd->cmd_str,
+						all->simple_command_list->cmd->args, all->environments);
+	}
 	else
 		wait(&pid);
 	return (1);

@@ -172,7 +172,7 @@ int		debug_promt(t_todo *all)
 		buf[ret] = '\0';
 		lexer_build(buf, ret, all->lex_buf);
 		parse(all);
-		exec_bin(all->simple_command_list->cmd->cmd_str, all);
+		exec_bin(all->to_execute->cmd->cmd_str, all);
 	}
 	return (0);
 }

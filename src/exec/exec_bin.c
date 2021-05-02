@@ -55,7 +55,7 @@ static int do_builtin(char *path, t_todo *all)
 		return (ft_env(all));
 	}
 	else if (!(ft_strcmp(path, "exit")))
-		ft_exit(all->simple_command_list->cmd->args, all);
+		ft_exit(all->to_execute->cmd->args, all);
 	else
 		return (0);
 	ft_putstr_fd(" under construction! 🚧\n", 1);
@@ -97,8 +97,8 @@ int	exec_bin(char *path, t_todo *all)
 	pid = fork();
 	if (!pid)
 	{
-		all->exec.err = execve(all->simple_command_list->cmd->cmd_str,
-						all->simple_command_list->cmd->args, all->environments);
+		all->exec.err = execve(all->to_execute->cmd->cmd_str,
+						all->to_execute->cmd->args, all->environments);
 	}
 	else
 		wait(&pid);

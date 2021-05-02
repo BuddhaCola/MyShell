@@ -112,8 +112,8 @@ int		shell(t_todo *all)
 		ttc = all->lex_buf->tok_list;
 		while (ttc)
         {
-		    printf("s: %s ", ttc->data);
-		    printf("t: %d\n", ttc->type);
+		    printf("s:%s ", ttc->data);
+		    printf("t:%d\n", ttc->type);
 		    ttc = ttc->next;
         }
 		parse(all);

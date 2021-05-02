@@ -87,7 +87,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 		{
 		    if (chtype == CHAR_QUOTE)
 			{
-		        if ((i != 0) && (line[i - 1] == '\\'))
+		        if ((i != 0) && ((line[i - 1] == '\\') || (state == STATE_IN_DQUOTE)))
                 {
                     token->data[j++] = CHAR_QUOTE;
                     token->type = TOKEN;
@@ -107,14 +107,37 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
                 }
 			    else
                 {
-                    state = STATE_IN_DQUOTE;
-                    token->type = TOKEN;
+			        if (state != STATE_IN_DQUOTE)
+			        {
+                        state = STATE_IN_DQUOTE;
+                        token->type = TOKEN;
+                    }
+			        else
+                    {
+			            state = STATE_GENERAL;
+                    }
                 }
 			}
 			else if (chtype == CHAR_ESCAPESEQ)
 			{
-				token->data[j++] = line[++i];
-				token->type = TOKEN;
+			    if (state == STATE_IN_DQUOTE)
+			    {
+                    if (line[i + 1] && (line[i + 1] == '\"' || line[i + 1] == '$'))
+                    {
+                        token->data[j++] = line[++i];
+                        token->type = TOKEN;
+                    }
+                    else
+                    {
+                        token->data[j++] = c;
+                        token->type = TOKEN;
+                    }
+                }
+			    else
+                {
+                    token->data[j++] = line[++i];
+                    token->type = TOKEN;
+                }
 			}
 			else if (chtype == CHAR_GENERAL)
 			{
@@ -188,9 +211,14 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 		}
 		else if (state == STATE_IN_QUOTE)
 		{
-			token->data[j++] = c;
-			if (chtype == CHAR_QUOTE)
-				state = STATE_GENERAL;
+		    if (c != '\'') //c == '
+		    {
+                token->data[j++] = c;
+            }
+		    else
+            {
+		        state = STATE_GENERAL;
+            }
 		}
 		if (chtype == CHAR_NULL)
 		{

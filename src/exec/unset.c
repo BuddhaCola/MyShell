@@ -1,19 +1,39 @@
 #include "../minishell.h"
 
-int ft_unset(t_todo *all, char *var)
-{
-//	int i;
+//char	**clone_env(char **env, const char *new_env)
+//{
+//	int		i;
+//	char	**clone;
 //
-//	i = -1;
-//	while (all->environments[++i].name)
+//	i = 0;
+//	while (env[i])
+//		i++;
+//	if (new_env && *new_env != '\0')
+//		i += add_env(env, &new_env);
+//	clone = malloc(sizeof(char *) * i + 1);
+//	if (clone == NULL)
+//		return (NULL);
+//	i = 0;
+//	while (env[i])
 //	{
-//		if (!(ft_strncmp(all->environments[i].name, var, ft_strlen(all->environments[i].name))))
-//		{
-//			free(all->environments[i].name);
-//			all->environments[i].name = NULL;
-//			free(all->environments[i].value)
-//			all->environments[i].value = NULL;
-//		}
+//		clone[i] = ft_strdup(env[i]);
+//		i++;
 //	}
+//	clone[i] = NULL;
+//	return (clone);
+//}
+
+int ft_unset(t_todo *all)
+{
+	int i;
+
+	if (all->cur_cmd_list->args[1])
+	{
+		i = 1;
+		while (all->cur_cmd_list->args[i])
+		{
+			i++;
+		}
+	}
 	return (0);
 }

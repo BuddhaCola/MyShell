@@ -49,7 +49,7 @@ static int do_builtin(char *path, t_todo *all)
 	else if (!(ft_strcmp(path, "export")))
 		return (ft_export(all));
 	else if (!(ft_strcmp(path, "unset")))
-		ft_putstr_fd(path, 1);
+		return (ft_unset(all));
 	else if (!(ft_strcmp(path, "env")))
 	{
 		return (ft_env(all));

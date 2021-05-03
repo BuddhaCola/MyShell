@@ -129,6 +129,7 @@ int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int		ft_echo(int argc, char **argv);
 int		ft_env(t_todo *all);
 int		ft_exit(char **args, t_todo *all);
+int		ft_unset(t_todo *all);
 
 // utils
 void	i_want_to_be_freed(char **arr);

@@ -1,5 +1,38 @@
 #include "../minishell.h"
 
+int	ft_checkforbiddensymbols_arg(char *str, int mode)
+{
+	while (*str && *str != '=')
+	{
+		if (ft_isalnum(*str)
+		|| (mode == '+' && (ft_strchr("_=$", *str) || !ft_strncmp(str, "+=", 2)))
+		|| (mode == '-' && *str == '_'))
+			str++;
+		else
+			return (1);
+	}
+	return (0);
+}
+
+void	appendarg(char **str, const char **appendix, int key_len)
+{
+	char	*tmp;
+
+	tmp = *str;
+	*str = ft_strjoin(*str, *appendix + key_len + 2);
+	free(tmp);
+}
+
+int	swapstr(char **str1, char **str2)
+{
+	char	*tmp;
+
+	tmp = *str2;
+	*str2 = *str1;
+	*str1 = tmp;
+	return (1);
+}
+
 int ft_strcmp(char *str1, char *str2)
 {
 	int	bigger;

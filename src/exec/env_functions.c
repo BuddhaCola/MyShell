@@ -1,10 +1,42 @@
 #include "../minishell.h"
 
-static int add_env(char **env, const char **new_env)
+int	validate_arg(char *newenv, char mode)
+{
+	if (ft_strchr("+=$", newenv[0]) || (ft_isdigit(newenv[0]))
+		|| ft_checkforbiddensymbols_arg(newenv, mode))
+	{
+		if (mode == '+')
+			ft_putstr_fd("bash: export: `", 1);
+		else if (mode == '-')
+			ft_putstr_fd("bash: unset: `", 1);
+		ft_putstr_fd(newenv, 1);
+		ft_putstr_fd("': not a valid identifier\n", 1);
+		return (1);
+	}
+	return (0);
+}
+
+static int	arg_insertion(char **oldenv, const char **new_env, int key_len)
+{
+	char	*tmp;
+
+	if (!ft_strncmp(&(*new_env)[key_len], "+=", 2)
+		&& (*new_env)[key_len + 3])
+		appendarg(oldenv, new_env, key_len);
+	if ((*new_env)[key_len] == '=')
+	{
+		tmp = *oldenv;
+		*oldenv = ft_strdup(*new_env);
+		free(tmp);
+	}
+	*new_env = NULL;
+	return (0);
+}
+
+static int	add_env(char **env, const char **new_env)
 {
 	int		key_len;
 	int		i;
-	char 	*tmp;
 
 	key_len = 0;
 	i = 0;
@@ -12,34 +44,21 @@ static int add_env(char **env, const char **new_env)
 		key_len++;
 	while (env[i])
 	{
-		if (!ft_strncmp(env[i], *new_env, key_len) && (env[i][key_len] == '=' || env[i][key_len] == '\0'))
-		{
-			if (!ft_strncmp(&(*new_env)[key_len], "+=", 2) && (*new_env)[key_len + 3])
-			{
-				tmp = env[i];
-				env[i] = ft_strjoin(env[i], *new_env + key_len + 2);
-				free(tmp);
-			}
-			if ((*new_env)[key_len] == '=')
-			{
-				free(env[i]);
-				env[i] = ft_strdup(*new_env);
-			}
-			*new_env = NULL;
-			return (0);
-		}
+		if (!ft_strncmp(env[i], *new_env, key_len)
+			&& (env[i][key_len] == '=' || env[i][key_len] == '\0'))
+			arg_insertion(&env[i], new_env, key_len);
 		i++;
 	}
 	return (1);
 }
 
-char *add_last_env(char const *env)
+char	*add_last_env(char const *env)
 {
-	char *new;
-	int i;
+	char	*new;
+	int		i;
 
 	i = 0;
-	while (env[i] && !ft_strchr("+=", env[i])) //lol+=wow
+	while (env[i] && !ft_strchr("+=", env[i]))
 		i++;
 	if (env[i] == '+')
 	{

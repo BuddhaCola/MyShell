@@ -1,11 +1,12 @@
 #include "../minishell.h"
 
+
+
 char	**sort_env(char **env)
 {
 	int		i;
 	int		unsorted;
 	int		remain;
-	char	*tmp;
 
 	remain = 0;
 	while (env[remain])
@@ -19,19 +20,14 @@ char	**sort_env(char **env)
 		{
 			i++;
 			if (ft_strncmp(env[i - 1], env[i], ft_strlen(env[i - 1])) > 0)
-			{
-				tmp = env[i];
-				env[i] = env[i - 1];
-				env[i - 1] = tmp;
-				unsorted = 1;
-			}
+				unsorted = swapstr(&env[i - 1], &env[i]);
 		}
 		remain--;
 	}
 	return (env);
 }
 
-void print_one(char *clone)
+void	print_one(char *clone)
 {
 	if (ft_strncmp(clone, "_=", 2))
 	{
@@ -39,7 +35,8 @@ void print_one(char *clone)
 		{
 			while (*clone && *clone != '=')
 				write(1, clone++, 1);
-			if (*clone == '=') {
+			if (*clone == '=')
+			{
 				ft_putstr_fd("=\"", 1);
 				while (*(++clone))
 					write(1, clone, 1);
@@ -64,53 +61,7 @@ int	print_env(t_todo *all)
 	return (1);
 }
 
-static int	ft_checkforbiddensymbols(char *str)
-{
-	while (*str && *str != '=')
-	{
-		if (ft_isalnum(*str) || ft_strchr("_=", *str) || !ft_strncmp(str, "+=", 2))
-			str++;
-		else
-			return (1);
-	}
-	return (0);
-}
-
-static int	validate_arg(char *newenv)
-{
-	if (ft_strchr("+=$", newenv[0]) || (ft_isdigit(newenv[0])) || ft_checkforbiddensymbols(newenv))  //ошибка
-	{
-		ft_putstr_fd("bash: export: `", 1);
-		ft_putstr_fd(newenv, 1);
-		ft_putstr_fd("': not a valid identifier\n", 1);
-		return (1);
-	}
-	return (0);
-}
-
-//static void new_env(t_todo *all, char *new_env)
-//{
-//	char	**clone;
-//
-//	clone = clone_env(all->environments, new_env);
-//	i_want_to_be_freed(all->environments);
-//	all->environments = clone;
-//}
-
-//int			set_env(t_todo *all)
-//{
-//	int i;
-//
-//	i = 1;
-//	while (all->to_execute->cmd->args[i])
-//	{
-//		if (!validate_arg(all->to_execute->cmd->args[i++]))
-//			new_env(all, all->to_execute->cmd->args[i - 1]);
-//	}
-//	return (0);
-//}
-
-int ft_export(t_todo *all)
+int	ft_export(t_todo *all)
 {
 	int		i;
 	char	**clone;
@@ -122,12 +73,14 @@ int ft_export(t_todo *all)
 		i = 1;
 		while (all->to_execute->cmd->args[i])
 		{
-			if (!validate_arg(all->to_execute->cmd->args[i++]))
+			if (!validate_arg(all->to_execute->cmd->args[i], '+'))
 			{
-				clone = clone_env(all->environments,all->to_execute->cmd->args[i - 1]);
+				clone = clone_env(all->environments,
+					all->to_execute->cmd->args[i]);
 				i_want_to_be_freed(all->environments);
 				all->environments = clone;
 			}
+			i++;
 		}
 	}
 	return (1);

@@ -154,7 +154,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 					tok_init(token, size - i);
 					j = 0;
 				}
-				else
+				else if (state == STATE_IN_DQUOTE)
                 {
                     token->data[j++] = c;
                 }
@@ -199,7 +199,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 			{
                 if ((i != 0) && (line[i - 1] != '\\'))
                 {
-                    dereference_the_value(line, &i);
+//                    dereference_the_value(line, &i);
                     token->type = TOKEN;
                 }
                 else

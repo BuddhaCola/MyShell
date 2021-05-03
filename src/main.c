@@ -169,9 +169,18 @@ int		debug_promt(t_todo *all)
 	{
 		ft_putstr_fd(PROMT, 1);
 		ret = read(0, &buf, 1000);
+		//TODO check ret from read
 		buf[ret] = '\0';
 		lexer_build(buf, ret, all->lex_buf);
+		t_tok *list;
+		list = all->lex_buf;
+		while (list)
+        {
+		    printf("%s\n", list->data);
+		    list = list->next;
+        }
 		parse(all);
+        printf("|%s|\n", all->to_execute->cmd->cmd_str);
 		exec_bin(all->to_execute->cmd->cmd_str, all);
 	}
 	return (0);

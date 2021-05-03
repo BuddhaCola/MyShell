@@ -1,49 +1,14 @@
 #include "../minishell.h"
 
-char	*ft_envpsearch(const char *haystack, const char *needle)
-{
-	int	len;
-	int	i;
-
-	i = 0;
-	len = ft_strlen(needle);
-	while (i < len && needle[i])
-	{
-		if (needle[i] == haystack[i])
-			i++;
-		else
-			return (NULL);
-	}
-	if (haystack[i] == '=')
-		return (ft_strdup(&haystack[++i]));
-	return (NULL);
-}
-
-int	count_environments(t_todo *all)
-{
-	int	i;
-
-	i = 0;
-	all->env_count = 0;
-	while (all->environments[i])
-	{
-		if (ft_strchr(all->environments[i], '='))
-			all->env_count++;
-		i++;
-	}
-	return (all->env_count);
-}
-
-static int add_env(char **env, const char **new_env)
+static int	remove_env(char **env, char **new_env)
 {
 	int		key_len;
 	int		i;
 
 	key_len = 0;
 	i = 0;
-	while ((*new_env)[key_len] && (*new_env)[key_len] != '=')
+	while ((*new_env)[key_len])
 		key_len++;
-	printf("|%s|key=|%.*s| keylen=%d\nnew_env[key_len]='%c'\n", *new_env, key_len, *new_env, key_len, (*new_env)[key_len]);
 	while (env[i])
 	{
 		if (!ft_strncmp(env[i], *new_env, key_len) && (env[i][key_len] == '=' || env[i][key_len] == '\0'))
@@ -58,29 +23,96 @@ static int add_env(char **env, const char **new_env)
 		}
 		i++;
 	}
+	return (0);
+}
+
+static int	ft_checkforbiddensymbols(char *str, int mode)
+{
+	while (*str)
+	{
+//		if (mode > 0 && *str != '=')
+//			break;
+		if (ft_isalnum(*str) || ((mode > 0 && ft_strchr("_=", *str)) || (mode < 0 && *str == '_')))
+			str++;
+		else
+			return (1);
+	}
+	return (0);
+}
+
+static void insert_remove_env(t_todo *all, char *new_env, int mode)
+{
+	char	**clone;
+
+	if (mode > 0)
+		clone = clone_env(all->environments, new_env);
+	else if (mode <= 0)
+		clone = remove_env;
+	i_want_to_be_freed(all->environments);
+	all->environments = clone;
+}
+
+static int	validate_arg(char *newenv, int mode)
+{
+	if ((mode > 0 && ((newenv[0] == '=' || (ft_isdigit(newenv[0]))
+					   || ft_checkforbiddensymbols(newenv, mode)))) ||
+		(mode < 0 && ((ft_isdigit(newenv[0])) ||
+					  ft_checkforbiddensymbols(newenv, mode))))
+	{
+		if (mode > 0)
+			ft_putstr_fd("bash: export: `", 1);
+		else
+			ft_putstr_fd("bash: unset: `", 1);
+		ft_putstr_fd(newenv, 1);
+		ft_putstr_fd("': not a valid identifier\n", 1);
+		return (0);
+	}
 	return (1);
 }
 
-//int 	ft_unset(t_todo *all, char *env)
-//{
-//	int		i;
-//	char 	**clone;
-//
-//	i = 0;
-//	while (all->environments[i])
-//		i++;
-//	clone = malloc(sizeof(char *) * i);
-//	if (clone == NULL)
-//		return (NULL);
-//	i = 0;
-//	while (all->environments[i])
-//	{
-//		i++;
-//	}
-//	return (1);
-//}
+int			set_unset_env(t_todo *all, int mode)
+{
+	int i;
 
-char	**clone_env(char **env, const char *new_env)
+	i = 1;
+	while (all->to_execute->cmd->args[i])
+	{
+		if (validate_arg(all->to_execute->cmd->args[i++], mode))
+			insert_remove_env(all, all->to_execute->cmd->args[i - 1], mode);
+	}
+	return (0);
+}
+
+static int	add_env(char **env, char **new_env)
+{
+	int		key_len;
+	int		i;
+	char 	*tmp;
+
+	key_len = 0;
+	i = 0;
+	while ((*new_env)[key_len] && (*new_env)[key_len] != '=')
+		key_len++;
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], *new_env, key_len) && (env[i][key_len] == '=' || env[i][key_len] == '\0'))
+		{
+			if ((*new_env)[key_len] == '=')
+			{
+				PROBE
+				tmp = env[i];
+				env[i] = ft_strdup(*new_env);
+				free(tmp);
+				*new_env = NULL;
+			}
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+char	**clone_env(char **env, char *new_env)
 {
 	int		i;
 	char	**clone;
@@ -89,7 +121,7 @@ char	**clone_env(char **env, const char *new_env)
 	while (env[i])
 		i++;
 	if (new_env && *new_env != '\0')
-		i += add_env(env, &new_env);
+			add_env(env, &new_env);
 	clone = malloc(sizeof(char *) * i + 1);
 	if (clone == NULL)
 		return (NULL);

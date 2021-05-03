@@ -1,67 +1,5 @@
 #include "../minishell.h"
 
-//
-//
-//int is_var_exist(t_todo *all, char **newenv)
-//{
-//	int i;
-//
-//	i = 0;
-//	while (all->environments[i].name)
-//	{
-//		if (!(ft_strncmp(all->environments[i].name, newenv[0], ft_strlen(all->environments[i].name))))
-//			all->environments[i].value = ft_strdup(newenv[1]);
-//		i++;
-//	}
-//	return (0);
-//}
-//
-
-//
-//int	set_env(t_todo *all, char *args)
-//{
-//	int		i;
-//	char 	**tmp;
-//	t_env	income_env;
-//
-//	if (validate_arg(all, args))
-//		return (1);
-//	if (ft_strchr(args, '='))
-//	{
-//		tmp = ft_split(args, '=');
-//		income_env.name = ft_strdup(tmp[0]);
-//		income_env.value = ft_strdup(tmp[1]);
-//		free(tmp[0]);
-//		free(tmp[1]);
-//		free(tmp);
-//	}
-//	else
-//	{
-//		income_env.name = ft_strdup(args);
-//		income_env.value = NULL;
-//	}
-//	i = 0;
-//	while (i <= all->env_count)
-//	{
-//		if (!all->environments[i].name)
-//		{
-//			all->environments[i].name = ft_strdup(income_env.name);
-//			all->environments[i].value = ft_strdup(income_env.value);
-//			break;
-//		}
-//		if (!(ft_strncmp(all->environments[i].name, income_env.name, ft_strlen(all->environments[i].name))))
-//			if (all->environments[i].value)
-//			{
-//				all->environments[i].value = ft_strdup(income_env.value);
-//				break;
-//			}
-//		i++;
-//	}
-//	free(income_env.name);
-//	free(income_env.value);
-//	return (0);
-//}
-
 char	**sort_env(char **env)
 {
 	int		i;
@@ -126,57 +64,11 @@ int	print_env(t_todo *all)
 	return (1);
 }
 
-static int	ft_checkforbiddensymbols(char *str)
-{
-	while (*str && *str != '=')
-	{
-		if (ft_isalnum(*str) || ft_strchr("_=", *str))
-			str++;
-		else
-			return (1);
-	}
-	return (0);
-}
-
-static int	validate_arg(char *newenv)
-{
-	if (newenv[0] == '=' || (ft_isdigit(newenv[0])) || ft_checkforbiddensymbols(newenv))  //ошибка
-	{
-		ft_putstr_fd("bash: export: `", 1);
-		ft_putstr_fd(newenv, 1);
-		ft_putstr_fd("': not a valid identifier\n", 1);
-		return (1);
-	}
-	return (0);
-}
-
-static void new_env(t_todo *all, char *new_env)
-{
-	char	**clone;
-
-	clone = clone_env(all->environments, new_env);
-	i_want_to_be_freed(all->environments);
-	all->environments = clone;
-}
-
-int			set_env(t_todo *all)
-{
-	int i;
-
-	i = 1;
-	while (all->to_execute->cmd->args[i])
-	{
-		if (!validate_arg(all->to_execute->cmd->args[i++]))
-			new_env(all, all->to_execute->cmd->args[i - 1]);
-	}
-	return (0);
-}
-
 int ft_export(t_todo *all)
 {
 	if (!all->to_execute->cmd->args[1])
 		return (print_env(all));
 	else
-		set_env(all);
+		set_unset_env(all, 1);
 	return (1);
 }

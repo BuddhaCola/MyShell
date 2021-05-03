@@ -19,7 +19,7 @@ int     termcap_stuff(t_todo *all)
 
 	termtype = getenv("TERM"); //аккуратнее с этим дерьмом!
 	if(!isatty(0))
-		printf("not a terminatl!\n");
+		ft_putstr_fd("not a terminatl!\n", 1);
 	if (tcgetattr(0, &all->saved_attributes) == -1)
 		return (-1);
 	ft_memcpy(&new_attributes, &all->saved_attributes, sizeof(new_attributes));
@@ -203,7 +203,6 @@ int		debug_promt(t_todo *all)
 //		if (buf[i] == '!')
 //			exec_bin(&buf[i+1], all);
 //		else if (buf[i] == '?')
-//			printf("%d\n", all->exec.err);
 //		else if (buf[i] == '|')
 //		{
 //			char **args = ft_split(&buf[i+1], ' ');

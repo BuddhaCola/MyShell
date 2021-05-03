@@ -2,7 +2,16 @@
 
 int ft_unset(t_todo *all)
 {
-	if (all->to_execute->cmd->args[1])
-		set_unset_env(all, -1);
-	return (1);
+	int i;
+
+	if (all->cur_cmd_list->args[1])
+	{
+		i = 1;
+		while (all->cur_cmd_list->args[i])
+		{
+			if (!validate_arg(all->to_execute->cmd->args[i], '-'))
+			i++;
+		}
+	}
+	return (0);
 }

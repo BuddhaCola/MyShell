@@ -118,7 +118,8 @@ void	tok_destroy(t_tok *tok);
 int		lexer_build(char *line, int size, t_lexer *lexer_list);
 void	lexer_destroi(t_lexer *list);
 
-char	**clone_env(char **env, char *new_env);
+char	**clone_env(char **env, const char *new_env);
+void	handle_signals();
 int		print_env(t_todo *all);
 
 // builtins
@@ -134,11 +135,14 @@ int		ft_unset(t_todo *all);
 void	i_want_to_be_freed(char **arr);
 int		exec_bin(char *path, t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
+int		count_environments(t_todo *all);
+int		swapstr(char **str1, char **str2);
+void	appendarg(char **str, const char **appendix, int key_len);
 //char	*get_env_value(t_todo *all, char *name);
 char	*path_parse(t_todo *all, char *arg);
-int		set_unset_env(t_todo *all, int mode);
 
-int ft_strcmp(char *str1, char *str2);
-int ft_putchar(int c);
-
+int		ft_strcmp(char *str1, char *str2);
+int		ft_putchar(int c);
+int		validate_arg(char *newenv, char mode);
+int		ft_checkforbiddensymbols_arg(char *str, int mode);
 #endif

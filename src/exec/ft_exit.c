@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static int		ft_checkforbiddensymbols(char *str)
+static int		ft_checkforbiddensymbols_exit(char *str)
 {
 	while (*str)
 	{
@@ -19,7 +19,7 @@ int ft_exit(char **args, t_todo *all)
 
 	if (args && args[1])
 	{
-		if (ft_checkforbiddensymbols(args[1]))
+		if (ft_checkforbiddensymbols_exit(args[1]))
 		{
 			ft_putstr_fd("exit: numeric argument required 😠\n", 1);
 			exit (-1);

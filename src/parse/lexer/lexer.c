@@ -1,3 +1,17 @@
+/*
+ * Вернемся к восстановлению записи Escapeseq.
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 #include "../../minishell.h"
 
 int	get_num_of_type(char c)

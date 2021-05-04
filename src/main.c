@@ -173,7 +173,7 @@ int		debug_promt(t_todo *all)
 		buf[ret] = '\0';
 		lexer_build(buf, ret, all->lex_buf);
 		t_tok *list;
-		list = all->lex_buf;
+		list = all->lex_buf->tok_list;
 		while (list)
         {
 		    printf("%s\n", list->data);

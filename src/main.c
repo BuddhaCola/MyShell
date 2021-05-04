@@ -172,13 +172,13 @@ int		debug_promt(t_todo *all)
 		//TODO check ret from read
 		buf[ret] = '\0';
 		lexer_build(buf, ret, all->lex_buf);
-		t_tok *list;
-		list = all->lex_buf;
-		while (list)
-        {
-		    printf("%s\n", list->data);
-		    list = list->next;
-        }
+//		t_tok *list;
+//		list = all->lex_buf;
+//		while (list)
+//        {
+//		    printf("%s\n", list->data);
+//		    list = list->next;
+//        }
 		parse(all);
         printf("|%s|\n", all->to_execute->cmd->cmd_str);
 		exec_bin(all->to_execute->cmd->cmd_str, all);

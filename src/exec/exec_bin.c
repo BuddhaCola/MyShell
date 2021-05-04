@@ -82,9 +82,6 @@ int	exec_bin(char *path, t_todo *all)
 {
 	pid_t pid;
 
-	int i = 0;
-	while (all->cur_cmd_list->args[i] != NULL)
-
 	if (do_builtin(path, all) != 0)
 	{
 		return (all->exit_code);

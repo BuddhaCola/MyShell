@@ -145,4 +145,6 @@ int		ft_strcmp(char *str1, char *str2);
 int		ft_putchar(int c);
 int		validate_arg(char *newenv, char mode);
 int		ft_checkforbiddensymbols_arg(char *str, int mode);
+int		update_env(t_todo *all, char *key, char *change, char mode);
+char	**env_search(char **env, char *key);
 #endif

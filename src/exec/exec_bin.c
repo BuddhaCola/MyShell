@@ -62,34 +62,16 @@ static int do_builtin(char *path, t_todo *all)
 	return (0);
 }
 
-//int is_it_in_curdir(char *path)
-//{
-//	DIR				*current_dir;
-//	struct dirent	*current_file;
-//
-//	current_dir = opendir(".");
-//	while ((current_file = readdir(current_dir)))
-//	{
-//		ft_putstr_fd("|", 1);
-//		ft_putstr_fd(current_file->d_name, 1);
-//		ft_putstr_fd("| ", 1);
-//	}
-//	ft_putstr_fd("\n", 1);
-////		if (ft_strcmp(path, current_file->d_name))
-//}
-
 int	exec_bin(char *path, t_todo *all)
 {
 	pid_t pid;
 
 	if (do_builtin(path, all) != 0)
-	{
 		return (all->exit_code);
-	}
 	if (!path)
 	{
 		ft_putstr_fd("bash: ", 1);
-		ft_putstr_fd("|здесь должен быть запрос|", 1);
+		ft_putstr_fd(all->to_execute->cmd->cmd_str, 1);
 		ft_putstr_fd(": command not found 😑\n", 1);
 		return (-1);
 	}

@@ -29,7 +29,7 @@ static int	arg_insertion(char **oldenv, const char **new_env, int key_len)
 		*oldenv = ft_strdup(*new_env);
 		free(tmp);
 	}
-	tmp = *new_env;
+	tmp = (char *)*new_env;
 	free(tmp);
 	*new_env = NULL;
 	return (0);
@@ -81,7 +81,6 @@ char	**clone_env(char **env, const char *new_env)
 	i = 0;
 	while (env[i])
 		i++;
-	printf("orig arr is %d long\n", i + 1);
 	if (new_env && *new_env != '\0')
 		i += add_env(env, &new_env);
 	clone = malloc(sizeof(char *) * i + 1);

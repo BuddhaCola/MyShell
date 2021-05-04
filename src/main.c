@@ -137,6 +137,12 @@ int		promt(t_todo *all)
 
 int		debug_promt(t_todo *all); //убрать 🚧
 
+void 	deal_with_shlvl(t_todo *all)
+{
+	if (!env_search(all->environments, "SHLVL"))
+		update_env(all, "SHLVL", 0, '+');
+}
+
 int		main(int argc, char **argv, char **env)
 {
 	t_todo		all;
@@ -144,7 +150,8 @@ int		main(int argc, char **argv, char **env)
 	ft_bzero(&all, sizeof(all));
 	if (!(all.environments = clone_env(env, NULL)))
 		return (-1);
-	env = all.environments;
+	deal_with_shlvl(&all);
+	update_env(&all, "OLDPWD", 0, '?');
 	if (argc > 1)
 		debug_promt(&all); //убрать 🚧
 	else

@@ -147,4 +147,6 @@ int		validate_arg(char *newenv, char mode);
 int		ft_checkforbiddensymbols_arg(char *str, int mode);
 int		update_env(t_todo *all, char *key, char *change, char mode);
 char	**env_search(char **env, char *key);
+void	set_env_value(t_todo *all, char *key, char *value);
+void	set_shlvl(t_todo *all);
 #endif

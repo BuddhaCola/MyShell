@@ -21,65 +21,29 @@ char	**env_search(char **env, char *key)
 	return NULL;
 }
 
-static int		ft_checkforbiddensymbols_shlvl(char *str)
+void	set_env_value(t_todo *all, char *key, char *value)
 {
-	while (*str)
-	{
-		if (ft_strchr("0123456789-+ \0", *str))
-			str++;
-		else
-			return (1);
-	}
-	return (0);
-}
-
-//int	increment_num_env(char **orig, char *key, int keylen)
-//{
-//	int		nu;
-//	char	*tmp;
-//
-////	if (ft_checkforbiddensymbols_shlvl((ft_strchr(*orig, '=') + 1)))
-////	{
-////		PROBE
-////		tmp = *orig;
-////		*orig = ft_strdup("SHLVL=0");
-////		free(tmp);
-////	}
-////
-////	if (!ft_isdigit(*(ft_strchr(*orig, '=') + 1))
-////		|| ft_atoi(ft_strnstr(*orig, "=", ft_strlen(*orig)) + 1) < 0)
-////	{
-////		key = ft_strjoin(key, "=");
-////		tmp = key;
-////		*orig = ft_strdup(key);
-////		free(tmp);
-////		tmp = *orig;
-////	}
-//	nu = ft_atoi(ft_strchr(*orig, '=') + 1);
-////	if (nu >= 999 || ft_strlen(ft_strchr(*orig, '=') + 1) > 3)
-////	{
-////		safe_strdup(orig, "SHLVL=\"\"");
-////		return (1);
-////	}
-////	if (tmp)
-////		free(tmp);
-//	tmp = ft_itoa(nu + 1);
-//	key = ft_strjoin(key, tmp);
-//	free (tmp);
-//	tmp = key;
-////	safe_strjoin(&key, tmp);
-////	safe_strdup(orig, key);
-//	return (1);
-//}
-
-char	*safe_strjoin(char **orig, char *appendix)
-{
+	char	**val_in_arr;
+	char	*ptr;
 	char	*tmp;
 
-	tmp = *orig;
-	*orig = ft_strjoin(*orig, appendix);
+	ptr = ft_strjoin(key, "=");
+	tmp = ptr;
+	ptr = ft_strjoin(ptr, value);
 	free(tmp);
-	return (*orig);
+	val_in_arr = env_search(all->environments, key);
+	if (!val_in_arr)
+	{
+		val_in_arr = all->environments;
+		all->environments = clone_env(all->environments, ptr);
+		free(val_in_arr);
+	}
+	else
+	{
+		tmp = *val_in_arr;
+		*val_in_arr = ptr;
+		free(tmp);
+	}
 }
 
 void	increment_num_env(char **orig, char *key, int keylen)

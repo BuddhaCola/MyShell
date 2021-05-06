@@ -28,6 +28,7 @@ typedef struct s_cmd
 	struct s_cmd		    *next;
 }				t_cmd;
 
+//to execute
 typedef struct s_to_execute
 {
 	t_cmd		            *cmd;
@@ -41,11 +42,25 @@ typedef struct s_tok
 	struct s_tok	*next;
 }					t_tok;
 
+//parser
+typedef struct  s_pipelist
+{
+    t_tok               *tok_lst;
+    struct s_pipelist   *next;
+}               t_pipelist;
+
+//lexer
 typedef struct s_lexer
 {
 	t_tok	*tok_list;
 	int		num_of_tokens;
 }				t_lexer;
+
+//parse utils
+typedef struct  s_parse_utils
+{
+    t_pipelist  *pipelist;
+}               t_parse_utils;
 
 //typedef struct	s_env
 //{
@@ -66,6 +81,7 @@ typedef	struct			s_todo
     t_cmd               *cur_cmd_list;
 	t_exec				exec;
 	t_lexer				*lex_buf;
+    t_parse_utils       *parse_utils;
 	char 				**environments;
 	int 				env_count;
 	struct termios		saved_attributes;
@@ -102,21 +118,22 @@ enum e_states
 };
 
 //dereference the value
-void dereference_the_value(char *line, int *i);
+void dereference_the_value(t_todo *all);
 
-//strip quotes
-void    strip_quotes(char **dst, char *src);
+//build exec list
+int build_execute_lst(t_todo *all, char *line, int size
+        ,t_lexer *lexer_list);
 
-//parse
-void parse(t_todo *all);
-void destroy_parser(t_todo *all);
+//tokenize
+int         tokenize(char *line, int size, t_lexer *lexer_list);
+void		lexer_destroy(t_lexer *list);
 
-//lexer
-int		get_num_of_type(char c);
-void	tok_init(t_tok *tok, int data_size);
-void	tok_destroy(t_tok *tok);
-int		lexer_build(char *line, int size, t_lexer *lexer_list);
-void	lexer_destroi(t_lexer *list);
+//check syntax
+int check_syntax(t_tok *token);
+
+//parse pipes
+void    parse_pipes(t_todo *all);
+void    destroy_parse_pipes(t_todo *all);
 
 char	**clone_env(char **env, const char *new_env);
 void	handle_signals();

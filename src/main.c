@@ -122,8 +122,7 @@ int		promt(t_todo *all)
 		if (*line)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			lexer_build(line, ft_strlen(line), all->lex_buf);
-			parse(all);
+			build_execute_lst(all, line, ft_strlen(line), all->lex_buf);
 //			free(line);
 			exec_bin(all->to_execute->cmd->cmd_str, all);
 		}
@@ -171,17 +170,16 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
-		lexer_build(buf, ret, all->lex_buf);
+        build_execute_lst(all, buf, ret, all->lex_buf);
 		t_tok *list;
 		list = all->lex_buf->tok_list;
-		while (list)
-        {
-		    printf("%s\n", list->data);
-		    list = list->next;
-        }
-		parse(all);
-        printf("|%s|\n", all->to_execute->cmd->cmd_str);
-		exec_bin(all->to_execute->cmd->cmd_str, all);
+//		while (list)
+//        {
+//		    printf("%s\t\t\t\t%d\n", list->data, list->type);
+//		    list = list->next;
+//        }
+//        printf("|%s|\n", all->to_execute->cmd->cmd_str);
+//		exec_bin(all->to_execute->cmd->cmd_str, all);
 	}
 	return (0);
 }

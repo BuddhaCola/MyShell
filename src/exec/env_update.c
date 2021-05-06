@@ -1,27 +1,6 @@
 #include "../minishell.h"
 
-char	**env_search(char **env, char *key)
-{
-	int	i;
-	int	keylen;
-
-	i = 0;
-	keylen = 0;
-	while (key[keylen] && key[keylen] != '=')
-		keylen++;
-	while(env[i])
-	{
-		if (!ft_strncmp(env[i], key, keylen)
-			&& (env[i][keylen] == '=' || env[i][keylen] == '\0'))
-		{
-			return (&env[i]);
-		}
-		i++;
-	}
-	return NULL;
-}
-
-void	set_env_value(t_todo *all, char *key, char *value)
+void	env_set_value(t_todo *all, char *key, char *value)
 {
 	char	**val_in_arr;
 	char	*ptr;
@@ -69,9 +48,20 @@ void	increment_num_env(char **orig, char *key, int keylen)
 	free(leftside);
 }
 
+void	create_leftside(t_todo *all, char *key, char *change, char mode)
+{
+	char	**clone;
+
+	change = ft_strjoin(key, "=");
+	clone = clone_env(all->environments, change);
+	free(change);
+	i_want_to_be_freed(all->environments);
+	all->environments = clone;
+	update_env(all, key, NULL, mode);
+}
+
 int	update_env(t_todo *all, char *key, char *change, char mode)
 {
-	int		i;
 	char	**env_in_arr;
 	char	**clone;
 
@@ -79,14 +69,7 @@ int	update_env(t_todo *all, char *key, char *change, char mode)
 	if (mode == '+')
 	{
 		if (!env_in_arr)
-		{
-			change = ft_strjoin(key, "=");
-			clone = clone_env(all->environments, change);
-			free(change);
-			i_want_to_be_freed(all->environments);
-			all->environments = clone;
-			update_env(all, key, NULL, mode);
-		}
+			create_leftside(all, key, change, mode);
 		else
 			increment_num_env(env_in_arr, key, ft_strlen(key));
 	}

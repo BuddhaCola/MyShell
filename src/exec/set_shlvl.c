@@ -44,18 +44,18 @@ void	set_shlvl(t_todo *all)
 	if (shlvl)
 	{
 		if (shlvl_validation(ft_strchr(*shlvl, '=') + 1))
-			set_env_value(all, "SHLVL", "0");
+			env_set_value(all, "SHLVL", "0");
 		else
 		{
 			oldlvl = ft_atoi(ft_strchr(*shlvl, '=') + 1);
 			if (oldlvl < 0)
-				set_env_value(all, "SHLVL", "-1");
+				env_set_value(all, "SHLVL", "-1");
 			else if (oldlvl >= 999 || (numlen(ft_strchr(*shlvl, '=')) > 3))
 			{
 				ft_putstr_fd("bash: warning: shell level (", 1);
 				ft_putstr_fd(ft_strchr(*shlvl, '=') + 1, 1);
 				ft_putstr_fd(") too high, resetting to 1\n", 1);
-				set_env_value(all, "SHLVL", "0");
+				env_set_value(all, "SHLVL", "0");
 			}
 		}
 	}

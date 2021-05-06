@@ -26,7 +26,8 @@ static void parse_build(t_todo *all)
 static int  try_get_cmd_str(t_todo *all)
 {
     if (all->cur_tok_list && (all->cur_tok_list->type == CHAR_GENERAL))
-        all->to_execute->cmd->cmd_str = path_parse(all, all->cur_tok_list->data);
+		all->to_execute->cmd->cmd_str = ft_strdup(all->cur_tok_list->data);
+//        all->to_execute->cmd->cmd_str = path_parse(all, all->cur_tok_list->data);
     else
         return (-1);
     return (0);
@@ -53,7 +54,7 @@ static int  try_get_args(t_todo *all)
     if (i > 0)
     {
         all->cur_cmd_list->args = malloc(sizeof(char *) * (i + 1));
-        all->cur_cmd_list->args[k] = path_parse(all, all->cur_tok_list->data);
+        all->cur_cmd_list->args[k] = ft_strdup(all->cur_tok_list->data);
         all->cur_tok_list = all->cur_tok_list->next;
         k++;
         i--;

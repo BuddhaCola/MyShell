@@ -54,6 +54,8 @@ static char *check_here(char *path, char *bin)
 	return (NULL);
 }
 
+//char *try_absolute_path(t_todo *all,)
+
 char *path_parse(t_todo *all, char *arg)
 {
 	char **path;
@@ -85,7 +87,7 @@ char *path_parse(t_todo *all, char *arg)
 	}
 	if (!(ft_strcmp(arg, ".")))
 	{
-		ft_putstr_fd("bitch, \".\", seriously!?\n", 1);
+		ft_putstr_fd("bash: .: filename argument required\n", 1);
 		return (NULL);
 	}
 	else if (!getenv("PATH"))

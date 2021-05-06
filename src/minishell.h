@@ -19,13 +19,13 @@
 //parser
 typedef struct s_cmd
 {
-	char					*cmd_str;
-	char					**args;
-	int						flg_pipe;
-	char					**input_files;
-	char					**output_files;
-	char                    **double_greater_output_files;
-	struct s_cmd		    *next;
+	char			*cmd_str;
+	char			**args;
+	int				flg_pipe;
+	char			**input_files;
+	char			**output_files;
+	char			**double_greater_output_files;
+	struct s_cmd	*next;
 }				t_cmd;
 
 typedef struct s_to_execute
@@ -47,6 +47,13 @@ typedef struct s_lexer
 	int		num_of_tokens;
 }				t_lexer;
 
+typedef struct			s_history
+{
+	char 				*data;
+	struct s_history	*next;
+	struct s_history	*prev;
+}						t_history;
+
 //typedef struct	s_env
 //{
 //	char *name;
@@ -67,10 +74,10 @@ typedef	struct			s_todo
 	t_exec				exec;
 	t_lexer				*lex_buf;
 	char 				**environments;
-	int 				env_count;
 	struct termios		saved_attributes;
-	char 				terminfo_buffer[2048];
 	int 				exit_code;
+	t_history			*hist_curr;
+	t_history			*head;
 }						t_todo;
 
 enum e_token_type
@@ -133,7 +140,7 @@ int		ft_unset(t_todo *all);
 
 // utils
 void	i_want_to_be_freed(char **arr);
-int		exec_bin(char *path, t_todo *all);
+int		exec_bin(t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
 int		count_environments(t_todo *all);
 int		swapstr(char **str1, char **str2);
@@ -147,6 +154,7 @@ int		validate_arg(char *newenv, char mode);
 int		ft_checkforbiddensymbols_arg(char *str, int mode);
 int		update_env(t_todo *all, char *key, char *change, char mode);
 char	**env_search(char **env, char *key);
-void	set_env_value(t_todo *all, char *key, char *value);
+char	*env_get_value(t_todo *all, char *key);
+void	env_set_value(t_todo *all, char *key, char *value);
 void	set_shlvl(t_todo *all);
 #endif

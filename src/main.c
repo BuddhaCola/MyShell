@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 18:15:43 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/20 21:35:07 by wtaylor          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 int     termcap_stuff(t_todo *all)
@@ -52,24 +40,85 @@ void	ft_backspace(char *str)
 		str[len - 1] = '\0';
 	}
 }
+
+//void	history_pressed_enter(t_history **current, char *data)
+//{
+//	t_history *new;
+//
+//	new = malloc(sizeof(t_history *));
+//	(*current)->next = new;
+//	(*current)->data = ft_strdup("data");
+//	new->prev = *current;
+//	*current = new;
+//	(*current)->next = NULL;
+//}
+
+t_history 	*hist_new(char *content)
+{
+	t_history	*new;
+
+	if (!(new = malloc(sizeof(t_history))))
+		return (NULL);
+	new->data = content;
+	new->next = NULL;
+	new->prev = NULL;
+	return (new);
+}
+
+void	histadd_front(t_history **lst, t_history *new)
+{
+	if (new)
+	{
+		new->next = *lst;
+		(*lst)->prev = new;
+		*lst = new;
+	}
+}
+
+//t_history	*hist_move_up(t_history *current)
+//{
+//	current = current->prev;
+//}
+
+void print_hist(t_todo *all)
+{
+	t_history *curr = all->hist_curr;
+	if (!curr)
+		ft_putstr_fd("no curr!\n", 1);
+	while (curr->data)
+	{
+//		PROBE
+		printf("|%s|->", (*curr).data);
+		fflush(stdout);
+		curr = curr->next;
+	}
+}
+
 int 	check_input(char *buf, char **line, t_todo *all)
 {
+
 	static int quote;
+	t_history *lst;
 
 	if (ft_isprint(*buf))
 	{
-//		if (ft_strchr("/'/", *buf))
-//			quote = 1;
 		get_line(buf, line);
 		ft_putstr_fd(buf, 1);
 		return (0);
 	}
 	else if (*buf == '\n')
 	{
-//		if (quote == 1)
-//			return (write(1, "\n", 1));
-//		else
 		{
+//			if (!all->head)
+//			{
+//				if (*line)
+//				{
+//					all->head = hist_new(ft_strdup(*line));
+//					all->hist_curr = all->head;
+//				}
+//			}
+//			else
+//				(histadd_front(&all->head, hist_new(ft_strdup(*line))));
 			return (write(1, "\n", 1));
 		}
 	}
@@ -87,14 +136,35 @@ int 	check_input(char *buf, char **line, t_todo *all)
 				ft_exit(NULL, all);
 	}
 	else if (!(ft_strcmp(buf, "\e[A")))
+//	else if (!(ft_strcmp(buf, "1")))
 	{
-		ft_putstr_fd("you pressed UP   | Great job! 👍", 1);
-					tputs(restore_cursor, 1, ft_putchar);
+		//UP
+		if (all->hist_curr && all->hist_curr->prev)
+		{
+//			print_hist(all);
+			all->hist_curr = all->hist_curr->prev;
+			tputs(restore_cursor, 1, ft_putchar);
+			tputs(tgetstr("cd", 0), 1, ft_putchar);
+			ft_putstr_fd(all->hist_curr->data, 1);
+//			printf("%s", all->hist_curr->data);
+//			fflush(stdout);
+		}
+//		else
+//			all->hist_curr = all->head;
 	}
+//	else if (!(ft_strcmp(buf, "2")))
 	else if (!(ft_strcmp(buf, "\e[B")))
 	{
-			ft_putstr_fd("you pressed DOWN | Great job! 👍", 1);
-						tputs(restore_cursor, 1, ft_putchar);
+		if (all->hist_curr && all->hist_curr->next)
+		{
+//			print_hist(all);
+			all->hist_curr = all->hist_curr->next;
+			tputs(restore_cursor, 1, ft_putchar);
+			tputs(tgetstr("cd", 0), 1, ft_putchar);
+			printf("%s", all->hist_curr->data);
+			fflush(stdout);
+		}
+//		tputs(restore_cursor, 1, ft_putchar);
 	}
 	return (0);
 }
@@ -106,32 +176,53 @@ int		promt(t_todo *all)
 	char	*line;
 
 	all->lex_buf = malloc(sizeof(t_lexer));
+
 	while (all->environments)
 	{
 		termcap_stuff(all);
 		ft_putstr_fd(PROMT, 1);
 		tputs(save_cursor, 1, ft_putchar);
-		line = ft_strdup("");
+//		line = ft_strdup("");
+		all->head = hist_new("");
+		histadd_front(&all->head, hist_new(ft_strdup("")));
+		all->hist_curr = all->head;
 		while (1)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			if (check_input(buf, &line, all))
+			if (check_input(buf, &all->head->data, all))
 				break;
 		}
-		if (*line)
+		if (*all->head->data)
 		{
+			print_hist(all);
+//			histadd_front(&all->head, hist_new(ft_strdup(all->head->data)));
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			lexer_build(line, ft_strlen(line), all->lex_buf);
+			lexer_build(all->head->data, ft_strlen(all->head->data), all->lex_buf);
 			parse(all);
-//			free(line);
-			exec_bin(all->to_execute->cmd->cmd_str, all);
+//			free(all->head->data);
+			exec_bin(all);
 		}
-		if (*line)
-			free(line);
+		if (*all->head->data)
+			free(all->head->data);
 //		reset_parser(all);
 	}
 	//at the end of program clean all.
+	return (0);
+}
+
+int		load_up(t_todo *all, char **env)
+{
+	if (!(all->environments = clone_env(env, NULL)))
+		return (-1);
+	set_shlvl(all);
+	update_env(all, "OLDPWD", NULL, '?');
+	all->hist_curr = malloc((sizeof(t_history *)));
+	all->hist_curr->prev = NULL;
+	all->hist_curr->next = NULL;
+	all->head = all->hist_curr;
+//	printf("start:\nall->hist_curr=%p\nall->hist_curr->prev=%p\nall->hist_curr->next=%p\n", &all->hist_curr, &all->hist_curr->prev, &all->hist_curr->next);
+	fflush(stdout);
 	return (0);
 }
 
@@ -142,10 +233,17 @@ int		main(int argc, char **argv, char **env)
 	t_todo		all;
 
 	ft_bzero(&all, sizeof(all));
-	if (!(all.environments = clone_env(env, NULL)))
-		return (-1);
-	set_shlvl(&all);
-	update_env(&all, "OLDPWD", NULL, '?');
+	load_up(&all, env);
+
+//	t_history *hist;
+//	hist = hist_new(ft_strdup(NULL));
+//	histadd_front(&hist, hist_new(ft_strdup("two!")));
+////	hist = hist->next;
+//	while (hist)
+//	{
+//		printf("|%s\n", hist->data);
+//		hist = hist->next;
+//	}
 	if (argc > 1)
 		debug_promt(&all); //убрать 🚧
 	else
@@ -172,6 +270,8 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
+		if (check_input(buf, &buf, all))
+			break;
 		lexer_build(buf, ret, all->lex_buf);
 //		t_tok *list;
 //		list = all->lex_buf;
@@ -181,8 +281,7 @@ int		debug_promt(t_todo *all)
 //		    list = list->next;
 //        }
 		parse(all);
-        printf("|%s|\n", all->to_execute->cmd->cmd_str);
-		exec_bin(all->to_execute->cmd->cmd_str, all);
+		exec_bin(all);
 	}
 	return (0);
 }

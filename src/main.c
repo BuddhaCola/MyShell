@@ -65,8 +65,12 @@ t_history 	*hist_new(char *content)
 	return (new);
 }
 
-void	histadd_front(t_history **lst, t_history *new)
-{
+void	histadd_front(t_history **lst, t_history *new) {
+	if (!lst)
+	{
+		*lst = new;
+		return ;
+	}
 	if (new)
 	{
 		new->next = *lst;
@@ -212,16 +216,20 @@ int		promt(t_todo *all)
 
 int		load_up(t_todo *all, char **env)
 {
+	char **oldpwd;
 	if (!(all->environments = clone_env(env, NULL)))
 		return (-1);
 	set_shlvl(all);
-	update_env(all, "OLDPWD", NULL, '?');
-	all->hist_curr = malloc((sizeof(t_history *)));
-	all->hist_curr->prev = NULL;
-	all->hist_curr->next = NULL;
-	all->head = all->hist_curr;
-//	printf("start:\nall->hist_curr=%p\nall->hist_curr->prev=%p\nall->hist_curr->next=%p\n", &all->hist_curr, &all->hist_curr->prev, &all->hist_curr->next);
-	fflush(stdout);
+	oldpwd = env_search(all->environments, "OLDPWD");
+	if (!oldpwd)
+		update_env(all, "OLDPWD", NULL, '?');
+	free (*oldpwd);
+	*oldpwd = ft_strdup("OLDPWD");
+//	all->hist_curr = histadd_front()
+//			malloc((sizeof(t_history *)));
+//	all->hist_curr->prev = NULL;
+//	all->hist_curr->next = NULL;
+//	all->head = all->hist_curr;
 	return (0);
 }
 

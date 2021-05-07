@@ -30,7 +30,7 @@ typedef struct s_cmd
 
 typedef struct s_to_execute
 {
-	t_cmd		            *cmd;
+	t_cmd			*cmd;
 }				t_to_execute;
 
 //lexer
@@ -68,9 +68,9 @@ typedef	struct s_exec
 
 typedef	struct			s_todo
 {
-    t_to_execute		*to_execute;
-    t_tok               *cur_tok_list;
-    t_cmd               *cur_cmd_list;
+	t_to_execute		*to_execute;
+	t_tok				*cur_tok_list;
+	t_cmd				*cur_cmd_list;
 	t_exec				exec;
 	t_lexer				*lex_buf;
 	char 				**environments;
@@ -130,8 +130,9 @@ void	handle_signals();
 int		print_env(t_todo *all);
 
 // builtins
-void	ft_pwd(void);
+int		ft_pwd(void);
 int		ft_export(t_todo *all);
+int		ft_cd(t_todo *all);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int		ft_echo(int argc, char **argv);
 int		ft_env(t_todo *all);

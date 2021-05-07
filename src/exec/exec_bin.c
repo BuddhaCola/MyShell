@@ -5,13 +5,9 @@ static int do_builtin(char *path, t_todo *all)
 	if (!(ft_strcmp(path, "echo")))
 		ft_putstr_fd("echo", 1);
 	else if (!(ft_strcmp(path, "cd")))
-		ft_putstr_fd("cd", 1);
+		return (ft_cd(all));
 	else if (!(ft_strcmp(path, "pwd")))
-	{
-		ft_putstr_fd(getenv("PWD"), 1);
-		ft_putstr_fd("\n", 1);
-		return (1);
-	}
+		return (ft_pwd());
 	else if (!(ft_strcmp(path, "export")))
 		return (ft_export(all));
 	else if (!(ft_strcmp(path, "unset")))

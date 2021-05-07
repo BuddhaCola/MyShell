@@ -5,7 +5,7 @@ int     termcap_stuff(t_todo *all)
 	struct termios	new_attributes;
 	char			*termtype;
 
-	termtype = getenv("TERM"); //аккуратнее с этим дерьмом!
+	termtype = getenv("TERM"); //это говно!
 	if(!isatty(0))
 		ft_putstr_fd("not a terminatl!\n", 1);
 	if (tcgetattr(0, &all->saved_attributes) == -1)
@@ -96,7 +96,6 @@ void print_hist(t_todo *all)
 
 int 	check_input(char *buf, char **line, t_todo *all)
 {
-
 	static int quote;
 	t_history *lst;
 
@@ -195,7 +194,7 @@ int		promt(t_todo *all)
 		}
 		if (*all->head->data)
 		{
-			print_hist(all);
+//			print_hist(all);
 //			histadd_front(&all->head, hist_new(ft_strdup(all->head->data)));
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
 			lexer_build(all->head->data, ft_strlen(all->head->data), all->lex_buf);
@@ -234,16 +233,6 @@ int		main(int argc, char **argv, char **env)
 
 	ft_bzero(&all, sizeof(all));
 	load_up(&all, env);
-
-//	t_history *hist;
-//	hist = hist_new(ft_strdup(NULL));
-//	histadd_front(&hist, hist_new(ft_strdup("two!")));
-////	hist = hist->next;
-//	while (hist)
-//	{
-//		printf("|%s\n", hist->data);
-//		hist = hist->next;
-//	}
 	if (argc > 1)
 		debug_promt(&all); //убрать 🚧
 	else
@@ -270,16 +259,9 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
-		if (check_input(buf, &buf, all))
-			break;
+//		if (check_input(buf, &buf, all))
+//			break;
 		lexer_build(buf, ret, all->lex_buf);
-//		t_tok *list;
-//		list = all->lex_buf;
-//		while (list)
-//        {
-//		    printf("%s\n", list->data);
-//		    list = list->next;
-//        }
 		parse(all);
 		exec_bin(all);
 	}

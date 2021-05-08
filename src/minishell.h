@@ -21,17 +21,16 @@ typedef struct s_cmds
 {
 	char					*cmd_str;
 	char					**args;
-	int						flg_pipe;
 	char					**input_files;
 	char					**output_files;
-	char                    **double_greater_output_files;
+	char                    **append_files;
 	struct s_cmds		    *next;
 }				t_cmds;
 
 //to execute
 typedef struct s_to_execute
 {
-	t_cmds		            *cmd;
+	t_cmds		            *cmds;
 }				t_to_execute;
 
 //lexer
@@ -114,6 +113,10 @@ enum e_states
 	STATE_IN_ESCAPEDSEQ,
 	STATE_GENERAL,
 };
+
+//build to execute lst
+void build_to_execute_lst(t_todo *all);
+void destroy_to_execute_lst(t_todo *all);
 
 //strip quotes and bslashes
 void strip_quotes_and_bslashes(char **src);

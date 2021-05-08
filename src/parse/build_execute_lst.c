@@ -2,7 +2,7 @@
 
 //returns -1 if error was found
 int build_execute_lst(t_todo *all, char *line, int size
-,t_lexer *lexer_list)
+		, t_lexer *lexer_list)
 {
 	tokenize(line, size, lexer_list);
 	if(check_syntax(lexer_list->tok_list))
@@ -14,8 +14,10 @@ int build_execute_lst(t_todo *all, char *line, int size
 	printf("%s\n", all->parse_utils->pipelist->tok_lst->data);
 	dereference_the_value(all);
 	printf("%s\n", all->parse_utils->pipelist->tok_lst->data);
+	build_to_execute_lst(all);
 
 
+	destroy_to_execute_lst(all);
 	destroy_parse_pipes(all);
 	lexer_destroy(all->lex_buf);
 

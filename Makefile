@@ -16,7 +16,7 @@ src/exec/env_functions.c src/exec/exec_bin.c src/exec/ft_echo.c src/exec/ft_env.
 src/exec/env_search.c \
 src/parse/lexer/lexer.c src/parse/lexer/strip_quotes/strip_quotes.c\
 src/parse/dereferencing_dollar/dereference_the_value.c src/parse/parse_pipes/parse_pipes.c \
-src/parse/parse_redirs/parse_redirs.c src/parse/tokenizer/tokenize.c\
+src/parse/tokenizer/tokenize.c src/parse/build_to_execute_lst/build_to_execute_lst.c\
 src/parse/build_execute_lst.c src/parse/check_syntax/check_syntax.c \
 src/parse/strip_quotes_and_bslashes/strip_quotes_and_bslashes.c
 

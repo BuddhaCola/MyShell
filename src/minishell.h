@@ -17,7 +17,7 @@
 #define PROMT "Minihell!🔥"
 
 //parser
-typedef struct s_cmd
+typedef struct s_cmds
 {
 	char					*cmd_str;
 	char					**args;
@@ -25,13 +25,13 @@ typedef struct s_cmd
 	char					**input_files;
 	char					**output_files;
 	char                    **double_greater_output_files;
-	struct s_cmd		    *next;
-}				t_cmd;
+	struct s_cmds		    *next;
+}				t_cmds;
 
 //to execute
 typedef struct s_to_execute
 {
-	t_cmd		            *cmd;
+	t_cmds		            *cmd;
 }				t_to_execute;
 
 //lexer
@@ -77,8 +77,6 @@ typedef	struct s_exec
 typedef	struct			s_todo
 {
     t_to_execute		*to_execute;
-    t_tok               *cur_tok_list;
-    t_cmd               *cur_cmd_list;
 	t_exec				exec;
 	t_lexer				*lex_buf;
     t_parse_utils       *parse_utils;
@@ -116,6 +114,9 @@ enum e_states
 	STATE_IN_ESCAPEDSEQ,
 	STATE_GENERAL,
 };
+
+//strip quotes
+void    strip_quotes(char **dst, char *src);
 
 //dereference the value
 void dereference_the_value(t_todo *all);
@@ -157,5 +158,9 @@ char	*path_parse(t_todo *all, char *arg);
 
 int ft_strcmp(char *str1, char *str2);
 int ft_putchar(int c);
+
+char	**env_search(char **env, char *key);
+char	*env_get_value(t_todo *all, char *key);
+
 
 #endif

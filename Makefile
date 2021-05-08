@@ -13,9 +13,12 @@
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c src/utils/utils.c\
 src/exec/env_functions.c src/exec/exec_bin.c src/exec/ft_echo.c src/exec/ft_env.c src/exec/ft_exit.c src/exec/ft_export.c src/exec/ft_pipe.c src/exec/ft_pwd.c src/exec/path_parse.c src/exec/redirection.c src/exec/unset.c \
-src/parse/lexer/lexer.c src/parse/parser/parser.c src/parse/lexer/strip_quotes/strip_quotes.c\
-src/parse/dereferencing_dollar/dereference_the_value.c src/parse/new_parser/parse.c src/parse/tokenizer/tokenize.c\
-src/parse/build_execute_lst.c src/parse/check_syntax/check_syntax.c
+src/exec/env_search.c \
+src/parse/lexer/lexer.c src/parse/lexer/strip_quotes/strip_quotes.c\
+src/parse/dereferencing_dollar/dereference_the_value.c src/parse/parse_pipes/parse_pipes.c \
+src/parse/parse_redirs/parse_redirs.c src/parse/tokenizer/tokenize.c\
+src/parse/build_execute_lst.c src/parse/check_syntax/check_syntax.c \
+src/parse/strip_quotes_and_bslashes/strip_quotes_and_bslashes.c
 
 NAME	=	minishell
 

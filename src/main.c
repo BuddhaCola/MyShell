@@ -122,7 +122,7 @@ int		promt(t_todo *all)
 		if (*line)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			build_execute_lst(all, line, ft_strlen(line), all->lex_buf);
+			build_execute_lst(all, line, ret, all->lex_buf);
 //			free(line);
 			exec_bin(all->to_execute->cmd->cmd_str, all);
 		}

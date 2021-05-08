@@ -115,8 +115,8 @@ enum e_states
 	STATE_GENERAL,
 };
 
-//strip quotes
-void    strip_quotes(char **dst, char *src);
+//strip quotes and bslashes
+void strip_quotes_and_bslashes(char **src);
 
 //dereference the value
 void dereference_the_value(t_todo *all);

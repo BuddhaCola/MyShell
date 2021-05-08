@@ -15,6 +15,7 @@ int build_execute_lst(t_todo *all, char *line, int size
 	dereference_the_value(all);
 	printf("%s\n", all->parse_utils->pipelist->tok_lst->data);
 
+
 	destroy_parse_pipes(all);
 	lexer_destroy(all->lex_buf);
 

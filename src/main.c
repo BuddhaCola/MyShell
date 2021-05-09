@@ -129,7 +129,7 @@ int 	check_input(char *buf, char **line, t_todo *all)
 	}
 	else if (!(ft_strcmp(buf, "\e[B")))
 	{
-		if (all->hist_curr && all->hist_curr->next)
+		if (all->head->prev)
 		{
 			all->head = all->head->prev;
 			tputs(restore_cursor, 1, ft_putchar);

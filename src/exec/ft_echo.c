@@ -12,28 +12,29 @@
 
 #include "../minishell.h"
 
-int 	ft_echo(int argc, char **argv)
+int 	ft_echo(t_todo *all)
 {
 	char	endsymbol;
 	int		i;
 
 	endsymbol = '\n';
-	if (argc > 1)
+	if (all->cur_cmd_list->args[0])
 	{
 		i = 1;
-		if (!(ft_strncmp(argv[1], "-n", 3)))
+		if (!(ft_strcmp(all->cur_cmd_list->args[i], "-n")))
 		{
 			endsymbol = 0;
 			i++;
 		}
-		while (i < argc)
+		while (all->cur_cmd_list->args[i])
 		{
-			write(1, argv[i], ft_strlen(argv[i]));
+			write(1, all->cur_cmd_list->args[i],
+				ft_strlen(all->cur_cmd_list->args[i]));
 			i++;
-			if (i != argc)
+			if (all->cur_cmd_list->args[i])
 				write(1, " ", 1);
 		}
 	}
 	write(1, &endsymbol, 1);
-	return (0);
+	return (1);
 }

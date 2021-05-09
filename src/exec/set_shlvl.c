@@ -59,5 +59,5 @@ void	set_shlvl(t_todo *all)
 			}
 		}
 	}
-	update_env(all, "SHLVL", 0, '+');
+	env_update(all, "SHLVL", 0, '+');
 }

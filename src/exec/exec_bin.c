@@ -3,7 +3,7 @@
 static int do_builtin(char *path, t_todo *all)
 {
 	if (!(ft_strcmp(path, "echo")))
-		ft_putstr_fd("echo", 1);
+		return (ft_echo(all));
 	else if (!(ft_strcmp(path, "cd")))
 		return (ft_cd(all));
 	else if (!(ft_strcmp(path, "pwd")))
@@ -94,7 +94,8 @@ int	start_process(t_todo *all, char *bin)
 		all->exec.err = execve(bin, all->to_execute->cmd->args, all->environments);
 	}
 	else
-		wait(&pid);
+		wait(&(all->exit_code));
+	printf("|%d|\n", all->exit_code);
 	return (0);
 }
 
@@ -114,6 +115,7 @@ int	exec_bin(t_todo *all)
 	}
 	if (do_builtin(all->to_execute->cmd->cmd_str, all) != 0)
 		return (all->exit_code);
+	PROBE
 	bin_location = try_path(all);
 	if (bin_location)
 		return (start_process(all, bin_location));

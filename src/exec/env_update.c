@@ -1,28 +1,40 @@
 #include "../minishell.h"
 
-void	env_set_value(t_todo *all, char *key, char *value)
+void	env_insetion(t_todo *all, char *insertion, char *key)
 {
 	char	**val_in_arr;
-	char	*ptr;
 	char	*tmp;
 
-	ptr = ft_strjoin(key, "=");
-	tmp = ptr;
-	ptr = ft_strjoin(ptr, value);
-	free(tmp);
 	val_in_arr = env_search(all->environments, key);
 	if (!val_in_arr)
 	{
 		val_in_arr = all->environments;
-		all->environments = clone_env(all->environments, ptr);
+		all->environments = clone_env(all->environments, insertion);
 		free(val_in_arr);
 	}
 	else
 	{
 		tmp = *val_in_arr;
-		*val_in_arr = ptr;
+		*val_in_arr = insertion;
 		free(tmp);
 	}
+}
+void	env_set_value(t_todo *all, char *key, char *value)
+{
+
+	char	*insertion;
+	char	*tmp;
+
+	if (value)
+	{
+		insertion = ft_strjoin(key, "=");
+		tmp = insertion;
+		insertion = ft_strjoin(insertion, value);
+		free(tmp);
+	}
+	else
+		insertion = ft_strdup(key);
+	env_insetion(all, insertion, key);
 }
 
 void	increment_num_env(char **orig, char *key, int keylen)
@@ -57,10 +69,10 @@ void	create_leftside(t_todo *all, char *key, char *change, char mode)
 	free(change);
 	i_want_to_be_freed(all->environments);
 	all->environments = clone;
-	update_env(all, key, NULL, mode);
+	env_update(all, key, NULL, mode);
 }
 
-int	update_env(t_todo *all, char *key, char *change, char mode)
+int	env_update(t_todo *all, char *key, char *change, char mode)
 {
 	char	**env_in_arr;
 	char	**clone;

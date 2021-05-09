@@ -220,16 +220,7 @@ int		load_up(t_todo *all, char **env)
 	if (!(all->environments = clone_env(env, NULL)))
 		return (-1);
 	set_shlvl(all);
-	oldpwd = env_search(all->environments, "OLDPWD");
-	if (!oldpwd)
-		update_env(all, "OLDPWD", NULL, '?');
-	free (*oldpwd);
-	*oldpwd = ft_strdup("OLDPWD");
-//	all->hist_curr = histadd_front()
-//			malloc((sizeof(t_history *)));
-//	all->hist_curr->prev = NULL;
-//	all->hist_curr->next = NULL;
-//	all->head = all->hist_curr;
+	env_set_value(all, "OLDPWD", NULL);
 	return (0);
 }
 

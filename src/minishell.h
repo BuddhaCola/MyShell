@@ -26,7 +26,7 @@ typedef struct s_cmd
 	char			**output_files;
 	char			**double_greater_output_files;
 	struct s_cmd	*next;
-}				t_cmd;
+}					t_cmd;
 
 typedef struct s_to_execute
 {
@@ -134,7 +134,7 @@ int		ft_pwd(void);
 int		ft_export(t_todo *all);
 int		ft_cd(t_todo *all);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
-int		ft_echo(int argc, char **argv);
+int 	ft_echo(t_todo *all);
 int		ft_env(t_todo *all);
 int		ft_exit(char **args, t_todo *all);
 int		ft_unset(t_todo *all);
@@ -153,7 +153,7 @@ int		ft_strcmp(char *str1, char *str2);
 int		ft_putchar(int c);
 int		validate_arg(char *newenv, char mode);
 int		ft_checkforbiddensymbols_arg(char *str, int mode);
-int		update_env(t_todo *all, char *key, char *change, char mode);
+int		env_update(t_todo *all, char *key, char *change, char mode);
 char	**env_search(char **env, char *key);
 char	*env_get_value(t_todo *all, char *key);
 void	env_set_value(t_todo *all, char *key, char *value);

@@ -37,5 +37,7 @@ int	ft_cd(t_todo *all)
 	home = getcwd(home, 0);
 	env_set_value(all, "PWD", home);
 	free(home);
+	if (ret == 0)
+		ret = 1;
 	return (ret);
 }

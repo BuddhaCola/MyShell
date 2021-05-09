@@ -32,6 +32,9 @@ static t_cmds *get_new_cmds_elem(t_cmds *cmds)
 static void get_cmd_str(t_cmds *cmds, t_tok *tok)
 {
     cmds->cmd_str = ft_strdup(tok->data);
+    cmds->args = malloc(sizeof(char *) * 2);
+    cmds->args[0] = ft_strdup(tok->data);
+    cmds->args[1] = NULL;
 }
 
 static void add_to_2d(char ***src, t_tok *tok)

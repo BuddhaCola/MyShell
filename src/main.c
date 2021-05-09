@@ -15,7 +15,7 @@ int     termcap_stuff(t_todo *all)
 	new_attributes.c_lflag &= ~(ISIG);
 	new_attributes.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &new_attributes);
-	if (tgetent(0, termtype) != 1)
+	if (tgetent(0, "xterm-256color") != 1)
 		return (write(1, "error on tgetent\n", 17));
 	return (0);
 }
@@ -23,18 +23,10 @@ int     termcap_stuff(t_todo *all)
 void 	get_line(char *buf, char **line, t_todo *all)
 {
 	char	*tmp;
-	tmp = all->head->data;
-	all->head->data = ft_strjoin(all->head->data, buf);
+	tmp = all->hist_curr->data;
+	all->hist_curr->data = ft_strjoin(all->hist_curr->data, buf);
 	free(tmp);
 }
-
-//void 	get_line(char *buf, char **line, t_todo *all)
-//{
-//	char	*tmp;
-//	tmp = *line;
-//	*line = ft_strjoin(*line, buf);
-//	free(tmp);
-//}
 
 void	ft_backspace(char *str)
 {
@@ -48,18 +40,6 @@ void	ft_backspace(char *str)
 		str[len - 1] = '\0';
 	}
 }
-
-//void	history_pressed_enter(t_history **current, char *data)
-//{
-//	t_history *new;
-//
-//	new = malloc(sizeof(t_history *));
-//	(*current)->next = new;
-//	(*current)->data = ft_strdup("data");
-//	new->prev = *current;
-//	*current = new;
-//	(*current)->next = NULL;
-//}
 
 t_history 	*hist_new(char *content)
 {
@@ -112,29 +92,27 @@ int 	check_input(char *buf, char **line, t_todo *all)
 	}
 	else if (*buf == '\4')
 	{
-			if (**line == '\0')
-				ft_exit(NULL, all);
+		if (**line == '\0')
+			ft_exit(NULL, all);
 	}
 	else if (!(ft_strcmp(buf, "\e[A")))
 	{
-		//UP
-		if (all->head->next)
+		if (all->hist_curr->next)
 		{
-			all->head = all->head->next;
+			all->hist_curr = all->hist_curr->next;
 			tputs(restore_cursor, 1, ft_putchar);
 			tputs(tgetstr("cd", 0), 1, ft_putchar);
-			ft_putstr_fd(all->head->data, 1);
+			ft_putstr_fd(all->hist_curr->data, 1);
 		}
-	//		tputs(restore_cursor, 1, ft_putchar);
 	}
 	else if (!(ft_strcmp(buf, "\e[B")))
 	{
-		if (all->head->prev)
+		if (all->hist_curr->prev)
 		{
-			all->head = all->head->prev;
+			all->hist_curr = all->hist_curr->prev;
 			tputs(restore_cursor, 1, ft_putchar);
 			tputs(tgetstr("cd", 0), 1, ft_putchar);
-			ft_putstr_fd(all->head->data, 1);
+			ft_putstr_fd(all->hist_curr->data, 1);
 		}
 	}
 	return (0);
@@ -153,23 +131,23 @@ int		promt(t_todo *all)
 		termcap_stuff(all);
 		ft_putstr_fd(PROMT, 1);
 		tputs(save_cursor, 1, ft_putchar);
-		histadd_front(&all->head, hist_new(ft_strdup("")));
+		histadd_front(&all->hist_curr, hist_new(ft_strdup("")));
 		while (1)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			if (check_input(buf, &all->head->data, all))
+			if (check_input(buf, &all->hist_curr->data, all))
 				break;
 		}
-		if (*all->head->data)
+		if (*all->hist_curr->data)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			lexer_build(all->head->data, ft_strlen(all->head->data), all->lex_buf);
+			lexer_build(all->hist_curr->data, ft_strlen(all->hist_curr->data), all->lex_buf);
 			parse(all);
 			exec_bin(all);
 		}
-		// if (*all->head->data)
-		// 	free(all->head->data);
+		// if (*all->hist_curr->data)
+		// 	free(all->hist_curr->data);
 //		reset_parser(all);
 	}
 	//at the end of program clean all.

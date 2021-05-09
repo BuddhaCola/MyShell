@@ -78,7 +78,6 @@ typedef	struct			s_todo
 	struct termios		saved_attributes;
 	int 				exit_code;
 	t_history			*hist_curr;
-	t_history			*head;
 }						t_todo;
 
 enum e_token_type

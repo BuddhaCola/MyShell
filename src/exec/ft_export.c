@@ -58,7 +58,7 @@ int	print_env(t_todo *all)
 	while (clone[i])
 		print_one(clone[i++]);
 	i_want_to_be_freed(clone);
-	return (1);
+	return (0);
 }
 
 int	ft_export(t_todo *all)
@@ -83,5 +83,5 @@ int	ft_export(t_todo *all)
 			i++;
 		}
 	}
-	return (1);
+	return (0);
 }

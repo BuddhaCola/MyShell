@@ -1,5 +1,21 @@
 #include "../minishell.h"
 
+int	cd_oldpwd(t_todo *all)
+{
+	char	*oldpwd;
+	int		ret;
+
+	oldpwd = env_get_value(all, "OLDPWD");
+	if (!oldpwd)
+	{
+		errorhandle(all, all->to_execute->cmd->args[0], "OLDPWD not set", "1");
+		return (1);
+	}
+	ft_putendl_fd(oldpwd, 1);
+	ret = chdir(oldpwd);
+	return (ret);
+}
+
 int	cd_home(t_todo *all)
 {
 	char	*home;
@@ -10,8 +26,8 @@ int	cd_home(t_todo *all)
 		ret = chdir(home);
 	else
 	{
-		ft_putstr_fd("bash: cd: HOME not set\n", 1);
 		ret = 1;
+		errorhandle(all, all->to_execute->cmd->args[0], "HOME not set", "1");
 	}
 	return (ret);
 }
@@ -19,25 +35,25 @@ int	cd_home(t_todo *all)
 int	ft_cd(t_todo *all)
 {
 	int		ret;
-	char	*home;
+	char	*oldpwd;
 
-	env_set_value(all, "OLDPWD", env_get_value(all, "PWD"));
 	if (all->to_execute->cmd->args[1]
 		&& ft_strcmp(all->to_execute->cmd->args[1], "~"))
 		ret = chdir(all->to_execute->cmd->args[1]);
-	else
+	else if (!all->to_execute->cmd->args[1]
+		|| !ft_strcmp(all->to_execute->cmd->args[1], "~"))
 		ret = cd_home(all);
+	if (!ft_strcmp(all->to_execute->cmd->args[1], "-"))
+		ret = cd_oldpwd(all);
 	if (ret == -1)
-	{
-		printf("bash: cd: %s: No such file or directory\n",
-			all->to_execute->cmd->args[1]);
-		fflush(stdout);
-	}
-	home = NULL;
-	home = getcwd(home, 0);
-	env_set_value(all, "PWD", home);
-	free(home);
+		errorhandle(all, all->to_execute->cmd->args[0], NULL, "1");
 	if (ret == 0)
-		ret = 1;
-	return (ret);
+	{
+		oldpwd = NULL;
+		oldpwd = getcwd(oldpwd, 0);
+		env_set_value(all, "OLDPWD", env_get_value(all, "PWD"));
+		env_set_value(all, "PWD", oldpwd);
+		free(oldpwd);
+	}
+	return (0);
 }

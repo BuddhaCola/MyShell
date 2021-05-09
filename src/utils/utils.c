@@ -1,5 +1,7 @@
 #include "../minishell.h"
 
+
+
 int	ft_checkforbiddensymbols_arg(char *str, int mode)
 {
 	if (mode == '+')

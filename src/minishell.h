@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <term.h>
+#include <string.h>
 
 
 #include "utils/get_next_line/get_next_line.h"
@@ -158,4 +159,5 @@ char	**env_search(char **env, char *key);
 char	*env_get_value(t_todo *all, char *key);
 void	env_set_value(t_todo *all, char *key, char *value);
 void	set_shlvl(t_todo *all);
+int		errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code);
 #endif

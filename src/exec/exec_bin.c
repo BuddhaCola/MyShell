@@ -13,17 +13,12 @@ static int do_builtin(char *path, t_todo *all)
 	else if (!(ft_strcmp(path, "unset")))
 		return (ft_unset(all));
 	else if (!(ft_strcmp(path, "env")))
-	{
 		return (ft_env(all));
-	}
 	else if (!(ft_strcmp(path, "exit")))
 		ft_exit(all->to_execute->cmd->args, all);
 	else if (!(ft_strcmp(path, "get_value")))
 		env_get_value(all, all->cur_cmd_list->args[1]);
-	else
-		return (0);
-	ft_putstr_fd(" under construction! 🚧\n", 1);
-	return (0);
+	return (1);
 }
 
 static char *check_here(char *path, char *bin)
@@ -87,35 +82,40 @@ char	*try_path(t_todo *all)
 int	start_process(t_todo *all, char *bin)
 {
 	pid_t	pid;
+	char	*status;
 
 	pid = fork();
 	if (!pid)
-	{
 		all->exec.err = execve(bin, all->to_execute->cmd->args, all->environments);
-	}
 	else
+	{
+		errno = 0;
 		wait(&(all->exit_code));
-	printf("|%d|\n", all->exit_code);
+		status = ft_itoa(all->exit_code / 255);
+		env_set_value(all, "?", status);
+		free(status);
+		if (errno)
+			ft_putstr_fd(strerror(errno), 1);
+	}
 	return (0);
 }
 
 int	exec_bin(t_todo *all)
 {
-	int		ret;
+	int		try_open;
 	char	*bin_location;
 
 	if (ft_strchr("./", all->to_execute->cmd->cmd_str[0]))
 	{
-		ret = open(all->to_execute->cmd->cmd_str, O_RDONLY);
-		if (ret != -1)
+		try_open = open(all->to_execute->cmd->cmd_str, O_RDONLY);
+		if (try_open != -1)
 		{
-			close(ret);
+			close(try_open);
 			return (start_process(all, all->to_execute->cmd->cmd_str));
 		}
 	}
-	if (do_builtin(all->to_execute->cmd->cmd_str, all) != 0)
+	if (do_builtin(all->to_execute->cmd->cmd_str, all) == 0)
 		return (all->exit_code);
-	PROBE
 	bin_location = try_path(all);
 	if (bin_location)
 		return (start_process(all, bin_location));

@@ -43,5 +43,5 @@ int	ft_unset(t_todo *all)
 			i++;
 		}
 	}
-	return (1);
+	return (0);
 }

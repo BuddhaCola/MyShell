@@ -20,13 +20,21 @@ int     termcap_stuff(t_todo *all)
 	return (0);
 }
 
-void 	get_line(char *buf, char **line)
+void 	get_line(char *buf, char **line, t_todo *all)
 {
 	char	*tmp;
-	tmp = *line;
-	*line = ft_strjoin(*line, buf);
+	tmp = all->head->data;
+	all->head->data = ft_strjoin(all->head->data, buf);
 	free(tmp);
 }
+
+//void 	get_line(char *buf, char **line, t_todo *all)
+//{
+//	char	*tmp;
+//	tmp = *line;
+//	*line = ft_strjoin(*line, buf);
+//	free(tmp);
+//}
 
 void	ft_backspace(char *str)
 {
@@ -57,16 +65,16 @@ t_history 	*hist_new(char *content)
 {
 	t_history	*new;
 
-	if (!(new = malloc(sizeof(t_history))))
-		return (NULL);
+	new = malloc(sizeof(t_history));
 	new->data = content;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
 }
 
-void	histadd_front(t_history **lst, t_history *new) {
-	if (!lst)
+void	histadd_front(t_history **lst, t_history *new)
+{
+	if (!*lst)
 	{
 		*lst = new;
 		return ;
@@ -79,25 +87,6 @@ void	histadd_front(t_history **lst, t_history *new) {
 	}
 }
 
-//t_history	*hist_move_up(t_history *current)
-//{
-//	current = current->prev;
-//}
-
-void print_hist(t_todo *all)
-{
-	t_history *curr = all->hist_curr;
-	if (!curr)
-		ft_putstr_fd("no curr!\n", 1);
-	while (curr->data)
-	{
-//		PROBE
-		printf("|%s|->", (*curr).data);
-		fflush(stdout);
-		curr = curr->next;
-	}
-}
-
 int 	check_input(char *buf, char **line, t_todo *all)
 {
 	static int quote;
@@ -105,25 +94,13 @@ int 	check_input(char *buf, char **line, t_todo *all)
 
 	if (ft_isprint(*buf))
 	{
-		get_line(buf, line);
+		get_line(buf, line, all);
 		ft_putstr_fd(buf, 1);
 		return (0);
 	}
 	else if (*buf == '\n')
 	{
-		{
-//			if (!all->head)
-//			{
-//				if (*line)
-//				{
-//					all->head = hist_new(ft_strdup(*line));
-//					all->hist_curr = all->head;
-//				}
-//			}
-//			else
-//				(histadd_front(&all->head, hist_new(ft_strdup(*line))));
-			return (write(1, "\n", 1));
-		}
+		return (write(1, "\n", 1));
 	}
 	else if (*buf == '\177')
 		ft_backspace(*line);
@@ -139,35 +116,26 @@ int 	check_input(char *buf, char **line, t_todo *all)
 				ft_exit(NULL, all);
 	}
 	else if (!(ft_strcmp(buf, "\e[A")))
-//	else if (!(ft_strcmp(buf, "1")))
 	{
 		//UP
-		if (all->hist_curr && all->hist_curr->prev)
+		if (all->head->next)
 		{
-//			print_hist(all);
-			all->hist_curr = all->hist_curr->prev;
+			all->head = all->head->next;
 			tputs(restore_cursor, 1, ft_putchar);
 			tputs(tgetstr("cd", 0), 1, ft_putchar);
-			ft_putstr_fd(all->hist_curr->data, 1);
-//			printf("%s", all->hist_curr->data);
-//			fflush(stdout);
+			ft_putstr_fd(all->head->data, 1);
 		}
-//		else
-//			all->hist_curr = all->head;
+	//		tputs(restore_cursor, 1, ft_putchar);
 	}
-//	else if (!(ft_strcmp(buf, "2")))
 	else if (!(ft_strcmp(buf, "\e[B")))
 	{
 		if (all->hist_curr && all->hist_curr->next)
 		{
-//			print_hist(all);
-			all->hist_curr = all->hist_curr->next;
+			all->head = all->head->prev;
 			tputs(restore_cursor, 1, ft_putchar);
 			tputs(tgetstr("cd", 0), 1, ft_putchar);
-			printf("%s", all->hist_curr->data);
-			fflush(stdout);
+			ft_putstr_fd(all->head->data, 1);
 		}
-//		tputs(restore_cursor, 1, ft_putchar);
 	}
 	return (0);
 }
@@ -185,10 +153,7 @@ int		promt(t_todo *all)
 		termcap_stuff(all);
 		ft_putstr_fd(PROMT, 1);
 		tputs(save_cursor, 1, ft_putchar);
-//		line = ft_strdup("");
-		all->head = hist_new("");
 		histadd_front(&all->head, hist_new(ft_strdup("")));
-		all->hist_curr = all->head;
 		while (1)
 		{
 			ret = read(0, &buf, 100);
@@ -198,16 +163,13 @@ int		promt(t_todo *all)
 		}
 		if (*all->head->data)
 		{
-//			print_hist(all);
-//			histadd_front(&all->head, hist_new(ft_strdup(all->head->data)));
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
 			lexer_build(all->head->data, ft_strlen(all->head->data), all->lex_buf);
 			parse(all);
-//			free(all->head->data);
 			exec_bin(all);
 		}
-		if (*all->head->data)
-			free(all->head->data);
+		// if (*all->head->data)
+		// 	free(all->head->data);
 //		reset_parser(all);
 	}
 	//at the end of program clean all.
@@ -216,11 +178,15 @@ int		promt(t_todo *all)
 
 int		load_up(t_todo *all, char **env)
 {
-	char **oldpwd;
+	char	*pwd;
 	if (!(all->environments = clone_env(env, NULL)))
 		return (-1);
 	set_shlvl(all);
+	pwd = 0;
+	pwd = getcwd(pwd, 0);
+	env_set_value(all, "PWD", pwd);
 	env_set_value(all, "OLDPWD", NULL);
+	free(pwd);
 	return (0);
 }
 

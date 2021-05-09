@@ -36,5 +36,5 @@ int 	ft_echo(t_todo *all)
 		}
 	}
 	write(1, &endsymbol, 1);
-	return (1);
+	return (0);
 }

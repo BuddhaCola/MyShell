@@ -18,8 +18,7 @@ int	ft_pwd(void)
 
 	pwd = NULL;
 	pwd = getcwd(pwd, 0);
-	ft_putstr_fd(pwd, 1);
-	ft_putstr_fd("\n", 1);
+	ft_putendl_fd(pwd, 1);
 	free(pwd);
-	return (1);
+	return (0);
 }

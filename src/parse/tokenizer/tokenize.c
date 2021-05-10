@@ -209,7 +209,7 @@ int tokenize(char *line, int size, t_lexer *lexer_list)
 			break ;
 		i++;
 	}
-	lexer_list->num_of_tokens = count_tokens(lexer_list->tok_list);;
+	lexer_list->num_of_tokens = count_tokens(lexer_list->tok_list);
 	return (lexer_list->num_of_tokens);
 }
 

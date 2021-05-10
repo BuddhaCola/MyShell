@@ -83,13 +83,15 @@ void build_to_execute_lst(t_todo *all)
     //to_execute
 	t_cmds *cmds;
 
-	//get cmds list elem
-    cmds = all->to_execute->cmds;
 	//for every pipe_elem
     parse_build(all);
-	while (pipe_lst_elem)
+	//get cmds list elem
+	cmds = all->to_execute->cmds;
+    while (pipe_lst_elem)
 	{
-		tok = pipe_lst_elem->tok_lst;
+		//get new cmds elem;
+		cmds = get_new_cmds_elem(cmds);
+    	tok = pipe_lst_elem->tok_lst;
 		//for every token in pipe_elem
 		get_cmd_str(cmds, tok);
 		tok = tok->next;
@@ -105,8 +107,6 @@ void build_to_execute_lst(t_todo *all)
                 add_to_2d(&cmds->args, tok);
             tok = tok->next;
         }
-		//get new cmds elem;
-		cmds = get_new_cmds_elem(cmds);
 		//next pipe_elem
 		pipe_lst_elem = pipe_lst_elem->next;
 	}

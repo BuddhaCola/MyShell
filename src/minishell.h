@@ -59,6 +59,7 @@ typedef struct s_lexer
 typedef struct  s_parse_utils
 {
     t_pipelist  *pipelist;
+    t_tok *cur_tok;
 }               t_parse_utils;
 
 //typedef struct	s_env

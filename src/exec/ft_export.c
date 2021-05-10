@@ -164,17 +164,17 @@ int			set_env(t_todo *all)
 	int i;
 
 	i = 1;
-	while (all->to_execute->cmd->args[i])
+	while (all->to_execute->cmds->args[i])
 	{
-		if (!validate_arg(all->to_execute->cmd->args[i++]))
-			new_env(all, all->to_execute->cmd->args[i - 1]);
+		if (!validate_arg(all->to_execute->cmds->args[i++]))
+			new_env(all, all->to_execute->cmds->args[i - 1]);
 	}
 	return (0);
 }
 
 int ft_export(t_todo *all)
 {
-	if (!all->to_execute->cmd->args[1])
+	if (!all->to_execute->cmds->args[1])
 		return (print_env(all));
 	else
 		set_env(all);

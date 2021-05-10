@@ -5,7 +5,6 @@ static void init_cmd(t_todo *all)
 {
     all->to_execute->cmd->cmd_str = NULL;
     all->to_execute->cmd->args = NULL;
-    all->to_execute->cmd->flg_pipe = 0;
     all->to_execute->cmd->input_files = NULL;
     all->to_execute->cmd->output_files = NULL;
     all->to_execute->cmd->double_greater_output_files = NULL;

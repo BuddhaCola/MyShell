@@ -1,3 +1,17 @@
+/*
+ * Вернемся к восстановлению
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
 #include "../../minishell.h"
 
 int	get_num_of_type(char c)
@@ -120,24 +134,9 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 			}
 			else if (chtype == CHAR_ESCAPESEQ)
 			{
-			    if (state == STATE_IN_DQUOTE)
-			    {
-                    if (line[i + 1] && (line[i + 1] == '\"' || line[i + 1] == '$'))
-                    {
-                        token->data[j++] = line[++i];
-                        token->type = TOKEN;
-                    }
-                    else
-                    {
-                        token->data[j++] = c;
-                        token->type = TOKEN;
-                    }
-                }
-			    else
-                {
-                    token->data[j++] = line[++i];
-                    token->type = TOKEN;
-                }
+                token->data[j++] = line[i++];
+                token->data[j++] = line[i];
+                token->type = TOKEN;
 			}
 			else if (chtype == CHAR_GENERAL)
 			{
@@ -154,7 +153,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 					tok_init(token, size - i);
 					j = 0;
 				}
-				else
+				else if (state == STATE_IN_DQUOTE)
                 {
                     token->data[j++] = c;
                 }
@@ -199,7 +198,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 			{
                 if ((i != 0) && (line[i - 1] != '\\'))
                 {
-                    dereference_the_value(line, &i);
+//                    dereference_the_value(line, &i);
                     token->type = TOKEN;
                 }
                 else
@@ -251,7 +250,7 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 	return k;
 }
 
-void		lexer_destroi(t_lexer *list)
+static void		lexer_destroi(t_lexer *list)
 {
 	if (list == NULL)
 		return ;

@@ -20,7 +20,7 @@ int     termcap_stuff(t_todo *all)
 	return (0);
 }
 
-void 	get_line(char *buf, char **line, t_todo *all)
+void 	get_line(char *buf, t_todo *all)
 {
 	char	*tmp;
 	tmp = all->hist_curr->temp;
@@ -41,7 +41,7 @@ void	ft_backspace(char *str)
 	}
 }
 
-int 	check_input(char *buf, char **line, t_todo *all)
+int 	check_input(char *buf, t_todo *all)
 {
 	static int quote;
 	t_history *lst;
@@ -49,7 +49,7 @@ int 	check_input(char *buf, char **line, t_todo *all)
 
 	if (ft_isprint(*buf))
 	{
-		get_line(buf, line, all);
+		get_line(buf, all);
 		ft_putstr_fd(buf, 1);
 		return (0);
 	}
@@ -69,16 +69,16 @@ int 	check_input(char *buf, char **line, t_todo *all)
 		return (write(1, "\n", 1));
 	}
 	else if (*buf == '\177')
-		ft_backspace(*line);
+		ft_backspace(all->hist_curr->temp);
 	else if (*buf == '\3')
 	{
-		free(*line);
-		*line = ft_strdup("");
+		free(all->hist_curr->temp);
+		all->hist_curr->temp = ft_strdup("");
 		return (write(1, "\n", 1));
 	}
 	else if (*buf == '\4')
 	{
-		if (**line == '\0')
+		if (*all->hist_curr->temp == '\0')
 			ft_exit(NULL, all);
 	}
 	else if (!(ft_strcmp(buf, "\e[B")))
@@ -108,10 +108,8 @@ int		promt(t_todo *all)
 {
 	char	buf[100];
 	int 	ret;
-	char	*line;
 
 	all->lex_buf = malloc(sizeof(t_lexer));
-
 	while (all->environments)
 	{
 		hist_add(&all->hist_curr, hist_new(ft_strdup("")));
@@ -123,7 +121,7 @@ int		promt(t_todo *all)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			if (check_input(buf, &all->hist_curr->temp, all))
+			if (check_input(buf, all))
 				break;
 		}
 		if (*all->hist_curr->temp)
@@ -133,9 +131,6 @@ int		promt(t_todo *all)
 			parse(all);
 			exec_bin(all);
 		}
-		// if (*all->hist_curr->temp)
-		// 	free(all->hist_curr->temp);
-//		reset_parser(all);
 	}
 	//at the end of program clean all.
 	return (0);

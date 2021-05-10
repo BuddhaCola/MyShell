@@ -154,6 +154,7 @@ int		load_up(t_todo *all, char **env)
 	pwd = 0;
 	pwd = getcwd(pwd, 0);
 	env_set_value(all, "PWD", pwd);
+	env_set_value(all, "?", "0");
 	env_set_value(all, "OLDPWD", NULL);
 	free(pwd);
 	return (0);

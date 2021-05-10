@@ -103,12 +103,12 @@ static void try_dereference(t_todo *all, char **src)
 				str++;
 			}
 			else if (*str == '$' && *(str + 1) != '\0'
-			&& (ft_isalpha(*(str + 1)) || *(str + 1) == '_'))
+			&& (ft_isalpha(*(str + 1)) || ft_strchr("?_", *(str + 1))))
 			{
 				start = str++;
 				key_iter = 0;
 				while (*str && (ft_isalpha(*str) || ft_isdigit(*str)
-				|| *str == '_'))
+				|| *str == '_' || *str == '?'))
 					key[key_iter++] = *str++;
 				key[key_iter] = '\0';
 				answer = search_key(all, key);
@@ -149,12 +149,12 @@ static void try_dereference(t_todo *all, char **src)
 				str++;
 			}
 			else if (*str == '$' && *(str + 1) != '\0'
-					 && (ft_isalpha(*(str + 1)) || *(str + 1) == '_'))
+					 && (ft_isalpha(*(str + 1)) || ft_strchr("?_", *(str + 1))))
 			{
 				start = str++;
 				key_iter = 0;
 				while (*str && (ft_isalpha(*str) || ft_isdigit(*str)
-								|| *str == '_'))
+								|| ft_strchr("?_", *(str))))
 					key[key_iter++] = *str++;
 				key[key_iter] = '\0';
 				answer = search_key(all, key);

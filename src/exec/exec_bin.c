@@ -96,6 +96,7 @@ int	start_process(t_todo *all, char *bin)
 		free(status);
 		if (errno)
 			ft_putstr_fd(strerror(errno), 1);
+		free (bin);
 	}
 	return (0);
 }

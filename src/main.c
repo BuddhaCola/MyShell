@@ -57,7 +57,7 @@ int 	check_input(char *buf, t_todo *all)
 	{
 		if (!all->hist_curr->orig)
 			all->hist_curr->orig = ft_strdup(all->hist_curr->temp);
-		else
+		else if (*all->hist_curr->temp)
 		{
 			tmp = ft_strdup(all->hist_curr->temp);
 			free(all->hist_curr->temp);
@@ -72,6 +72,7 @@ int 	check_input(char *buf, t_todo *all)
 		ft_backspace(all->hist_curr->temp);
 	else if (*buf == '\3')
 	{
+		env_set_value(all, "?", "1");
 		free(all->hist_curr->temp);
 		all->hist_curr->temp = ft_strdup("");
 		return (write(1, "\n", 1));
@@ -112,7 +113,8 @@ int		promt(t_todo *all)
 	all->lex_buf = malloc(sizeof(t_lexer));
 	while (all->environments)
 	{
-		hist_add(&all->hist_curr, hist_new(ft_strdup("")));
+		if (!all->hist_curr || (all->hist_curr && all->hist_curr->temp[0]))
+			hist_add(&all->hist_curr, hist_new(ft_strdup("")));
 		hist_move_to_end(all);
 		termcap_stuff(all);
 		ft_putstr_fd(PROMT, 1);

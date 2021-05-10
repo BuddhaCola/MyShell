@@ -46,7 +46,7 @@ int	ft_cd(t_todo *all)
 	if (!ft_strcmp(all->to_execute->cmds->args[1], "-"))
 		ret = cd_oldpwd(all);
 	if (ret == -1)
-		errorhandle(all, all->to_execute->cmds->args[0], NULL, "1");
+		errorhandle(all, all->to_execute->cmds->args[0], all->to_execute->cmds->args[1], "1");
 	if (ret == 0)
 	{
 		oldpwd = NULL;
@@ -55,5 +55,5 @@ int	ft_cd(t_todo *all)
 		env_set_value(all, "PWD", oldpwd);
 		free(oldpwd);
 	}
-	return (0);
+	return (ret);
 }

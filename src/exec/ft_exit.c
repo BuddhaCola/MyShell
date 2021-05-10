@@ -28,8 +28,8 @@ int ft_exit(char **args, t_todo *all)
 			code = ft_atoi(args[1]);
 		if (args[2])
 		{
-			ft_putstr_fd("exit: too many arguments 😠\n", 1);
-			return (1);
+			errorhandle(all, all->to_execute->cmds->args[0], "too many arguments", "1");
+			return (0);
 		}
 	}
 	else

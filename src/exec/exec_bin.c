@@ -1,5 +1,27 @@
 #include "../minishell.h"
 
+static int is_builtin(char *path)
+{
+	if (!path)
+		return (0);
+	char *builtins[8];
+	int i;
+
+	i = 0;
+	builtins[0] = "echo";
+	builtins[1] = "cd";
+	builtins[2] = "pwd";
+	builtins[3] = "export";
+	builtins[4] = "unset";
+	builtins[5] = "env";
+	builtins[6] = "exit";
+	builtins[7] = NULL;
+	while (builtins[i])
+		if (!ft_strcmp(builtins[i++], path))
+			return (1);
+	return (0);
+}
+
 static int do_builtin(char *path, t_todo *all)
 {
 	if (!(ft_strcmp(path, "echo")))
@@ -15,10 +37,8 @@ static int do_builtin(char *path, t_todo *all)
 	else if (!(ft_strcmp(path, "env")))
 		return (ft_env(all));
 	else if (!(ft_strcmp(path, "exit")))
-		ft_exit(all->to_execute->cmds->args, all);
-	else if (!(ft_strcmp(path, "get_value")))
-		env_get_value(all, all->to_execute->cmds->args[1]);
-	return (1);
+		return (ft_exit(all->to_execute->cmds->args, all));
+	return (0);
 }
 
 static char *check_here(char *path, char *bin)
@@ -82,41 +102,39 @@ char	*try_path(t_todo *all)
 int	start_process(t_todo *all, char *bin)
 {
 	pid_t	pid;
-	char	*status;
 
 	pid = fork();
 	if (!pid)
-		all->exec.err = execve(bin, all->to_execute->cmds->args, all->environments);
+		execve(bin, all->to_execute->cmds->args, all->environments);
 	else
 	{
 		errno = 0;
 		wait(&(all->exit_code));
-		status = ft_itoa(all->exit_code / 255);
-		env_set_value(all, "?", status);
-		free(status);
-		if (errno)
-			ft_putstr_fd(strerror(errno), 1);
-		free (bin);
+		all->exit_code /= 255;
+		if (all->exit_code < 0)
+			errorhandle(all, all->to_execute->cmds->cmd_str, NULL, NULL);
+		free(bin);
 	}
-	return (0);
+	return (all->exit_code);
 }
 
-int	exec_bin(t_todo *all)
+int	execution(t_todo *all)
 {
-	int		try_open;
+	int		fd;
 	char	*bin_location;
 
 	if (ft_strchr("./", all->to_execute->cmds->cmd_str[0]))
 	{
-		try_open = open(all->to_execute->cmds->cmd_str, O_RDONLY);
-		if (try_open != -1)
+		fd = open(all->to_execute->cmds->cmd_str, O_RDONLY);
+		if (fd != -1)
 		{
-			close(try_open);
-			return (start_process(all, all->to_execute->cmds->cmd_str));
+			bin_location = ft_strdup(all->to_execute->cmds->cmd_str);
+			close(fd);
+			return (start_process(all, bin_location));
 		}
 	}
-	if (do_builtin(all->to_execute->cmds->cmd_str, all) == 0)
-		return (all->exit_code);
+	if (is_builtin(all->to_execute->cmds->cmd_str))
+		return (do_builtin(all->to_execute->cmds->cmd_str, all));
 	bin_location = try_path(all);
 	if (bin_location)
 		return (start_process(all, bin_location));
@@ -125,8 +143,19 @@ int	exec_bin(t_todo *all)
 		ft_putstr_fd("bash: ", 1);
 		ft_putstr_fd(all->to_execute->cmds->cmd_str, 1);
 		ft_putstr_fd(": command not found 😑\n", 1);
-		return (0);
+		return (127);
 	}
-	free(all->to_execute->cmds->cmd_str);
-	return (1);
+}
+
+int	exec_bin(t_todo *all)
+{
+	int		ret;
+	char	*ret_ascii;
+
+	env_set_value(all, "?", "0");
+	ret = execution(all);
+	ret_ascii = ft_itoa(ret);
+	env_set_value(all, "?", ret_ascii);
+	free(ret_ascii);
+	return (0);
 }

@@ -3,59 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/09 14:54:49 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/09 16:45:07 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/07 18:51:42 by igearhea          #+#    #+#             */
+/*   Updated: 2020/11/07 18:51:45 by igearhea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_digits(int n)
+static char		*set_s(int n, int count)
 {
-	int				i;
-	unsigned int	nu;
+	char	*ptr;
+	char	*save_ptr;
+	int		target;
+	int		sign;
 
-	i = 0;
+	sign = 1;
+	target = 0;
+	ptr = malloc(sizeof(char) * count + 1);
+	if (!ptr)
+		return (ptr);
+	save_ptr = ptr;
+	ptr[count] = '\0';
 	if (n < 0)
 	{
-		nu = ((unsigned int)(n * -1));
-		i++;
+		ptr[0] = '-';
+		target = 1;
+		sign = -1;
 	}
-	else
-		nu = (unsigned int)n;
-	while (nu >= 10)
+	while (count-- != target)
 	{
-		nu /= 10;
-		i++;
+		ptr[count] = sign * (n % 10) + '0';
+		n /= 10;
 	}
-	return (i + 1);
+	return (save_ptr);
 }
 
-char		*ft_itoa(int n)
+static int		do_count(int n)
 {
-	char			*asc;
-	int				len;
-	unsigned int	nu;
+	int		count;
 
-	len = ft_digits(n);
-	if (!(asc = (char *)ft_calloc(len + 1, sizeof(char))))
-		return (NULL);
-	if (n < 0)
+	count = 0;
+	if (n <= 0)
+		count++;
+	while (n)
 	{
-		*asc = '-';
-		nu = ((unsigned int)(n * -1));
+		n = n / 10;
+		count++;
 	}
-	else
-		nu = (unsigned int)n;
-	len--;
-	while (nu >= 10)
-	{
-		*(asc + len) = nu % 10 + '0';
-		nu /= 10;
-		len--;
-	}
-	*(asc + len) = nu % 10 + '0';
-	return (asc);
+	return (count);
+}
+
+char			*ft_itoa(int n)
+{
+	char	*ptr;
+
+	ptr = set_s(n, do_count(n));
+	return (ptr);
 }

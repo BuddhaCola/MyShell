@@ -23,8 +23,8 @@ int     termcap_stuff(t_todo *all)
 void 	get_line(char *buf, char **line, t_todo *all)
 {
 	char	*tmp;
-	tmp = all->hist_curr->data;
-	all->hist_curr->data = ft_strjoin(all->hist_curr->data, buf);
+	tmp = all->hist_curr->temp;
+	all->hist_curr->temp = ft_strjoin(all->hist_curr->temp, buf);
 	free(tmp);
 }
 
@@ -41,36 +41,11 @@ void	ft_backspace(char *str)
 	}
 }
 
-t_history 	*hist_new(char *content)
-{
-	t_history	*new;
-
-	new = malloc(sizeof(t_history));
-	new->data = content;
-	new->next = NULL;
-	new->prev = NULL;
-	return (new);
-}
-
-void	histadd_front(t_history **lst, t_history *new)
-{
-	if (!*lst)
-	{
-		*lst = new;
-		return ;
-	}
-	if (new)
-	{
-		new->next = *lst;
-		(*lst)->prev = new;
-		*lst = new;
-	}
-}
-
 int 	check_input(char *buf, char **line, t_todo *all)
 {
 	static int quote;
 	t_history *lst;
+	char	*tmp;
 
 	if (ft_isprint(*buf))
 	{
@@ -80,6 +55,17 @@ int 	check_input(char *buf, char **line, t_todo *all)
 	}
 	else if (*buf == '\n')
 	{
+		if (!all->hist_curr->orig)
+			all->hist_curr->orig = ft_strdup(all->hist_curr->temp);
+		else
+		{
+			tmp = ft_strdup(all->hist_curr->temp);
+			free(all->hist_curr->temp);
+			all->hist_curr->temp = ft_strdup(all->hist_curr->orig);
+			hist_move_to_end(all);
+			free(all->hist_curr->temp);
+			all->hist_curr->temp = tmp;
+		}
 		return (write(1, "\n", 1));
 	}
 	else if (*buf == '\177')
@@ -95,24 +81,24 @@ int 	check_input(char *buf, char **line, t_todo *all)
 		if (**line == '\0')
 			ft_exit(NULL, all);
 	}
-	else if (!(ft_strcmp(buf, "\e[A")))
+	else if (!(ft_strcmp(buf, "\e[B")))
 	{
 		if (all->hist_curr->next)
 		{
 			all->hist_curr = all->hist_curr->next;
 			tputs(restore_cursor, 1, ft_putchar);
 			tputs(tgetstr("cd", 0), 1, ft_putchar);
-			ft_putstr_fd(all->hist_curr->data, 1);
+			ft_putstr_fd(all->hist_curr->temp, 1);
 		}
 	}
-	else if (!(ft_strcmp(buf, "\e[B")))
+	else if (!(ft_strcmp(buf, "\e[A")))
 	{
 		if (all->hist_curr->prev)
 		{
 			all->hist_curr = all->hist_curr->prev;
 			tputs(restore_cursor, 1, ft_putchar);
 			tputs(tgetstr("cd", 0), 1, ft_putchar);
-			ft_putstr_fd(all->hist_curr->data, 1);
+			ft_putstr_fd(all->hist_curr->temp, 1);
 		}
 	}
 	return (0);
@@ -128,26 +114,27 @@ int		promt(t_todo *all)
 
 	while (all->environments)
 	{
+		hist_add(&all->hist_curr, hist_new(ft_strdup("")));
+		hist_move_to_end(all);
 		termcap_stuff(all);
 		ft_putstr_fd(PROMT, 1);
 		tputs(save_cursor, 1, ft_putchar);
-		histadd_front(&all->hist_curr, hist_new(ft_strdup("")));
 		while (1)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			if (check_input(buf, &all->hist_curr->data, all))
+			if (check_input(buf, &all->hist_curr->temp, all))
 				break;
 		}
-		if (*all->hist_curr->data)
+		if (*all->hist_curr->temp)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			lexer_build(all->hist_curr->data, ft_strlen(all->hist_curr->data), all->lex_buf);
+			lexer_build(all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf);
 			parse(all);
 			exec_bin(all);
 		}
-		// if (*all->hist_curr->data)
-		// 	free(all->hist_curr->data);
+		// if (*all->hist_curr->temp)
+		// 	free(all->hist_curr->temp);
 //		reset_parser(all);
 	}
 	//at the end of program clean all.

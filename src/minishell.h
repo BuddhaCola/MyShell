@@ -50,7 +50,8 @@ typedef struct s_lexer
 
 typedef struct			s_history
 {
-	char 				*data;
+	char 				*temp;
+	char				*orig;
 	struct s_history	*next;
 	struct s_history	*prev;
 }						t_history;
@@ -159,4 +160,8 @@ char	*env_get_value(t_todo *all, char *key);
 void	env_set_value(t_todo *all, char *key, char *value);
 void	set_shlvl(t_todo *all);
 int		errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code);
+
+t_history 	*hist_new(char *content);
+void		hist_add(t_history **lst, t_history *new);
+void		hist_move_to_end(t_todo *all);
 #endif

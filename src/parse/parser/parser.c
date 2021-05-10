@@ -27,7 +27,7 @@ static int  try_get_cmd_str(t_todo *all)
 {
     if (all->cur_tok_list && (all->cur_tok_list->type == CHAR_GENERAL))
 		all->to_execute->cmd->cmd_str = ft_strdup(all->cur_tok_list->data);
-//        all->to_execute->cmd->cmd_str = path_parse(all, all->cur_tok_list->data);
+//        all->to_execute->cmd->cmd_str = path_parse(all, all->cur_tok_list->temp);
     else
         return (-1);
     return (0);

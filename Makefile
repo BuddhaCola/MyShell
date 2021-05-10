@@ -12,7 +12,7 @@
 
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c src/utils/utils.c\
-src/exec/env_functions.c src/exec/exec_bin.c src/exec/ft_echo.c src/exec/ft_env.c src/exec/ft_exit.c src/exec/ft_export.c src/exec/ft_pipe.c src/exec/ft_pwd.c src/exec/path_parse.c src/exec/redirection.c src/exec/ft_unset.c src/exec/env_update.c src/exec/set_shlvl.c src/exec/env_search.c src/exec/ft_cd.c src/exec/error_handle.c\
+src/exec/env_functions.c src/exec/exec_bin.c src/exec/ft_echo.c src/exec/ft_env.c src/exec/ft_exit.c src/exec/ft_export.c src/exec/ft_pipe.c src/exec/ft_pwd.c src/exec/path_parse.c src/exec/redirection.c src/exec/ft_unset.c src/exec/env_update.c src/exec/set_shlvl.c src/exec/env_search.c src/exec/ft_cd.c src/exec/error_handle.c src/exec/history.c\
 src/parse/lexer/lexer.c src/parse/parser/parser.c src/parse/lexer/strip_quotes/strip_quotes.c src/parse/dereferencing_dollar/dereference_the_value.c
 
 NAME	=	minishell

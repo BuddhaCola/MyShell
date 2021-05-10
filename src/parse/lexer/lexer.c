@@ -240,9 +240,9 @@ int			lexer_build(char *line, int size, t_lexer *lexer_list)
 	{
 		if (token->type == TOKEN)
 		{
-//		    strip_quotes(&save_tok_data_ptr, token->data);
-//		    free(token->data);
-//		    token->data = save_tok_data_ptr;
+//		    strip_quotes(&save_tok_data_ptr, token->temp);
+//		    free(token->temp);
+//		    token->temp = save_tok_data_ptr;
 		    k++;
 		}
 		token = token->next;

@@ -127,8 +127,18 @@ int		promt(t_todo *all)
 		if (*all->hist_curr->temp)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			build_execute_lst(all, all->hist_curr->temp, ret, all->lex_buf);
-			exec_bin(all);
+			build_execute_lst(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf);
+			while (all->parse_utils->cur_tok)
+			{
+				parse_pipes(all);
+				dereference_the_value(all);
+				build_to_execute_lst(all);
+				exec_bin(all);
+				destroy_to_execute_lst(all);
+				destroy_parse_pipes(all);
+			}
+			lexer_destroy(all->lex_buf);
+			free(all->parse_utils);
 		}
 	}
 	//at the end of program clean all.

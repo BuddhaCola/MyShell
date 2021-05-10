@@ -9,9 +9,7 @@ void	env_insetion(t_todo *all, char *insertion, char *key)
 	val_in_arr = env_search(all->environments, key);
 	if (!val_in_arr)
 	{
-//		val_in_arr = all->environments;
 		clone = clone_env(all->environments, insertion);
-//		free(val_in_arr);
 		i_want_to_be_freed(all->environments);
 		all->environments = clone;
 		free(insertion);

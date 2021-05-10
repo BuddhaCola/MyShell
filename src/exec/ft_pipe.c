@@ -11,37 +11,47 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-int	ft_pipe(char *program1, char **arg1, char *program2, char **arg2)
-{
-	int	pipes[2];
-	int	process1;
-	int	process2;
 
-	if (pipe(pipes) == -1)
-		return (2);
-	process1 = fork();
-	if (process1 == 0)
+int	ft_pipe(t_todo *all)
+{
+	int   p[2];
+	pid_t pid;
+	int		fd_in = 0;
+	int		filefd;
+
+	t_cmds *cmds_cpy;
+	cmds_cpy = all->to_execute->cmds;
+	while(cmds_cpy)
 	{
-		dup2(pipes[1], STDOUT_FILENO);
-		close(pipes[0]);
-		close(pipes[1]);
-		execve(program1, 0, 0);
+		pipe(p);
+		if ((pid = fork()) == -1)
+		{
+			exit(EXIT_FAILURE);
+		}
+		else if (pid == 0)
+		{
+			if (cmds_cpy->input_files)
+			{
+				PROBE
+				filefd = open(*cmds_cpy->input_files, O_RDONLY, 0777);
+				dup2(filefd, STDIN_FILENO);
+				cmds_cpy->input_files++;
+			}
+			else
+				dup2(fd_in, 0); //change the input according to the old one
+			if (cmds_cpy->next != NULL)
+				dup2(p[1], 1);
+			close(p[0]);
+			execvp(cmds_cpy->cmd_str, cmds_cpy->args);
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			wait(NULL);
+			close(p[1]);
+			fd_in = p[0]; //save the input for the next command
+			cmds_cpy = cmds_cpy->next;
+		}
 	}
-	else if (process1 == -1)
-		return (1);
-	process2 = fork();
-	if (process2 == 0)
-	{
-		dup2(pipes[0], STDIN_FILENO);
-		close(pipes[0]);
-		close(pipes[1]);
-		execve(program2, 0, 0);
-	}
-	else if (process2 == -1)
-		return (1);
-	close(pipes[0]);
-	close(pipes[1]);
-	waitpid(process1, 0, 0);
-	waitpid(process2, 0, 0);
 	return (0);
 }

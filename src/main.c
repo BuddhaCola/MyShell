@@ -135,6 +135,7 @@ int		promt(t_todo *all)
 				parse_pipes(all);
 				dereference_the_value(all);
 				build_to_execute_lst(all);
+//				ft_pipe(all);
 				exec_bin(all);
 				destroy_to_execute_lst(all);
 				destroy_parse_pipes(all);

@@ -63,6 +63,7 @@ int	print_env(t_todo *all)
 
 int	ft_export(t_todo *all)
 {
+	PROBE
 	int		i;
 	char	**clone;
 

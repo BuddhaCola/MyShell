@@ -11,7 +11,6 @@ static void init_tok(t_tok *lst)
 //DONE
 void    init_pipe_list(t_todo *all)
 {
-	all->parse_utils = malloc(sizeof(t_parse_utils));
 	all->parse_utils->pipelist = malloc(sizeof(t_pipelist));
 	all->parse_utils->pipelist->next = NULL;
 	all->parse_utils->pipelist->tok_lst = malloc(sizeof(t_tok));
@@ -38,7 +37,53 @@ t_tok   *get_next_tok_list_elem(t_tok *lst)
 	return (lst->next);
 }
 
-//parse_pipes
+////parse_pipes
+//void    parse_pipes(t_todo *all)
+//{
+//	t_tok *src_lst;         //last src token
+//	t_tok *pipe_lst_tok;    //last pipe token
+//	t_pipelist *pipelist;   //pipe list elem
+//
+//	//init
+//	init_pipe_list(all);
+//	src_lst = all->parse_utils->cur_tok;
+//	pipe_lst_tok = all->parse_utils->pipelist->tok_lst;
+//	pipelist = all->parse_utils->pipelist;
+//	//iterate on src tokens
+//	while (src_lst)
+//	{
+//		//get next pipelist elem if char_pipe
+//		if (src_lst->type == CHAR_PIPE)
+//		{
+//			pipelist = get_next_pipe_list_elem(pipelist);
+//			pipe_lst_tok = pipelist->tok_lst;
+//			src_lst = src_lst->next;
+//			continue;
+//		}
+//		else if (src_lst->type != CHAR_SEMICOLON)
+//		{
+//			//get next elem, cpy tokens data and type
+//			pipe_lst_tok->data = ft_strdup(src_lst->data);
+//			pipe_lst_tok->type = src_lst->type;
+//		}
+//		//get tok after pipe
+//		if (src_lst->next == NULL || src_lst->type == CHAR_SEMICOLON)
+//		{
+//			if (src_lst->next != NULL)
+//				all->parse_utils->cur_tok = src_lst->next;
+//			else
+//				all->parse_utils->cur_tok = src_lst;
+//			break;
+//		}
+//		if (src_lst->next->type == CHAR_PIPE)
+//		{
+//			src_lst = src_lst->next;
+//			continue;
+//		}
+//		src_lst = src_lst->next;
+//	}
+//}
+
 void    parse_pipes(t_todo *all)
 {
 	t_tok *src_lst;         //last src token
@@ -53,22 +98,12 @@ void    parse_pipes(t_todo *all)
 	//iterate on src tokens
 	while (src_lst)
 	{
-		//get next pipelist elem if char_pipe
 		if (src_lst->type == CHAR_PIPE)
 		{
 			pipelist = get_next_pipe_list_elem(pipelist);
 			pipe_lst_tok = pipelist->tok_lst;
-			src_lst = src_lst->next;
-			continue;
 		}
-		else
-		{
-			//get next elem, cpy tokens data and type
-			pipe_lst_tok->data = ft_strdup(src_lst->data);
-			pipe_lst_tok->type = src_lst->type;
-		}
-		//get tok after pipe
-		if (src_lst->next == NULL || src_lst->type == CHAR_SEMICOLON)
+		else if (src_lst->type == CHAR_SEMICOLON)
 		{
 			if (src_lst->next != NULL)
 				all->parse_utils->cur_tok = src_lst->next;
@@ -76,13 +111,17 @@ void    parse_pipes(t_todo *all)
 				all->parse_utils->cur_tok = src_lst;
 			break;
 		}
-		if (src_lst->next->type == CHAR_PIPE)
+		else
 		{
-			src_lst = src_lst->next;
-			continue;
+			pipe_lst_tok->data = ft_strdup(src_lst->data);
+			pipe_lst_tok->type = src_lst->type;
+			if (src_lst->next != NULL && src_lst->next->type != CHAR_PIPE
+			&& src_lst->next->type != CHAR_SEMICOLON)
+				pipe_lst_tok = get_next_tok_list_elem(pipe_lst_tok);
 		}
-		pipe_lst_tok = get_next_tok_list_elem(pipe_lst_tok);
 		src_lst = src_lst->next;
+		if (!src_lst)
+			all->parse_utils->cur_tok = src_lst;
 	}
 }
 

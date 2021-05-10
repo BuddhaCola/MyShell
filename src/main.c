@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/11 18:15:43 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/20 21:35:07 by wtaylor          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 int     termcap_stuff(t_todo *all)
@@ -17,7 +5,7 @@ int     termcap_stuff(t_todo *all)
 	struct termios	new_attributes;
 	char			*termtype;
 
-	termtype = getenv("TERM"); //аккуратнее с этим дерьмом!
+	termtype = getenv("TERM"); //это говно!
 	if(!isatty(0))
 		ft_putstr_fd("not a terminatl!\n", 1);
 	if (tcgetattr(0, &all->saved_attributes) == -1)
@@ -27,16 +15,16 @@ int     termcap_stuff(t_todo *all)
 	new_attributes.c_lflag &= ~(ISIG);
 	new_attributes.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &new_attributes);
-	if (tgetent(0, termtype) != 1)
+	if (tgetent(0, "xterm-256color") != 1)
 		return (write(1, "error on tgetent\n", 17));
 	return (0);
 }
 
-void 	get_line(char *buf, char **line)
+void 	get_line(char *buf, char **line, t_todo *all)
 {
 	char	*tmp;
-	tmp = *line;
-	*line = ft_strjoin(*line, buf);
+	tmp = all->hist_curr->temp;
+	all->hist_curr->temp = ft_strjoin(all->hist_curr->temp, buf);
 	free(tmp);
 }
 
@@ -52,26 +40,33 @@ void	ft_backspace(char *str)
 		str[len - 1] = '\0';
 	}
 }
+
 int 	check_input(char *buf, char **line, t_todo *all)
 {
 	static int quote;
+	t_history *lst;
+	char	*tmp;
 
 	if (ft_isprint(*buf))
 	{
-//		if (ft_strchr("/'/", *buf))
-//			quote = 1;
-		get_line(buf, line);
+		get_line(buf, line, all);
 		ft_putstr_fd(buf, 1);
 		return (0);
 	}
 	else if (*buf == '\n')
 	{
-//		if (quote == 1)
-//			return (write(1, "\n", 1));
-//		else
+		if (!all->hist_curr->orig)
+			all->hist_curr->orig = ft_strdup(all->hist_curr->temp);
+		else
 		{
-			return (write(1, "\n", 1));
+			tmp = ft_strdup(all->hist_curr->temp);
+			free(all->hist_curr->temp);
+			all->hist_curr->temp = ft_strdup(all->hist_curr->orig);
+			hist_move_to_end(all);
+			free(all->hist_curr->temp);
+			all->hist_curr->temp = tmp;
 		}
+		return (write(1, "\n", 1));
 	}
 	else if (*buf == '\177')
 		ft_backspace(*line);
@@ -83,18 +78,28 @@ int 	check_input(char *buf, char **line, t_todo *all)
 	}
 	else if (*buf == '\4')
 	{
-			if (**line == '\0')
-				ft_exit(NULL, all);
-	}
-	else if (!(ft_strcmp(buf, "\e[A")))
-	{
-		ft_putstr_fd("you pressed UP   | Great job! 👍", 1);
-					tputs(restore_cursor, 1, ft_putchar);
+		if (**line == '\0')
+			ft_exit(NULL, all);
 	}
 	else if (!(ft_strcmp(buf, "\e[B")))
 	{
-			ft_putstr_fd("you pressed DOWN | Great job! 👍", 1);
-						tputs(restore_cursor, 1, ft_putchar);
+		if (all->hist_curr->next)
+		{
+			all->hist_curr = all->hist_curr->next;
+			tputs(restore_cursor, 1, ft_putchar);
+			tputs(tgetstr("cd", 0), 1, ft_putchar);
+			ft_putstr_fd(all->hist_curr->temp, 1);
+		}
+	}
+	else if (!(ft_strcmp(buf, "\e[A")))
+	{
+		if (all->hist_curr->prev)
+		{
+			all->hist_curr = all->hist_curr->prev;
+			tputs(restore_cursor, 1, ft_putchar);
+			tputs(tgetstr("cd", 0), 1, ft_putchar);
+			ft_putstr_fd(all->hist_curr->temp, 1);
+		}
 	}
 	return (0);
 }
@@ -106,31 +111,44 @@ int		promt(t_todo *all)
 	char	*line;
 
 	all->lex_buf = malloc(sizeof(t_lexer));
+
 	while (all->environments)
 	{
+		hist_add(&all->hist_curr, hist_new(ft_strdup("")));
+		hist_move_to_end(all);
 		termcap_stuff(all);
 		ft_putstr_fd(PROMT, 1);
 		tputs(save_cursor, 1, ft_putchar);
-		line = ft_strdup("");
 		while (1)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			if (check_input(buf, &line, all))
+			if (check_input(buf, &all->hist_curr->temp, all))
 				break;
 		}
-		if (*line)
+		if (*all->hist_curr->temp)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			build_execute_lst(all, line, ret, all->lex_buf);
-//			free(line);
-			exec_bin(all->to_execute->cmds->cmd_str, all);
+			build_execute_lst(all, all->hist_curr->temp, ret, all->lex_buf);
+			exec_bin(all);
 		}
-		if (*line)
-			free(line);
 //		reset_parser(all);
 	}
 	//at the end of program clean all.
+	return (0);
+}
+
+int		load_up(t_todo *all, char **env)
+{
+	char	*pwd;
+	if (!(all->environments = clone_env(env, NULL)))
+		return (-1);
+	set_shlvl(all);
+	pwd = 0;
+	pwd = getcwd(pwd, 0);
+	env_set_value(all, "PWD", pwd);
+	env_set_value(all, "OLDPWD", NULL);
+	free(pwd);
 	return (0);
 }
 
@@ -141,9 +159,7 @@ int		main(int argc, char **argv, char **env)
 	t_todo		all;
 
 	ft_bzero(&all, sizeof(all));
-	if (!(all.environments = clone_env(env, NULL)))
-		return (-1);
-	env = all.environments;
+	load_up(&all, env);
 	if (argc > 1)
 		debug_promt(&all); //убрать 🚧
 	else
@@ -171,15 +187,17 @@ int		debug_promt(t_todo *all)
 		//TODO check ret from read
 		buf[ret] = '\0';
         build_execute_lst(all, buf, ret, all->lex_buf);
-		t_tok *list;
-		list = all->lex_buf->tok_list;
-//		while (list)
-//        {
-//		    printf("%s\t\t\t\t%d\n", list->data, list->type);
-//		    list = list->next;
-//        }
-//        printf("|%s|\n", all->to_execute->cmd->cmd_str);
-//		exec_bin(all->to_execute->cmd->cmd_str, all);
+		while (all->parse_utils->cur_tok)
+        {
+			parse_pipes(all);
+			dereference_the_value(all);
+			build_to_execute_lst(all);
+			exec_bin(all);
+			destroy_to_execute_lst(all);
+			destroy_parse_pipes(all);
+		}
+		lexer_destroy(all->lex_buf);
+		free(all->parse_utils);
 	}
 	return (0);
 }

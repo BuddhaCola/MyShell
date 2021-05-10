@@ -11,16 +11,17 @@ int build_execute_lst(t_todo *all, char *line, int size
 		return -1;
 	}
 	//костыль для cur_tok
+	all->parse_utils = malloc(sizeof(t_parse_utils));
 	all->parse_utils->cur_tok = all->lex_buf->tok_list;
-	parse_pipes(all);
-	dereference_the_value(all);
-	build_to_execute_lst(all);
+//	parse_pipes(all);
+//	dereference_the_value(all);
+//	build_to_execute_lst(all);
 
-	destroy_to_execute_lst(all);
-	destroy_parse_pipes(all);
-	lexer_destroy(all->lex_buf);
+//	destroy_to_execute_lst(all);
+//	destroy_parse_pipes(all);
+//	lexer_destroy(all->lex_buf);
 
 	//free parse_utils struct at the end
-	free(all->parse_utils);
+//	free(all->parse_utils);
 	return 0;
 }

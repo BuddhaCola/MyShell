@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <term.h>
+#include <string.h>
 
 
 #include "utils/get_next_line/get_next_line.h"
@@ -62,6 +63,14 @@ typedef struct  s_parse_utils
     t_tok *cur_tok;
 }               t_parse_utils;
 
+typedef struct			s_history
+{
+	char 				*temp;
+	char				*orig;
+	struct s_history	*next;
+	struct s_history	*prev;
+}						t_history;
+
 //typedef struct	s_env
 //{
 //	char *name;
@@ -81,10 +90,9 @@ typedef	struct			s_todo
 	t_lexer				*lex_buf;
     t_parse_utils       *parse_utils;
 	char 				**environments;
-	int 				env_count;
 	struct termios		saved_attributes;
-	char 				terminfo_buffer[2048];
 	int 				exit_code;
+	t_history			*hist_curr;
 }						t_todo;
 
 enum e_token_type
@@ -145,17 +153,18 @@ void	handle_signals();
 int		print_env(t_todo *all);
 
 // builtins
-void	ft_pwd(void);
+int		ft_pwd(void);
 int		ft_export(t_todo *all);
+int		ft_cd(t_todo *all);
 int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
-int		ft_echo(int argc, char **argv);
+int 	ft_echo(t_todo *all);
 int		ft_env(t_todo *all);
 int		ft_exit(char **args, t_todo *all);
 int		ft_unset(t_todo *all);
 
 // utils
 void	i_want_to_be_freed(char **arr);
-int		exec_bin(char *path, t_todo *all);
+int		exec_bin(t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
 int		count_environments(t_todo *all);
 int		swapstr(char **str1, char **str2);
@@ -167,4 +176,14 @@ int		ft_strcmp(char *str1, char *str2);
 int		ft_putchar(int c);
 int		validate_arg(char *newenv, char mode);
 int		ft_checkforbiddensymbols_arg(char *str, int mode);
+int		env_update(t_todo *all, char *key, char *change, char mode);
+char	**env_search(char **env, char *key);
+char	*env_get_value(t_todo *all, char *key);
+void	env_set_value(t_todo *all, char *key, char *value);
+void	set_shlvl(t_todo *all);
+int		errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code);
+
+t_history 	*hist_new(char *content);
+void		hist_add(t_history **lst, t_history *new);
+void		hist_move_to_end(t_todo *all);
 #endif

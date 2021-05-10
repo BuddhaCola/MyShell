@@ -21,7 +21,7 @@ static int	arg_insertion(char **oldenv, const char **new_env, int key_len)
 	char	*tmp;
 
 	if (!ft_strncmp(&(*new_env)[key_len], "+=", 2)
-		&& (*new_env)[key_len + 3])
+		&& (*new_env)[key_len + 2])
 		appendarg(oldenv, new_env, key_len);
 	if ((*new_env)[key_len] == '=')
 	{
@@ -29,6 +29,8 @@ static int	arg_insertion(char **oldenv, const char **new_env, int key_len)
 		*oldenv = ft_strdup(*new_env);
 		free(tmp);
 	}
+	tmp = (char *)*new_env;
+	free(tmp);
 	*new_env = NULL;
 	return (0);
 }
@@ -42,7 +44,7 @@ static int	add_env(char **env, const char **new_env)
 	i = 0;
 	while ((*new_env)[key_len] && !ft_strchr("+=", (*new_env)[key_len]))
 		key_len++;
-	while (env[i])
+	while (env[i] && *new_env)
 	{
 		if (!ft_strncmp(env[i], *new_env, key_len)
 			&& (env[i][key_len] == '=' || env[i][key_len] == '\0'))

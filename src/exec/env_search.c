@@ -7,7 +7,11 @@ char	*env_get_value(t_todo *all, char *key)
 
 	env_in_arr = env_search(all->environments, key);
 	if (env_in_arr)
-		value = ft_strchr(*env_in_arr, '=') + 1;
+	{
+		value = ft_strchr(*env_in_arr, '=');
+		if (value && value + 1)
+			value += 1;
+	}
 	else
 		value = NULL;
 	return (value);

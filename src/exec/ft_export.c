@@ -66,17 +66,17 @@ int	ft_export(t_todo *all)
 	int		i;
 	char	**clone;
 
-	if (!all->to_execute->cmd->args[1])
+	if (!all->to_execute->cmds->args[1])
 		return (print_env(all));
 	else
 	{
 		i = 1;
-		while (all->to_execute->cmd->args[i])
+		while (all->to_execute->cmds->args[i])
 		{
-			if (!validate_arg(all->to_execute->cmd->args[i], '+'))
+			if (!validate_arg(all->to_execute->cmds->args[i], '+'))
 			{
 				clone = clone_env(all->environments,
-					all->to_execute->cmd->args[i]);
+					all->to_execute->cmds->args[i]);
 				i_want_to_be_freed(all->environments);
 				all->environments = clone;
 			}

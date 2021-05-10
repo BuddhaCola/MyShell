@@ -33,13 +33,13 @@ int	ft_unset(t_todo *all)
 {
 	int	i;
 
-	if (all->cur_cmd_list->args[1])
+	if (all->to_execute->cmds->args[1])
 	{
 		i = 1;
-		while (all->cur_cmd_list->args[i])
+		while (all->to_execute->cmds->args[i])
 		{
-			if (!validate_arg(all->to_execute->cmd->args[i], '-'))
-				search_and_destroy(all, all->to_execute->cmd->args[i]);
+			if (!validate_arg(all->to_execute->cmds->args[i], '-'))
+				search_and_destroy(all, all->to_execute->cmds->args[i]);
 			i++;
 		}
 	}

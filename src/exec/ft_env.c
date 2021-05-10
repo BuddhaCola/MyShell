@@ -4,7 +4,7 @@ int ft_env(t_todo *all)
 	int i;
 
 	i = 0;
-	if (all->to_execute->cmd->args[1] != NULL)
+	if (all->to_execute->cmds->args[1] != NULL)
 		return ((int)write(1, "env: env without any options and any arguments\n", 47));
 	if (!all->environments)
 		return ((int)write(1, "env: env is a NULL pointer\n", 8));

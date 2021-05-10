@@ -18,20 +18,20 @@
 #define PROMT "Minihell!🔥"
 
 //parser
-typedef struct s_cmd
+typedef struct s_cmds
 {
-	char			*cmd_str;
-	char			**args;
-	int				flg_pipe;
-	char			**input_files;
-	char			**output_files;
-	char			**double_greater_output_files;
-	struct s_cmd	*next;
-}					t_cmd;
+	char					*cmd_str;
+	char					**args;
+	char					**input_files;
+	char					**output_files;
+	char                    **append_files;
+	struct s_cmds		    *next;
+}				t_cmds;
 
+//to execute
 typedef struct s_to_execute
 {
-	t_cmd			*cmd;
+	t_cmds		            *cmds;
 }				t_to_execute;
 
 //lexer
@@ -42,11 +42,26 @@ typedef struct s_tok
 	struct s_tok	*next;
 }					t_tok;
 
+//parser
+typedef struct  s_pipelist
+{
+    t_tok               *tok_lst;
+    struct s_pipelist   *next;
+}               t_pipelist;
+
+//lexer
 typedef struct s_lexer
 {
 	t_tok	*tok_list;
 	int		num_of_tokens;
 }				t_lexer;
+
+//parse utils
+typedef struct  s_parse_utils
+{
+    t_pipelist  *pipelist;
+    t_tok *cur_tok;
+}               t_parse_utils;
 
 typedef struct			s_history
 {
@@ -70,11 +85,10 @@ typedef	struct s_exec
 
 typedef	struct			s_todo
 {
-	t_to_execute		*to_execute;
-	t_tok				*cur_tok_list;
-	t_cmd				*cur_cmd_list;
+    t_to_execute		*to_execute;
 	t_exec				exec;
 	t_lexer				*lex_buf;
+    t_parse_utils       *parse_utils;
 	char 				**environments;
 	struct termios		saved_attributes;
 	int 				exit_code;
@@ -109,22 +123,30 @@ enum e_states
 	STATE_GENERAL,
 };
 
+//build to execute lst
+void build_to_execute_lst(t_todo *all);
+void destroy_to_execute_lst(t_todo *all);
+
+//strip quotes and bslashes
+void strip_quotes_and_bslashes(char **src);
+
 //dereference the value
-void dereference_the_value(char *line, int *i);
+void dereference_the_value(t_todo *all);
 
-//strip quotes
-void    strip_quotes(char **dst, char *src);
+//build exec list
+int build_execute_lst(t_todo *all, char *line, int size
+        ,t_lexer *lexer_list);
 
-//parse
-void parse(t_todo *all);
-void destroy_parser(t_todo *all);
+//tokenize
+int         tokenize(char *line, int size, t_lexer *lexer_list);
+void		lexer_destroy(t_lexer *list);
 
-//lexer
-int		get_num_of_type(char c);
-void	tok_init(t_tok *tok, int data_size);
-void	tok_destroy(t_tok *tok);
-int		lexer_build(char *line, int size, t_lexer *lexer_list);
-void	lexer_destroi(t_lexer *list);
+//check syntax
+int check_syntax(t_tok *token);
+
+//parse pipes
+void    parse_pipes(t_todo *all);
+void    destroy_parse_pipes(t_todo *all);
 
 char	**clone_env(char **env, const char *new_env);
 void	handle_signals();

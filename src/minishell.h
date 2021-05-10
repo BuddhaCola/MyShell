@@ -142,7 +142,7 @@ int         tokenize(char *line, int size, t_lexer *lexer_list);
 void		lexer_destroy(t_lexer *list);
 
 //check syntax
-int check_syntax(t_tok *token);
+int check_syntax(t_todo *all, t_tok *token);
 
 //parse pipes
 void    parse_pipes(t_todo *all);

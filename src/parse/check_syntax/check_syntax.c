@@ -54,7 +54,7 @@ static int validate_quotation(char *str)
 	return (0);
 }
 
-int check_syntax(t_tok *token)
+int check_syntax(t_todo *all, t_tok *token)
 {
 	t_tok *previous_token;
 
@@ -64,7 +64,7 @@ int check_syntax(t_tok *token)
 	{
 		if (validate_quotation(token->data))
 		{
-			printf("Syntax error: quotes not closed.\n");
+			errorhandle(all, NULL, "Syntax error: quotes not closed", "1");
 			return -1;
 		}
 		if (token->type == CHAR_GREATER || token->type == CHAR_DGREATER || token->type == CHAR_LESSER)
@@ -72,6 +72,7 @@ int check_syntax(t_tok *token)
 			if (previous_token->type != TOKEN || token->next == NULL
 			|| token->next->type != TOKEN)
 			{
+				errorhandle(all, NULL, "Syntax error: quotes not closed", "1");
 				printf("Error around token: '%s'.\n", token->data);
 				return -1;
 			}

@@ -194,7 +194,8 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
-        build_execute_lst(all, buf, ret, all->lex_buf);
+        if (build_execute_lst(all, buf, ret, all->lex_buf) != 0)
+            return -1;
 		while (all->parse_utils->cur_tok)
         {
 			parse_pipes(all);

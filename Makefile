@@ -17,7 +17,8 @@ src/parse/dereferencing_dollar/dereference_the_value.c src/parse/parse_pipes/par
 src/parse/tokenizer/tokenize.c src/parse/build_to_execute_lst/build_to_execute_lst.c\
 src/parse/build_execute_lst.c src/parse/check_syntax/check_syntax.c \
 src/parse/strip_quotes_and_bslashes/strip_quotes_and_bslashes.c\
-src/parse/tokenizer/if_state_in_general.c
+src/parse/tokenizer/if_state_in_general/if_state_in_general.c\
+src/parse/tokenizer/if_state_in_general/if_state_in_general_utils.c
 
 NAME	=	minishell
 

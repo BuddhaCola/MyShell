@@ -57,6 +57,7 @@ typedef struct s_lexer
 	int 	chtype;
 	t_tok	*token;
 	int		state;
+	int     size;
 	int		j;
 }				t_lexer;
 
@@ -142,6 +143,15 @@ int build_execute_lst(t_todo *all, char *line, int size
 int         tokenize(char *line, int size, t_lexer *lexer_list);
 void 		if_state_in_general(t_lexer *lexer, char *line);
 void		lexer_destroy(t_lexer *list);
+void tok_init(t_tok *tok, int data_size);
+void if_char_quote_do(t_lexer *lexer);
+void if_char_dquote_do(t_lexer *lexer);
+void if_char_escape_or_general_do(t_lexer *lexer, const char *line);
+void if_char_whitespace_do(t_lexer *lexer, const char *line);
+void if_semi_great_less_pipe_char_do(t_lexer *lexer, const char *line);
+
+
+
 
 //check syntax
 int check_syntax(t_tok *token);

@@ -187,4 +187,7 @@ int		errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code)
 t_history 	*hist_new(char *content);
 void		hist_add(t_history **lst, t_history *new);
 void		hist_move_to_end(t_todo *all);
+
+void	hist_print(t_todo *all);
+
 #endif

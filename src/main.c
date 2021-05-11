@@ -73,6 +73,7 @@ int 	check_input(char *buf, t_todo *all)
 	else if (*buf == '\3')
 	{
 		env_set_value(all, "?", "1");
+		hist_move_to_end(all);
 		free(all->hist_curr->temp);
 		all->hist_curr->temp = ft_strdup("");
 		return (write(1, "\n", 1));

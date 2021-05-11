@@ -34,7 +34,7 @@ void	hist_move_to_end(t_todo *all)
 		all->hist_curr = all->hist_curr->next;
 }
 
-void	print_hist(t_todo *all)
+void	hist_print(t_todo *all)
 {
 	t_history	*ptr;
 

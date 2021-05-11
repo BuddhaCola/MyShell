@@ -1,30 +1,5 @@
 #include "../minishell.h"
 
-static int is_builtin(char *path)
-{
-	char *builtins[8];
-	int i;
-
-	i = 0;
-	builtins[0] = "echo";
-	builtins[1] = "cd";
-	builtins[2] = "pwd";
-	builtins[3] = "export";
-	builtins[4] = "unset";
-	builtins[5] = "env";
-	builtins[6] = "exit";
-	builtins[7] = NULL;
-	while (builtins[i])
-	{
-		if (!(ft_strcmp(path, builtins[i++])))
-		{
-//			ft_putstr_fd("|is_builtin| It's builtin! 🎉\n", 1);
-			return (1);
-		}
-	}
-	return (0);
-}
-
 static char *check_here(char *path, char *bin)
 {
 	struct	dirent *lol;
@@ -100,8 +75,8 @@ char *path_parse(t_todo *all, char *arg)
 		else
 			return NULL;
 	}
-	if (is_builtin(arg))
-		return (arg);
+//	if (is_builtin(arg))
+//		return (arg);
 	else
 	{
 		i = 0;

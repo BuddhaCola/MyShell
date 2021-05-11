@@ -34,22 +34,22 @@ void	hist_move_to_end(t_todo *all)
 		all->hist_curr = all->hist_curr->next;
 }
 
-void	hist_print(t_todo *all)
-{
-	t_history	*ptr;
-
-	ptr = all->hist_curr;
-	printf("History:");
-	while (ptr->prev)
-	{
-		ptr = ptr->prev;
-	}
-	while (ptr)
-	{
-		if (ptr == all->hist_curr)
-			printf("👉");
-		printf("|%s|->", ptr->temp);
-		ptr = ptr->next;
-	}
-	printf("⚫️\n");
-}
+//void	hist_print(t_todo *all)
+//{
+//	t_history	*ptr;
+//
+//	ptr = all->hist_curr;
+//	printf("History:");
+//	while (ptr->prev)
+//	{
+//		ptr = ptr->prev;
+//	}
+//	while (ptr)
+//	{
+//		if (ptr == all->hist_curr)
+//			printf("👉");
+//		printf("|%s|->", ptr->temp);
+//		ptr = ptr->next;
+//	}
+//	printf("⚫️\n");
+//}

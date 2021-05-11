@@ -160,12 +160,16 @@ int		ft_pipe(t_todo *all);
 //int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int 	ft_echo(t_todo *all);
 int		ft_env(t_todo *all);
-int		ft_exit(char **args, t_todo *all);
+int		ft_exit(t_todo *all);
 int		ft_unset(t_todo *all);
 
 // utils
 void	i_want_to_be_freed(char **arr);
-int		exec_bin(t_todo *all);
+int		execution(t_todo *all);
+int		start_process(t_todo *all, char *bin);
+int		do_builtin(char *path, t_todo *all);
+int		is_builtin(char *path);
+int		try_rel_abs_path(t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
 int		count_environments(t_todo *all);
 int		swapstr(char **str1, char **str2);
@@ -188,6 +192,6 @@ t_history 	*hist_new(char *content);
 void		hist_add(t_history **lst, t_history *new);
 void		hist_move_to_end(t_todo *all);
 
-void	hist_print(t_todo *all);
+//void	hist_print(t_todo *all);
 
 #endif

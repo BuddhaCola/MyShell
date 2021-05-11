@@ -3,9 +3,7 @@
 int     termcap_stuff(t_todo *all)
 {
 	struct termios	new_attributes;
-	char			*termtype;
 
-	termtype = getenv("TERM"); //это говно!
 	if(!isatty(0))
 		ft_putstr_fd("not a terminatl!\n", 1);
 	if (tcgetattr(0, &all->saved_attributes) == -1)
@@ -16,7 +14,10 @@ int     termcap_stuff(t_todo *all)
 	new_attributes.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &new_attributes);
 	if (tgetent(0, "xterm-256color") != 1)
-		return (write(1, "error on tgetent\n", 17));
+	{
+		ft_putstr_fd("error on tgetent\n", 1);
+		exit(-1);
+	}
 	return (0);
 }
 
@@ -81,7 +82,11 @@ int 	check_input(char *buf, t_todo *all)
 	else if (*buf == '\4')
 	{
 		if (*all->hist_curr->temp == '\0')
-			ft_exit(NULL, all);
+		{
+			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
+			tcsetattr(0, TCSANOW, &all->saved_attributes);
+			exit(0);
+		}
 	}
 	else if (!(ft_strcmp(buf, "\e[B")))
 	{
@@ -129,7 +134,9 @@ int		promt(t_todo *all)
 		}
 		if (*all->hist_curr->temp)
 		{
+			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
+//			tcsetattr(0, TCSANOW, &all->saved_attributes);
 			build_execute_lst(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf);
 			while (all->parse_utils->cur_tok)
 			{
@@ -137,7 +144,7 @@ int		promt(t_todo *all)
 				dereference_the_value(all);
 				build_to_execute_lst(all);
 //				ft_pipe(all);
-				exec_bin(all);
+				execution(all);
 				destroy_to_execute_lst(all);
 				destroy_parse_pipes(all);
 			}
@@ -204,7 +211,7 @@ int		debug_promt(t_todo *all)
 			parse_pipes(all);
 			dereference_the_value(all);
 			build_to_execute_lst(all);
-			exec_bin(all);
+			execution(all);
 			destroy_to_execute_lst(all);
 			destroy_parse_pipes(all);
 		}
@@ -238,7 +245,7 @@ int		debug_promt(t_todo *all)
 //	while (buf[++i])
 //	{
 //		if (buf[i] == '!')
-//			exec_bin(&buf[i+1], all);
+//			execution(&buf[i+1], all);
 //		else if (buf[i] == '?')
 //		else if (buf[i] == '|')
 //		{

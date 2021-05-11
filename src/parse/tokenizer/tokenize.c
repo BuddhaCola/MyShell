@@ -15,8 +15,6 @@ static int  get_num_of_type(char c)
 		return (CHAR_DQUOTE);
 	else if (c == '|')
 		return (CHAR_PIPE);
-	else if (c == '&')
-		return (CHAR_AMPERSAND);
 	else if (c == '\\')
 		return (CHAR_ESCAPESEQ);
 	else if (c == '\t')
@@ -49,16 +47,16 @@ static void		tok_destroy(t_tok *tok)
 	}
 }
 
-static void get_chtype(char *line, int *i, int *chtype, char c)
-{
-	if (line[*i + 1] && ((line[*i] == '>') && (line[*i + 1] == '>')))
-	{
-		*chtype = CHAR_DGREATER;
-		(*i)++;
-	}
-	else
-		*chtype = get_num_of_type(c);
-}
+//static void get_chtype(char *line, int *i, int *chtype, char c)
+//{
+//	if (line[*i + 1] && ((line[*i] == '>') && (line[*i + 1] == '>')))
+//	{
+//		*chtype = CHAR_DGREATER;
+//		(*i)++;
+//	}
+//	else
+//		*chtype = get_num_of_type(c);
+//}
 
 static int count_tokens(t_tok *token)
 {
@@ -71,6 +69,18 @@ static int count_tokens(t_tok *token)
 		token = token->next;
 	}
 	return (k);
+}
+
+static void if_ch_is_quote_set_state_general(int *state, int *chtype)
+{
+	if (*chtype == CHAR_QUOTE)
+		*state = STATE_GENERAL;
+}
+
+static void if_ch_is_dquote_set_state_general(int *state, int *chtype)
+{
+	if (*chtype == CHAR_DQUOTE)
+		*state = STATE_GENERAL;
 }
 
 int tokenize(char *line, int size, t_lexer *lexer_list)
@@ -140,8 +150,7 @@ int tokenize(char *line, int size, t_lexer *lexer_list)
 					j = 0;
 				}
 			}
-			if (chtype == CHAR_SEMICOLON || chtype == CHAR_GREATER || chtype == CHAR_LESSER || chtype == CHAR_AMPERSAND
-			|| chtype == CHAR_PIPE)
+			if (chtype == CHAR_SEMICOLON || chtype == CHAR_GREATER || chtype == CHAR_LESSER || chtype == CHAR_PIPE)
 			{
 				if (j > 0)
 				{
@@ -187,8 +196,7 @@ int tokenize(char *line, int size, t_lexer *lexer_list)
 		else if (state == STATE_IN_QUOTE)
 		{
 			token->data[j++] = c;
-			if (chtype == CHAR_QUOTE)
-				state = STATE_GENERAL;
+			state_in_quote(&state, &chtype);
 		}
 		//else if state in dquote
 		else if (state == STATE_IN_DQUOTE)
@@ -211,6 +219,85 @@ int tokenize(char *line, int size, t_lexer *lexer_list)
 	}
 	lexer_list->num_of_tokens = count_tokens(lexer_list->tok_list);
 	return (lexer_list->num_of_tokens);
+}
+
+static void get_chtype(char **line, int *chtype)
+{
+	char *str;
+
+	str = *line;
+	if ((str + 1) && ((str == '>') && ((str + 1) == '>')))
+	{
+		*chtype = CHAR_DGREATER;
+		str++;
+		*line = str;
+	}
+	else
+		*chtype = get_num_of_type(*str);
+}
+
+static void init_tokenizer(t_lexer *lexer, int size)
+{
+	lexer->tok_list = malloc(sizeof(t_tok));
+	lexer->token = lexer->tok_list;
+	tok_init(lexer->token, size);
+	lexer->chtype = 0;
+	lexer->j = 0;
+	lexer->state = STATE_GENERAL;
+}
+
+static void if_char_null_set_zero(t_lexer *lexer)
+{
+	if (lexer->chtype == CHAR_NULL)
+	{
+		if (lexer->j > 0)
+		{
+			lexer->token->data[lexer->j] = 0;
+			lexer->j = 0;
+		}
+	}
+}
+
+static void if_last_char_is_not_zero_do_line_pp(char **line)
+{
+	if (**line != '\0')
+		*line++;
+}
+
+static int set_and_return_num_of_tokens(t_lexer *lexer)
+{
+	lexer->num_of_tokens = count_tokens(lexer->tok_list);
+	return lexer->num_of_tokens;
+}
+
+static void if_state_in_quote(t_lexer *lexer, const char *line)
+{
+	lexer->token->data[lexer->j++] = *line;
+	if_ch_is_quote_set_state_general(&lexer->state, &lexer->chtype);
+}
+
+static void if_state_in_dquote(t_lexer *lexer, const char *line)
+{
+	lexer->token->data[lexer->j++] = *line;
+	if_ch_is_dquote_set_state_general(&lexer->state, &lexer->chtype);
+}
+
+int tokenize(char *line, int size, t_lexer *lexer)
+{
+	init_tokenizer(lexer, size);
+	while (*line)
+	{
+		get_chtype(&line, &lexer->chtype);
+		if (lexer->state == STATE_GENERAL)
+			if_state_in_general(lexer, line);
+		else if (lexer->state == STATE_IN_QUOTE)
+			if_state_in_quote(lexer, line);
+		else if (lexer->state == STATE_IN_DQUOTE)
+			if_state_in_dquote(lexer, line);
+		if_char_null_set_zero(lexer);
+		if_last_char_is_not_zero_do_line_pp(&line);
+	}
+	return (set_and_return_num_of_tokens(lexer));
 }
 
 void		lexer_destroy(t_lexer *list)

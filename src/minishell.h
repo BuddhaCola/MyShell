@@ -54,6 +54,10 @@ typedef struct s_lexer
 {
 	t_tok	*tok_list;
 	int		num_of_tokens;
+	int 	chtype;
+	t_tok	*token;
+	int		state;
+	int		j;
 }				t_lexer;
 
 //parse utils
@@ -102,13 +106,11 @@ enum e_token_type
 	CHAR_QUOTE = '\'',
 	CHAR_DQUOTE = '\"',
 	CHAR_PIPE = '|',
-	CHAR_AMPERSAND = '&',
 	CHAR_ESCAPESEQ = '\\',
 	CHAR_TAB = '\t',
 	CHAR_NEWLINE = '\n',
 	CHAR_GREATER = '>',
 	CHAR_LESSER = '<',
-	CHAR_DOLLAR = '$',
 	CHAR_DGREATER = -2,
 	CHAR_NULL = 0,
 	CHAR_GENERAL = -1,
@@ -119,7 +121,6 @@ enum e_states
 {
 	STATE_IN_DQUOTE,
 	STATE_IN_QUOTE,
-	STATE_IN_ESCAPEDSEQ,
 	STATE_GENERAL,
 };
 
@@ -139,6 +140,7 @@ int build_execute_lst(t_todo *all, char *line, int size
 
 //tokenize
 int         tokenize(char *line, int size, t_lexer *lexer_list);
+void 		if_state_in_general(t_lexer *lexer, char *line);
 void		lexer_destroy(t_lexer *list);
 
 //check syntax

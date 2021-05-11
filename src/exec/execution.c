@@ -6,7 +6,13 @@ int	start_process(t_todo *all, char *bin)
 
 	pid = fork();
 	if (!pid)
+	{
+		if (all->cur_cmds->input_files)
+			all->orig_stdin = input_redirect(all);
+		if (all->cur_cmds->output_files || all->cur_cmds->append_files)
+			all->orig_stdout = output_redirect(all);
 		execve(bin, all->to_execute->cmds->args, all->environments);
+	}
 	else
 	{
 		errno = 0;
@@ -15,10 +21,14 @@ int	start_process(t_todo *all, char *bin)
 		if (all->exit_code < 0)
 			errorhandle(all, all->to_execute->cmds->cmd_str, NULL, NULL);
 		free(bin);
+		if (all->cur_cmds->input_files)
+			dup2(all->orig_stdin, STDIN_FILENO);
+		if (all->cur_cmds->output_files || all->cur_cmds->append_files)
+			dup2(all->orig_stdout, STDOUT_FILENO);
 	}
 	return (all->exit_code);
 }
-
+//
 //int	define_and_execute(t_todo *all)
 //{
 //	int		try;
@@ -45,25 +55,6 @@ int	start_process(t_todo *all, char *bin)
 
 int	execute_cmd(t_todo *all)
 {
-	int		filefd;
-	char	**files;
-
-	files = all->cur_cmds->input_files;
-	if (all->cur_cmds->input_files)
-	{
-		while (*files)
-		{
-			filefd = open(*files, O_RDONLY, 0777);
-			if (filefd == -1)
-			{
-				errorhandle(all, *files, "No such file or directory", "0");
-				return (1);
-			}
-			if (!files + 1)
-				dup2(filefd, STDIN_FILENO);
-			files++;
-		}
-	}
 	int		try;
 	char	*bin_location;
 

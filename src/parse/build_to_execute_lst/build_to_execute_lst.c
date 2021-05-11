@@ -9,6 +9,7 @@ static void parse_build(t_todo *all)
 	all->to_execute->cmds->input_files = NULL;
 	all->to_execute->cmds->output_files = NULL;
 	all->to_execute->cmds->append_files = NULL;
+	all->to_execute->cmds->file_type_flg = NONE;
 	all->to_execute->cmds->next = NULL;
 }
 
@@ -19,6 +20,7 @@ static void init_cmds_elem(t_cmds *cmds)
     cmds->input_files = NULL;
     cmds->output_files = NULL;
     cmds->append_files = NULL;
+    cmds->file_type_flg = NONE;
     cmds->next = NULL;
 }
 
@@ -101,6 +103,7 @@ void build_to_execute_lst(t_todo *all)
             {
             	tok = tok->next;
 				add_to_2d(&cmds->output_files, tok);
+				cmds->file_type_flg = O_WRONLY | O_TRUNC | O_CREAT;
 			}
             else if (tok->type == CHAR_LESSER)
             {
@@ -111,6 +114,7 @@ void build_to_execute_lst(t_todo *all)
             {
             	tok = tok->next;
 				add_to_2d(&cmds->append_files, tok);
+				cmds->file_type_flg = O_WRONLY | O_APPEND | O_CREAT;
 			}
             else
                 add_to_2d(&cmds->args, tok);

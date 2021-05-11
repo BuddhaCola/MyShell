@@ -1,14 +1,14 @@
 #include "minishell.h"
 
-int     termcap_stuff(t_todo *all)
+int	termcap_stuff(t_todo *all)
 {
 	struct termios	new_attributes;
 
 	if(!isatty(0))
-		ft_putstr_fd("not a terminatl!\n", 1);
+		ft_putstr_fd("not a terminal!\n", 1);
 	if (tcgetattr(0, &all->saved_attributes) == -1)
 		return (-1);
-	ft_memcpy(&new_attributes, &all->saved_attributes, sizeof(new_attributes));
+	tcgetattr(0, &new_attributes);
 	new_attributes.c_lflag &= ~(ECHO);
 	new_attributes.c_lflag &= ~(ISIG);
 	new_attributes.c_lflag &= ~(ICANON);
@@ -77,13 +77,14 @@ int 	check_input(char *buf, t_todo *all)
 		hist_move_to_end(all);
 		free(all->hist_curr->temp);
 		all->hist_curr->temp = ft_strdup("");
+		tcsetattr(0, TCSANOW, &all->saved_attributes);
 		return (write(1, "\n", 1));
 	}
 	else if (*buf == '\4')
 	{
 		if (*all->hist_curr->temp == '\0')
 		{
-			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
+//			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
 			ft_putendl_fd("exit", 1);
 			exit(0);
@@ -130,27 +131,28 @@ int		promt(t_todo *all)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
+			// printf("ret = %d\n", ret);
 			if (check_input(buf, all))
 				break;
 		}
 		if (*all->hist_curr->temp)
 		{
-			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
+//			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
 			if (!build_tokens(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf))
 			{
-                while (all->parse_utils->cur_tok)
-                {
-                    parse_pipes(all);
-                    dereference_the_value(all);
-                    build_to_execute_lst(all);
+				while (all->parse_utils->cur_tok)
+				{
+					parse_pipes(all);
+					dereference_the_value(all);
+					build_to_execute_lst(all);
 					execution(all);
-                    destroy_to_execute_lst(all);
-                    destroy_parse_pipes(all);
-                }
-                lexer_destroy(all->lex_buf);
-                free(all->parse_utils);
-            }
+					destroy_to_execute_lst(all);
+					destroy_parse_pipes(all);
+				}
+				lexer_destroy(all->lex_buf);
+				free(all->parse_utils);
+			}
 		}
 	}
 	//at the end of program clean all.
@@ -174,10 +176,28 @@ int		load_up(t_todo *all, char **env)
 
 int		debug_promt(t_todo *all); //убрать 🚧
 
+void sigint_handler(int sig_num)
+{
+	int stat_loc;
+
+	wait(&stat_loc);
+	if (stat_loc == sig_num)
+	{
+		if (sig_num == SIGINT)
+			ft_putchar_fd('\n', 2);
+		else if (sig_num == SIGQUIT)
+		{
+			ft_putstr_fd("Quit: 3\n", 2);
+		}
+	}
+}
+
 int		main(int argc, char **argv, char **env)
 {
 	t_todo		all;
 
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigint_handler);
 	ft_bzero(&all, sizeof(all));
 	load_up(&all, env);
 	if (argc > 1)
@@ -206,20 +226,20 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
-        if (!build_tokens(all, buf, ret, all->lex_buf))
-        {
-            while (all->parse_utils->cur_tok)
-            {
-                parse_pipes(all);
-                dereference_the_value(all);
-                build_to_execute_lst(all);
+		if (!build_tokens(all, buf, ret, all->lex_buf))
+		{
+			while (all->parse_utils->cur_tok)
+			{
+				parse_pipes(all);
+				dereference_the_value(all);
+				build_to_execute_lst(all);
 				execution(all);
-                destroy_to_execute_lst(all);
-                destroy_parse_pipes(all);
-            }
-            lexer_destroy(all->lex_buf);
-            free(all->parse_utils);
-        }
+				destroy_to_execute_lst(all);
+				destroy_parse_pipes(all);
+			}
+			lexer_destroy(all->lex_buf);
+			free(all->parse_utils);
+		}
 	}
 	return (0);
 }

@@ -17,11 +17,11 @@ int	redirection(char *filepath, char *program, char **args, int mode)
 	int		pid;
 
 	if (mode == 0) // '>'
-		filefd = open(filepath, O_WRONLY | O_APPEND | O_CREAT, 0777);
+		filefd = open(filepath, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	else if (mode == 1) // ">>"
-		filefd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		filefd = open(filepath, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	else if (mode == 2) // '<'
-		filefd = open(filepath, O_RDONLY, 0777);
+		filefd = open(filepath, O_RDONLY, 0644);
 	if (filefd < 0)
 		return (1);
 	pid = fork();

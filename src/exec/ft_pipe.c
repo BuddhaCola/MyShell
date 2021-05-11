@@ -32,7 +32,7 @@ int	ft_pipe(t_todo *all)
 		{
 			if (cmds_cpy->input_files)
 			{
-				filefd = open(*cmds_cpy->input_files, O_RDONLY, 0777);
+				filefd = open(*cmds_cpy->input_files, O_RDONLY, 0644);
 				dup2(filefd, STDIN_FILENO);
 				cmds_cpy->input_files++;
 			}

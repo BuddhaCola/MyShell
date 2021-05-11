@@ -17,6 +17,10 @@
 #define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
 #define PROMT "Minihell!🔥"
 
+#define NONE 0
+#define APPEND_FILE 521
+#define OUTPUT_FILE 1537
+
 //parser
 typedef struct s_cmds
 {
@@ -25,6 +29,7 @@ typedef struct s_cmds
 	char					**input_files;
 	char					**output_files;
 	char                    **append_files;
+	int 					file_type_flg;
 	struct s_cmds		    *next;
 }				t_cmds;
 
@@ -45,8 +50,8 @@ typedef struct s_tok
 //parser
 typedef struct  s_pipelist
 {
-    t_tok               *tok_lst;
-    struct s_pipelist   *next;
+	t_tok               *tok_lst;
+	struct s_pipelist   *next;
 }               t_pipelist;
 
 //lexer
@@ -64,8 +69,8 @@ typedef struct s_lexer
 //parse utils
 typedef struct  s_parse_utils
 {
-    t_pipelist  *pipelist;
-    t_tok *cur_tok;
+	t_pipelist  *pipelist;
+	t_tok *cur_tok;
 }               t_parse_utils;
 
 typedef struct			s_history
@@ -90,15 +95,17 @@ typedef	struct s_exec
 
 typedef	struct			s_todo
 {
-    t_to_execute		*to_execute;
+	t_to_execute		*to_execute;
 	t_exec				exec;
 	t_lexer				*lex_buf;
-    t_parse_utils       *parse_utils;
+	t_parse_utils       *parse_utils;
 	char 				**environments;
 	struct termios		saved_attributes;
 	int 				exit_code;
 	t_history			*hist_curr;
 	t_cmds				*cur_cmds;
+	int					orig_stdin;
+	int					orig_stdout;
 }						t_todo;
 
 enum e_token_type
@@ -138,7 +145,7 @@ void dereference_the_value(t_todo *all);
 
 //build exec list
 int build_tokens(t_todo *all, char *line, int size
-        ,t_lexer *lexer_list);
+		,t_lexer *lexer_list);
 
 //tokenize
 int         tokenize(char *line, int size, t_lexer *lexer_list);
@@ -189,6 +196,8 @@ int		ft_unset(t_todo *all);
 // utils
 void	i_want_to_be_freed(char **arr);
 int		execution(t_todo *all);
+int		input_redirect(t_todo *all);
+int		output_redirect(t_todo *all);
 int		start_process(t_todo *all, char *bin);
 int		do_builtin(char *path, t_todo *all);
 int		is_builtin(char *path);

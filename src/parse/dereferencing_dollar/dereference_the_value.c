@@ -80,21 +80,14 @@ static void try_dereference(t_todo *all, char **src)
 	char *answer;
 	char *new_src;
 	int key_iter;
-	//state mashine
 	int state;
-	int state_general;
-	int state_q;
-	int state_dq;
-	state_general = 0;
-	state_q = 1;
-	state_dq = 2;
 
-	state = state_general;
+	state = STATE_GENERAL;
 	str = *src;
 	key = malloc (sizeof(char) * ft_strlen(str) + 1);
 	while (*str)
 	{
-		if (state == state_general)
+		if (state == STATE_GENERAL)
 		{
 			if (*str == '\\')
 			{
@@ -131,16 +124,13 @@ static void try_dereference(t_todo *all, char **src)
 				}
 			}
 			else if (*str == '\'')
-				state = state_q;
+				state = STATE_IN_QUOTE;
 			else if (*str == '\"')
-				state = state_dq;
+				state = STATE_IN_DQUOTE;
 		}
-		else if (state == state_q)
-		{
-			if (*str == '\'')
-				state = state_general;
-		}
-		else if (state == state_dq)
+		else if (state == STATE_IN_QUOTE && *str == '\'')
+				state = STATE_GENERAL;
+		else if (state == STATE_IN_DQUOTE)
 		{
 			if (*str == '\\')
 			{
@@ -177,12 +167,138 @@ static void try_dereference(t_todo *all, char **src)
 				}
 			}
 			else if (*str == '\"')
-				state = state_general;
+				state = STATE_GENERAL;
 		}
 		str++;
 	}
 	free(key);
 }
+
+//static void init(int *state, char **str, char **src, char **key)
+//{
+//    *state = STATE_GENERAL;
+//    *str = *src;
+//    *key = malloc (sizeof(char) * ft_strlen(*str) + 1);
+//}
+////                              /
+//static void work_with_key(t_todo *all, char **str, char **key, char ***src)
+//{
+//    char *start;
+//    char *answer;
+//    char *new_src;
+//    int key_iter;
+//
+//    start = *str++;
+//    key_iter = 0;
+//    while (**str && (ft_isalpha(**str) || ft_isdigit(**str)
+//                    || **str == '_' || **str == '?'))
+//        (*key)[key_iter++] = *(*str++);
+//    (*key)[key_iter] = '\0';
+//    answer = search_key(all, *key);
+//    if (answer != NULL && key_iter != 0)
+//    {
+//        //put answer, refresh src, str must be at the (and - 1)
+//        //of answer in the src.
+//        new_src = put_answer(**src, start, &(*str), answer);
+//        free(*src);
+//        **src = new_src;
+//        free(answer);
+//    }
+//    else if (answer == NULL && key_iter != 0)
+//    {
+//        //put "", refresh src, str must be at the (and - 1)
+//        //of answer in the src.
+//        new_src = put_nothing(**src, start, &(*str));
+//        free(*src);
+//        **src = new_src;
+//    }
+//}
+//
+//static void try_dereference(t_todo *all, char **src)
+//{
+//    int state;
+//    char *str;
+//    char *key;
+//
+//    init(&state, &str, src, &key);
+//    while (*str)
+//    {
+//        if (state == STATE_GENERAL)
+//        {
+//            if (*str == '\\')
+//                    str++;
+//            else if (*str == '$' && *(str + 1) != '\0'
+//                     && (ft_isalpha(*(str + 1)) || ft_strchr("?_", *(str + 1))))
+//                work_with_key(all, &str, &key, &src);
+//            else if (*str == '\'')
+//                state = STATE_IN_QUOTE;
+//            else if (*str == '\"')
+//                state = STATE_IN_DQUOTE;
+//        }
+//        else if (state == STATE_IN_QUOTE && *str == '\'')
+//            state = STATE_GENERAL;
+//        else if (state == STATE_IN_DQUOTE)
+//        {
+//            if (*str == '\\')
+//                str++;
+//            else if (*str == '$' && *(str + 1) != '\0'
+//                     && (ft_isalpha(*(str + 1)) || ft_strchr("?_", *(str + 1))))
+//                work_with_key(all, &str, &key, &src);
+//            else if (*str == '\"')
+//                state = STATE_GENERAL;
+//        }
+//        if (*str != '\0')
+//            str++;
+//    }
+//    free(key);
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void dereference_the_value(t_todo *all)
 {

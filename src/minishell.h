@@ -129,6 +129,11 @@ enum e_states
 //build to execute lst
 void build_to_execute_lst(t_todo *all);
 void destroy_to_execute_lst(t_todo *all);
+void parse_build(t_todo *all, t_cmds **cmds);
+void init_cmds_elem(t_cmds *cmds);
+t_cmds *get_new_cmds_elem(t_cmds *cmds);
+void get_cmd_str(t_cmds *cmds, t_tok *tok);
+void add_to_2d(char ***src, t_tok *tok);
 
 //strip quotes and bslashes
 void strip_quotes_and_bslashes(char **src);
@@ -161,15 +166,17 @@ void init_tokenizer(t_lexer *lexer, int size);
 void if_char_null_set_zero(t_lexer *lexer);
 void if_last_char_is_not_zero_do_line_pp(char **line);
 
-
-
-
 //check syntax
 int check_syntax(t_todo *all, t_tok *token);
+int validate_quotation(char *str);
 
 //parse pipes
 void    parse_pipes(t_todo *all);
 void    destroy_parse_pipes(t_todo *all);
+void    init_pipe_list(t_todo *all, t_tok **src_lst, t_tok **pipe_lst_tok, t_pipelist **pipelist);
+void init_tok(t_tok *lst);
+t_pipelist  *get_next_pipe_list_elem(t_pipelist *pipe_lst);
+t_tok   *get_next_tok_list_elem(t_tok *lst);
 
 char	**clone_env(char **env, const char *new_env);
 void	handle_signals();

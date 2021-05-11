@@ -1,64 +1,27 @@
 #include "../../minishell.h"
 
-//DONE
-//check each token at the closed quotes
-static int validate_quotation(char *str)
+static char *build_error_str(char *str, char *token_data)
 {
-	int state;
-	int state_general;
-	int state_q;
-	int state_dq;
+    char *ret;
+    char *tmp;
+    tmp = ft_strjoin(str, token_data);
+    ret = ft_strjoin(tmp, "'");
+    free(tmp);
+    return (ret);
+}
 
-	state_general = 0;
-	state_q = 1;
-	state_dq = 2;
-
-	state = state_general;
-	while (*str)
-	{
-		if (state == state_general)
-		{
-			if (*str == '\\')
-			{
-				if (*(str + 1) == '\0' || *(str + 2) == '\0')
-					break;
-				str += 2;
-				continue;
-			}
-			if (*str == '\'')
-				state = state_q;
-			if (*str == '\"')
-				state = state_dq;
-		}
-		else if (state == state_q)
-		{
-			if (*str == '\'')
-				state = state_general;
-		}
-		else if (state == state_dq)
-		{
-			if (*str == '\\')
-			{
-				if (*(str + 1) == '\0' || *(str + 2) == '\0')
-					break;
-				str += 2;
-				continue;
-			}
-			if (*str == '\"')
-				state = state_general;
-		}
-		str++;
-	}
-	if (state != state_general)
-		return (-1);
-	return (0);
+static void print_error_unexpctd_near_tok(t_todo *all, t_tok *token)
+{
+    char *err_str;
+    err_str = build_error_str("syntax error near unexpected token '", token->data);
+    errorhandle(all, NULL, err_str, "1");
+    free(err_str);
 }
 
 int check_syntax(t_todo *all, t_tok *token)
 {
 	t_tok *previous_token;
 	char *err_str;
-	char *save_str;
 
 	previous_token = token;
 	//iterate tokens
@@ -66,46 +29,17 @@ int check_syntax(t_todo *all, t_tok *token)
 	{
 		if (validate_quotation(token->data))
 		{
-			errorhandle(all, NULL, "bash: syntax error, quotes not closed", "1");
-			return -1;
+			errorhandle(all, NULL, "syntax error, quotes not closed", "1");
+			return (-1);
 		}
-		if (token->type == CHAR_GREATER || token->type == CHAR_DGREATER || token->type == CHAR_LESSER)
+		if (((token->type == CHAR_GREATER || token->type == CHAR_DGREATER || token->type == CHAR_LESSER)
+		&& (previous_token->type != TOKEN || token->next == NULL || token->next->type != TOKEN))
+		|| (token->type == CHAR_PIPE && (previous_token->type != TOKEN
+		|| token->next == NULL || token->next->type != TOKEN))
+		|| (token->type == CHAR_SEMICOLON && previous_token->type != TOKEN))
 		{
-			if (previous_token->type != TOKEN || token->next == NULL
-			|| token->next->type != TOKEN)
-			{
-				save_str = ft_strjoin("bash: syntax error near unexpected token '", token->data);
-				err_str = ft_strjoin(save_str, "'");
-				free(save_str);
-				errorhandle(all, NULL, err_str, "1");
-				free(err_str);
-				return -1;
-			}
-		}
-		if (token->type == CHAR_PIPE)
-		{
-			if (previous_token->type != TOKEN || token->next == NULL
-				|| token->next->type != TOKEN)
-			{
-				save_str = ft_strjoin("bash: syntax error near unexpected token '", token->data);
-				err_str = ft_strjoin(save_str, "'");
-				free(save_str);
-				errorhandle(all, NULL, err_str, "1");
-				free(err_str);
-				return -1;
-			}
-		}
-		if (token->type == CHAR_SEMICOLON)
-		{
-			if (previous_token->type != TOKEN)
-			{
-				save_str = ft_strjoin("bash: syntax error near unexpected token '", token->data);
-				err_str = ft_strjoin(save_str, "'");
-				free(save_str);
-				errorhandle(all, NULL, err_str, "1");
-				free(err_str);
-				return -1;
-			}
+            print_error_unexpctd_near_tok(all, token);
+            return (-1);
 		}
 		previous_token = token;
 		token = token->next;

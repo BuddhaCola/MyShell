@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 //returns -1 if error was found
-int build_execute_lst(t_todo *all, char *line, int size
+int build_tokens(t_todo *all, char *line, int size
 		, t_lexer *lexer_list)
 {
 	tokenize(line, size, lexer_list);

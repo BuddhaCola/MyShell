@@ -127,19 +127,20 @@ int		promt(t_todo *all)
 		if (*all->hist_curr->temp)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			if (build_execute_lst(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf))
-				return -1;
-			while (all->parse_utils->cur_tok)
+			if (!build_tokens(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf))
 			{
-				parse_pipes(all);
-				dereference_the_value(all);
-				build_to_execute_lst(all);
-				exec_bin(all);
-				destroy_to_execute_lst(all);
-				destroy_parse_pipes(all);
-			}
-			lexer_destroy(all->lex_buf);
-			free(all->parse_utils);
+                while (all->parse_utils->cur_tok)
+                {
+                    parse_pipes(all);
+                    dereference_the_value(all);
+                    build_to_execute_lst(all);
+                    exec_bin(all);
+                    destroy_to_execute_lst(all);
+                    destroy_parse_pipes(all);
+                }
+                lexer_destroy(all->lex_buf);
+                free(all->parse_utils);
+            }
 		}
 	}
 	//at the end of program clean all.
@@ -195,19 +196,20 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
-        if (build_execute_lst(all, buf, ret, all->lex_buf))
-        	return -1;
-		while (all->parse_utils->cur_tok)
+        if (!build_tokens(all, buf, ret, all->lex_buf))
         {
-			parse_pipes(all);
-			dereference_the_value(all);
-			build_to_execute_lst(all);
-			exec_bin(all);
-			destroy_to_execute_lst(all);
-			destroy_parse_pipes(all);
-		}
-		lexer_destroy(all->lex_buf);
-		free(all->parse_utils);
+            while (all->parse_utils->cur_tok)
+            {
+                parse_pipes(all);
+                dereference_the_value(all);
+                build_to_execute_lst(all);
+                exec_bin(all);
+                destroy_to_execute_lst(all);
+                destroy_parse_pipes(all);
+            }
+            lexer_destroy(all->lex_buf);
+            free(all->parse_utils);
+        }
 	}
 	return (0);
 }

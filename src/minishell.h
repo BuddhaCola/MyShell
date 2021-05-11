@@ -136,7 +136,7 @@ void strip_quotes_and_bslashes(char **src);
 void dereference_the_value(t_todo *all);
 
 //build exec list
-int build_execute_lst(t_todo *all, char *line, int size
+int build_tokens(t_todo *all, char *line, int size
         ,t_lexer *lexer_list);
 
 //tokenize

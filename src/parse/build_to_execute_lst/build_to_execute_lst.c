@@ -95,6 +95,8 @@ void build_to_execute_lst(t_todo *all)
 		tok = tok->next;
 		while (tok)
 		{
+			if (tok->type == TOKEN)
+				strip_quotes_and_bslashes(&tok->data);
             if (tok->type == CHAR_GREATER)
             {
             	tok = tok->next;

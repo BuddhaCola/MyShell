@@ -127,7 +127,8 @@ int		promt(t_todo *all)
 		if (*all->hist_curr->temp)
 		{
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
-			build_execute_lst(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf);
+			if (build_execute_lst(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf))
+				return -1;
 			while (all->parse_utils->cur_tok)
 			{
 				parse_pipes(all);
@@ -194,8 +195,8 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
-        if (build_execute_lst(all, buf, ret, all->lex_buf) != 0)
-            return -1;
+        if (build_execute_lst(all, buf, ret, all->lex_buf))
+        	return -1;
 		while (all->parse_utils->cur_tok)
         {
 			parse_pipes(all);

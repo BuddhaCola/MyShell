@@ -154,7 +154,7 @@ void if_semi_great_less_pipe_char_do(t_lexer *lexer, const char *line);
 
 
 //check syntax
-int check_syntax(t_tok *token);
+int check_syntax(t_todo *all, t_tok *token);
 
 //parse pipes
 void    parse_pipes(t_todo *all);

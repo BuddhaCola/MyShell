@@ -11,7 +11,8 @@ int ft_env(t_todo *all)
 	while (all->environments[i] != NULL)
 	{
 		if (ft_strchr(all->environments[i], '='))
-			ft_putendl_fd(all->environments[i], 1);
+			if(*all->environments[i] != '?')
+				ft_putendl_fd(all->environments[i], 1);
 		i++;
 	}
 	return (0);

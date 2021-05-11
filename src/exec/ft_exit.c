@@ -21,14 +21,14 @@ int ft_exit(t_todo *all)
 	{
 		if (ft_checkforbiddensymbols_exit(all->to_execute->cmds->args[1]))
 		{
-			errorhandle(all, all->to_execute->cmds->args[0], "numeric argument required", "-1");
+			errorhandle(all, all->to_execute->cmds->args[0], "numeric argument required", NULL);
 			exit (-1);
 		}
 		else
 			code = ft_atoi(all->to_execute->cmds->args[1]);
 		if (all->to_execute->cmds->args[2])
 		{
-			errorhandle(all, all->to_execute->cmds->args[0], "too many arguments", "1");
+			errorhandle(all, all->to_execute->cmds->args[0], "too many arguments", NULL);
 			return (1);
 		}
 	}

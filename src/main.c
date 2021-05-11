@@ -85,6 +85,7 @@ int 	check_input(char *buf, t_todo *all)
 		{
 			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
+			ft_putendl_fd("exit", 1);
 			exit(0);
 		}
 	}

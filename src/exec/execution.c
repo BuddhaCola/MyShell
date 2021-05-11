@@ -1,63 +1,5 @@
 #include "../minishell.h"
 
-static char *check_here(char *path, char *bin)
-{
-	struct	dirent *lol;
-	DIR		*directory;
-	char 	*found;
-
-	directory = opendir(path);
-	if (directory == NULL)
-		return (NULL);
-	while (1)
-	{
-		lol = readdir(directory);
-		if (lol == NULL)
-			break ;
-		if (!(ft_strcmp(lol->d_name, bin)))
-		{
-			size_t dst_size = ft_strlen(path) + ft_strlen(lol->d_name) + 2;
-			found = ft_calloc(sizeof(char), dst_size);
-			ft_strlcat(found, path, dst_size);
-			ft_strlcat(found, "/", dst_size);
-			ft_strlcat(found, bin, dst_size);
-			closedir(directory);
-			return (found);
-		}
-	}
-	closedir(directory);
-	return (NULL);
-}
-
-char	*try_path(t_todo *all)
-{
-	char	**path;
-	char	**path_decomposed;
-	int		i;
-	char	*bin;
-
-	bin = NULL;
-	path = env_search(all->environments, "PATH");
-	if (path)
-	{
-		i = 0;
-		path_decomposed = ft_split(env_get_value(all, "PATH"), ':');
-		if (!path_decomposed)
-			return (NULL);
-//			ft_putstr_fd("PATH splitting error 💩\n", 1);
-		while (path_decomposed[i])
-		{
-//			printf("%s\n", all->to_execute->cmds->cmd_str);
-			bin = check_here(path_decomposed[i], all->to_execute->cmds->cmd_str);
-			if (bin)
-				break;
-			i++;
-		}
-		i_want_to_be_freed(path_decomposed);
-	}
-	return (bin);
-}
-
 int	start_process(t_todo *all, char *bin)
 {
 	pid_t	pid;
@@ -77,27 +19,85 @@ int	start_process(t_todo *all, char *bin)
 	return (all->exit_code);
 }
 
-int	define_and_execute(t_todo *all)
+//int	define_and_execute(t_todo *all)
+//{
+//	int		try;
+//	char	*bin_location;
+//
+//	if (ft_strchr("./", all->to_execute->cmds->cmd_str[0]))
+//	{
+//		try = try_rel_abs_path(all);
+//		if (try)
+//			return (try);
+//	}
+//	if (is_builtin(all->to_execute->cmds->cmd_str))
+//		return (do_builtin(all->to_execute->cmds->cmd_str, all));
+//	bin_location = try_path(all);
+//	if (bin_location)
+//		return (start_process(all, bin_location));
+//	else
+//	{
+//		errorhandle(all, all->to_execute->cmds->cmd_str,
+//			"command not found", NULL);
+//		return (127);
+//	}
+//}
+
+int	execute_cmd(t_todo *all)
 {
+	int		filefd;
+	char	**files;
+
+	files = all->cur_cmds->input_files;
+	if (all->cur_cmds->input_files)
+	{
+		while (*files)
+		{
+			filefd = open(*files, O_RDONLY, 0777);
+			if (filefd == -1)
+			{
+				errorhandle(all, *files, "No such file or directory", "0");
+				return (1);
+			}
+			if (!files + 1)
+				dup2(filefd, STDIN_FILENO);
+			files++;
+		}
+	}
 	int		try;
 	char	*bin_location;
 
-	if (ft_strchr("./", all->to_execute->cmds->cmd_str[0]))
+	if (ft_strchr("./", all->cur_cmds->cmd_str[0]))
 	{
 		try = try_rel_abs_path(all);
 		if (try)
 			return (try);
 	}
-	if (is_builtin(all->to_execute->cmds->cmd_str))
-		return (do_builtin(all->to_execute->cmds->cmd_str, all));
+	if (is_builtin(all->cur_cmds->cmd_str))
+		return (do_builtin(all->cur_cmds->cmd_str, all));
 	bin_location = try_path(all);
 	if (bin_location)
 		return (start_process(all, bin_location));
 	else
 	{
-		errorhandle(all, all->to_execute->cmds->cmd_str, "command not found", "-1");
+		errorhandle(all, all->cur_cmds->cmd_str,
+			"command not found", NULL);
 		return (127);
 	}
+}
+
+int	define_and_execute(t_todo *all)
+{
+	t_cmds	*cmds_cpy;
+	int		ret;
+
+	all->cur_cmds = all->to_execute->cmds;
+	while (all->cur_cmds)
+	{
+		ret = execute_cmd(all);
+		all->cur_cmds = all->cur_cmds->next;
+	}
+	return (ret);
 }
 
 int	execution(t_todo *all)

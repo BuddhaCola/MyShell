@@ -8,7 +8,7 @@ int	cd_oldpwd(t_todo *all)
 	oldpwd = env_get_value(all, "OLDPWD");
 	if (!oldpwd)
 	{
-		errorhandle(all, all->to_execute->cmds->args[0], "OLDPWD not set", "1");
+		errorhandle(all, all->to_execute->cmds->args[0], "OLDPWD not set", "0");
 		return (1);
 	}
 	ft_putendl_fd(oldpwd, 1);
@@ -27,7 +27,7 @@ int	cd_home(t_todo *all)
 	else
 	{
 		ret = 1;
-		errorhandle(all, all->to_execute->cmds->args[0], "HOME not set", "1");
+		errorhandle(all, all->to_execute->cmds->args[0], "HOME not set", NULL);
 	}
 	return (ret);
 }
@@ -47,7 +47,7 @@ int	ft_cd(t_todo *all)
 		ret = cd_oldpwd(all);
 	if (ret == -1)
 	{
-		errorhandle(all, all->to_execute->cmds->args[0], all->to_execute->cmds->args[1], "1");
+		errorhandle(all, all->to_execute->cmds->args[0], all->to_execute->cmds->args[1], NULL);
 		ret = 1;
 	}
 	if (ret == 0)

@@ -1,11 +1,33 @@
 #include "../minishell.h"
 
-int is_builtin(char *path)
+int	errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code)
 {
-	if (!path)
-		return (0);
-	char *builtins[8];
-	int i;
+	ft_putstr_fd("minishell", 1);
+	if (program_name)
+	{
+		ft_putstr_fd(": ", 1);
+		ft_putstr_fd(program_name, 1);
+	}
+	if (uniqe_error)
+	{
+		ft_putstr_fd(": ", 1);
+		ft_putstr_fd(uniqe_error, 1);
+	}
+	if (errno && ft_strcmp(code, "0"))
+	{
+		ft_putstr_fd(": ", 1);
+		ft_putstr_fd(strerror(errno), 1);
+	}
+	ft_putstr_fd("\n", 1);
+	if (code)
+		env_set_value(all, "?", code);
+	return (0);
+}
+
+int	is_builtin(char *path)
+{
+	char	*builtins[8];
+	int		i;
 
 	i = 0;
 	builtins[0] = "echo";
@@ -22,8 +44,9 @@ int is_builtin(char *path)
 	return (0);
 }
 
-int do_builtin(char *path, t_todo *all)
+int	do_builtin(char *path, t_todo *all)
 {
+	PROBE
 	if (!(ft_strcmp(path, "echo")))
 		return (ft_echo(all));
 	else if (!(ft_strcmp(path, "cd")))
@@ -41,14 +64,16 @@ int do_builtin(char *path, t_todo *all)
 	return (0);
 }
 
-char *try_open(t_todo *all)
+char	*try_open(t_todo *all)
 {
 	int		fd;
 	char	*bin_location;
 
 	bin_location = NULL;
 	fd = open(all->to_execute->cmds->cmd_str, O_RDONLY);
-	if (fd != -1 && !ft_strchr("./", all->to_execute->cmds->cmd_str[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+	if (fd != -1 && !ft_strchr("./",
+			all->to_execute->cmds->cmd_str
+			[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
 	{
 		bin_location = ft_strdup(all->to_execute->cmds->cmd_str);
 		close(fd);
@@ -64,9 +89,11 @@ int	try_rel_abs_path(t_todo *all)
 	bin_location = try_open(all);
 	if (bin_location)
 		return (start_process(all, bin_location));
-	else if (ft_strchr("./", all->to_execute->cmds->cmd_str[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+	else if (ft_strchr("./", all->to_execute->cmds->cmd_str
+			[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
 	{
-		errorhandle(all, all->to_execute->cmds->cmd_str, "is a directory", "126");
+		errorhandle
+			(all, all->to_execute->cmds->cmd_str, "is a directory", NULL);
 		return (126);
 	}
 	return (0);

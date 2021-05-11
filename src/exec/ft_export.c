@@ -56,7 +56,11 @@ int	print_env(t_todo *all)
 	clone = clone_env(all->environments, NULL);
 	clone = sort_env(clone);
 	while (clone[i])
-		print_one(clone[i++]);
+	{
+		if (*clone[i] != '?')
+			print_one(clone[i]);
+		i++;
+	}
 	i_want_to_be_freed(clone);
 	return (0);
 }

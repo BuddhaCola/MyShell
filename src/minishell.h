@@ -93,6 +93,7 @@ typedef	struct			s_todo
 	struct termios		saved_attributes;
 	int 				exit_code;
 	t_history			*hist_curr;
+	t_cmds				*cur_cmds;
 }						t_todo;
 
 enum e_token_type
@@ -170,6 +171,7 @@ int		start_process(t_todo *all, char *bin);
 int		do_builtin(char *path, t_todo *all);
 int		is_builtin(char *path);
 int		try_rel_abs_path(t_todo *all);
+char	*try_path(t_todo *all);
 int		redirection(char *filepath, char *program, char **args, int append);
 int		count_environments(t_todo *all);
 int		swapstr(char **str1, char **str2);

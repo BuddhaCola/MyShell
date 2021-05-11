@@ -149,6 +149,16 @@ void if_char_dquote_do(t_lexer *lexer);
 void if_char_escape_or_general_do(t_lexer *lexer, const char *line);
 void if_char_whitespace_do(t_lexer *lexer, const char *line);
 void if_semi_great_less_pipe_char_do(t_lexer *lexer, const char *line);
+int  get_num_of_type(char c);
+void tok_init(t_tok *tok, int data_size);
+void		tok_destroy(t_tok *tok);
+int count_tokens(t_tok *token);
+void if_ch_is_quote_set_state_general(int *state, int *chtype);
+void if_ch_is_dquote_set_state_general(int *state, int *chtype);
+void get_chtype(char **line, int *chtype);
+void init_tokenizer(t_lexer *lexer, int size);
+void if_char_null_set_zero(t_lexer *lexer);
+void if_last_char_is_not_zero_do_line_pp(char **line);
 
 
 

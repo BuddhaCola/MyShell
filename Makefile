@@ -18,7 +18,9 @@ src/parse/tokenizer/tokenize.c src/parse/build_to_execute_lst/build_to_execute_l
 src/parse/build_execute_lst.c src/parse/check_syntax/check_syntax.c \
 src/parse/strip_quotes_and_bslashes/strip_quotes_and_bslashes.c\
 src/parse/tokenizer/if_state_in_general/if_state_in_general.c\
-src/parse/tokenizer/if_state_in_general/if_state_in_general_utils.c
+src/parse/tokenizer/if_state_in_general/if_state_in_general_utils.c\
+src/parse/tokenizer/lexer_destroy.c src/parse/tokenizer/tokenizer_utils.c\
+src/parse/tokenizer/tokenizer_utils2.c
 
 NAME	=	minishell
 

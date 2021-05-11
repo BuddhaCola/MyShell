@@ -15,8 +15,12 @@ src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_ut
 src/exec/env_functions.c src/exec/execution.c src/exec/execution_utils.c src/exec/execution_utils_2.c src/exec/ft_echo.c src/exec/ft_env.c src/exec/ft_exit.c src/exec/ft_export.c src/exec/ft_pipe.c src/exec/ft_pwd.c src/exec/path_parse.c src/exec/redirection.c src/exec/ft_unset.c src/exec/env_update.c src/exec/set_shlvl.c src/exec/env_search.c src/exec/ft_cd.c src/exec/history.c\
 src/parse/dereferencing_dollar/dereference_the_value.c src/parse/parse_pipes/parse_pipes.c \
 src/parse/tokenizer/tokenize.c src/parse/build_to_execute_lst/build_to_execute_lst.c\
-src/parse/build_execute_lst.c src/parse/check_syntax/check_syntax.c \
-src/parse/strip_quotes_and_bslashes/strip_quotes_and_bslashes.c
+src/parse/build_tokens.c src/parse/check_syntax/check_syntax.c \
+src/parse/strip_quotes_and_bslashes/strip_quotes_and_bslashes.c\
+src/parse/tokenizer/if_state_in_general/if_state_in_general.c\
+src/parse/tokenizer/if_state_in_general/if_state_in_general_utils.c\
+src/parse/tokenizer/lexer_destroy.c src/parse/tokenizer/tokenizer_utils.c\
+src/parse/tokenizer/tokenizer_utils2.c
 
 NAME	=	minishell
 

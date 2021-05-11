@@ -54,6 +54,11 @@ typedef struct s_lexer
 {
 	t_tok	*tok_list;
 	int		num_of_tokens;
+	int 	chtype;
+	t_tok	*token;
+	int		state;
+	int     size;
+	int		j;
 }				t_lexer;
 
 //parse utils
@@ -103,13 +108,11 @@ enum e_token_type
 	CHAR_QUOTE = '\'',
 	CHAR_DQUOTE = '\"',
 	CHAR_PIPE = '|',
-	CHAR_AMPERSAND = '&',
 	CHAR_ESCAPESEQ = '\\',
 	CHAR_TAB = '\t',
 	CHAR_NEWLINE = '\n',
 	CHAR_GREATER = '>',
 	CHAR_LESSER = '<',
-	CHAR_DOLLAR = '$',
 	CHAR_DGREATER = -2,
 	CHAR_NULL = 0,
 	CHAR_GENERAL = -1,
@@ -120,7 +123,6 @@ enum e_states
 {
 	STATE_IN_DQUOTE,
 	STATE_IN_QUOTE,
-	STATE_IN_ESCAPEDSEQ,
 	STATE_GENERAL,
 };
 
@@ -135,15 +137,35 @@ void strip_quotes_and_bslashes(char **src);
 void dereference_the_value(t_todo *all);
 
 //build exec list
-int build_execute_lst(t_todo *all, char *line, int size
+int build_tokens(t_todo *all, char *line, int size
         ,t_lexer *lexer_list);
 
 //tokenize
 int         tokenize(char *line, int size, t_lexer *lexer_list);
+void 		if_state_in_general(t_lexer *lexer, char *line);
 void		lexer_destroy(t_lexer *list);
+void tok_init(t_tok *tok, int data_size);
+void if_char_quote_do(t_lexer *lexer);
+void if_char_dquote_do(t_lexer *lexer);
+void if_char_escape_or_general_do(t_lexer *lexer, const char *line);
+void if_char_whitespace_do(t_lexer *lexer, const char *line);
+void if_semi_great_less_pipe_char_do(t_lexer *lexer, const char *line);
+int  get_num_of_type(char c);
+void tok_init(t_tok *tok, int data_size);
+void		tok_destroy(t_tok *tok);
+int count_tokens(t_tok *token);
+void if_ch_is_quote_set_state_general(int *state, int *chtype);
+void if_ch_is_dquote_set_state_general(int *state, int *chtype);
+void get_chtype(char **line, int *chtype);
+void init_tokenizer(t_lexer *lexer, int size);
+void if_char_null_set_zero(t_lexer *lexer);
+void if_last_char_is_not_zero_do_line_pp(char **line);
+
+
+
 
 //check syntax
-int check_syntax(t_tok *token);
+int check_syntax(t_todo *all, t_tok *token);
 
 //parse pipes
 void    parse_pipes(t_todo *all);

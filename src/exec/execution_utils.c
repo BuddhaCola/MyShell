@@ -46,7 +46,6 @@ int	is_builtin(char *path)
 
 int	do_builtin(char *path, t_todo *all)
 {
-	PROBE
 	if (!(ft_strcmp(path, "echo")))
 		return (ft_echo(all));
 	else if (!(ft_strcmp(path, "cd")))

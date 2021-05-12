@@ -5,7 +5,7 @@ int	start_process(t_todo *all, char *bin)
 	pid_t	pid;
 
 	pid = fork();
-	if (!pid)
+	if (pid == 0)
 	{
 		if (all->cur_cmds->input_files)
 			all->orig_stdin = input_redirect(all);
@@ -79,17 +79,32 @@ int	execute_cmd(t_todo *all)
 
 int	define_and_execute(t_todo *all)
 {
-	t_cmds	*cmds_cpy;
 	int		ret;
 
 	all->cur_cmds = all->to_execute->cmds;
-	while (all->cur_cmds)
-	{
+	if (all->cur_cmds->next)
+		ret = ft_pipe(all);
+	else
 		ret = execute_cmd(all);
-		all->cur_cmds = all->cur_cmds->next;
-	}
+//	if (WIFSIGNALED(ret))
+//		ret = WTERMSIG(ret) + 128;
+//	else if (WIFEXITED(ret))
+//		ret = WEXITSTATUS(ret);
 	return (ret);
 }
+
+//int	define_and_execute(t_todo *all)
+//{
+//	int		ret;
+//
+//	all->cur_cmds = all->to_execute->cmds;
+//	while(all->cur_cmds)
+//	{
+//		ret = execute_cmd(all);
+//		all->cur_cmds = all->cur_cmds->next;
+//	}
+//	return (ret);
+//}
 
 int	execution(t_todo *all)
 {

@@ -34,7 +34,11 @@ int	output_redirect(t_todo *all)
 	else if (all->cur_cmds->file_type_flg == OUTPUT_FILE)
 		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
 	dup2(filefd, STDOUT_FILENO);
+	printf("|file fd = |%d|\n", filefd);
+//	fflush(stdout);
+	close(filefd);
 	return (orig_stdout);
+//	return (filefd);
 }
 
 int	input_redirect(t_todo *all)

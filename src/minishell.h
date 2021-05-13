@@ -42,8 +42,9 @@ typedef struct s_cmds
 	char					**args;
 	char					**input_files;
 	char					**output_files;
-	char                    **append_files;
+	char					**append_files;
 	struct s_cmds		    *next;
+	int						file_type_flg;
 }				t_cmds;
 
 //to execute
@@ -118,6 +119,8 @@ typedef	struct			s_todo
 	int 				exit_code;
 	t_history			*hist_curr;
 	t_cmds				*cur_cmds;
+	int					orig_stdin;
+	int					orig_stdout;
 }						t_todo;
 
 enum e_token_type

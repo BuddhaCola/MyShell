@@ -8,7 +8,11 @@ int	start_process(t_todo *all, char *bin)
 	if (pid == 0)
 	{
 		if (all->cur_cmds->input_files)
+		{
 			all->orig_stdin = input_redirect(all);
+			if (all->orig_stdin == -1)
+				return (1);
+		}
 		if (all->cur_cmds->output_files || all->cur_cmds->append_files)
 			all->orig_stdout = output_redirect(all);
 		execve(bin, all->to_execute->cmds->args, all->environments);
@@ -77,13 +81,28 @@ int	execute_cmd(t_todo *all)
 	}
 }
 
+//void	close_pipes(t_todo *all)
+//{
+//	t_cmds *cmds_cpy;
+//
+//	cmds_cpy = all->to_execute->cmds;
+//	while (cmds_cpy)
+//	{
+//		close(cmds_cpy->pipeline_in);
+//		cmds_cpy = cmds_cpy->next;
+//	}
+//}
+
 int	define_and_execute(t_todo *all)
 {
 	int		ret;
 
 	all->cur_cmds = all->to_execute->cmds;
 	if (all->cur_cmds->next)
+	{
 		ret = ft_pipe(all);
+//		close_pipes(all);
+	}
 	else
 		ret = execute_cmd(all);
 //	if (WIFSIGNALED(ret))

@@ -30,6 +30,7 @@ typedef struct s_cmds
 	char					**output_files;
 	char                    **append_files;
 	int 					file_type_flg;
+	int						pipeline_in;
 	struct s_cmds		    *next;
 }				t_cmds;
 

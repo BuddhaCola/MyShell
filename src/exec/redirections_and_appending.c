@@ -17,54 +17,58 @@ static int	go_through_redirections(t_todo *all, char ***type, int mode)
 	return (filefd);
 }
 
-int	output_redirect(t_todo *all)
-{
-	char	**append;
-	char	**output;
-	int		filefd;
-	int		orig_stdout;
-	orig_stdout = dup(STDOUT_FILENO);
-	append = all->cur_cmds->append_files;
-	output = all->cur_cmds->output_files;
-	filefd = go_through_redirections(all, &append, APPEND_FILE);
-	filefd = go_through_redirections(all, &output, OUTPUT_FILE);
-	if (all->cur_cmds->file_type_flg == APPEND_FILE)
-		filefd = open(*(append - 1), APPEND_FILE, 0644);
-	else if (all->cur_cmds->file_type_flg == OUTPUT_FILE)
-	{
-		filefd = open("oput", OUTPUT_FILE, 0644);
-//		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
-	}
-	dup2(filefd, 1);
-	close(filefd);
-	return (orig_stdout);
-}
-
 //int	output_redirect(t_todo *all)
 //{
-//	char	**files;
+//	char	**append;
+//	char	**output;
 //	int		filefd;
 //	int		orig_stdout;
-//	PROBE;
-//
-//	files = all->cur_cmds->output_files;
-//	while (*files)
+//	orig_stdout = dup(STDOUT_FILENO);
+//	append = all->cur_cmds->append_files;
+//	output = all->cur_cmds->output_files;
+//	filefd = go_through_redirections(all, &append, APPEND_FILE);
+//	filefd = go_through_redirections(all, &output, OUTPUT_FILE);
+//	if (all->cur_cmds->file_type_flg == APPEND_FILE)
 //	{
-//		filefd = open(*files, OUTPUT_FILE, 0644);
-//		if (filefd == -1)
-//		{
-//			errorhandle(all, "redirect", "file open error", "-1");
-//			return (1);
-//		}
-//		if (!*(files + 1))
-//		{
-//			orig_stdout = dup(STDOUT_FILENO);
-//			dup2(filefd, STDOUT_FILENO);
-//		}
-//		files++;
+//		printf("|output: %s\n", *(append - 1));
+//		filefd = open(*(append - 1), APPEND_FILE, 0644);
 //	}
+//	else if (all->cur_cmds->file_type_flg == OUTPUT_FILE)
+//	{
+//		printf("|output: %s\n", *output - 1);
+////		filefd = open("oput", OUTPUT_FILE, 0644);
+//		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
+//	}
+//	dup2(filefd, 1);
+//	close(filefd);
 //	return (orig_stdout);
 //}
+
+int	output_redirect(t_todo *all)
+{
+	char	**files;
+	int		filefd;
+	int		orig_stdout;
+	PROBE;
+
+	files = all->cur_cmds->output_files;
+	while (*files)
+	{
+		filefd = open(*files, OUTPUT_FILE, 0644);
+		if (filefd == -1)
+		{
+			errorhandle(all, "redirect", "file open error", "-1");
+			return (1);
+		}
+		if (!*(files + 1))
+		{
+			orig_stdout = dup(STDOUT_FILENO);
+			dup2(filefd, STDOUT_FILENO);
+		}
+		files++;
+	}
+	return (orig_stdout);
+}
 
 int	input_redirect(t_todo *all)
 {
@@ -79,8 +83,9 @@ int	input_redirect(t_todo *all)
 		if (filefd == -1)
 		{
 			errorhandle(all, *files, "No such file or directory", "0");
-			return (1);
+			return (-1);
 		}
+		printf("|input: %s\n", *files);
 		if (!*(files + 1))
 		{
 			orig_stdin = dup(STDIN_FILENO);

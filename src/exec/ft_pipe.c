@@ -69,6 +69,7 @@ static int	go_through_redirections(t_todo *all, char ***type, int mode)
 //		}
 //	}
 //}
+
 int	ft_pipe(t_todo *all)
 {
 	int		pipeline[2];
@@ -79,7 +80,9 @@ int	ft_pipe(t_todo *all)
 	int i = 0;
 	int count_cmd = 0;
 	int	exitcode;
-	fd_in = 0;
+	fd_in = -1;
+
+	int	fd_to_close[20];
 
 	t_cmds *cmds_cpy;
 	cmds_cpy = all->to_execute->cmds;
@@ -87,12 +90,16 @@ int	ft_pipe(t_todo *all)
 	{
 		count_cmd++;
 		pipe(pipeline);
+
+		printf("pipe:[%d][%d]\n", pipeline[0], pipeline[1]);
+
 		pid = fork();
 		if (pid == -1)
 			exit (-1);
 		else if (pid == 0)
 		{
-			if (!cmds_cpy->next)
+//			if (!cmds_cpy->next)
+			if (fd_in > 0)
 			{
 				dup2(fd_in, 0);
 				close(fd_in);
@@ -100,27 +107,38 @@ int	ft_pipe(t_todo *all)
 			if (cmds_cpy->next != NULL)
 				dup2(pipeline[1], 1);
 			close(pipeline[0]);
+			close(pipeline[1]);
 			if (cmds_cpy->input_files)
 				input_redirect(all);
-//			if (cmds_cpy->output_files)
-//			{
-////				output_redirect(all);
-//				PROBE
-//				filefd = open("oput", OUTPUT_FILE, 0644);
-//				dup2(filefd, 1);
-//				close(filefd);
-//			}
+			if (cmds_cpy->output_files)
+			{
+//				output_redirect(all);
+				filefd = open("oput", OUTPUT_FILE, 0644);
+				dup2(filefd, 1);
+				close(filefd);
+			}
 			execvp(cmds_cpy->cmd_str, cmds_cpy->args);
 			exit(EXIT_FAILURE);
 		}
 		else
 		{
 			close(pipeline[1]);
-//			if (cmds_cpy->next)
-			fd_in = pipeline[0];
+//			if (!cmds_cpy->next)
+//			{
+//				close(pipeline[0]);
+//				pipeline[0] = 0;
+//			}
+			cmds_cpy->pipeline_in = fd_in;
+			close(fd_in);
+			fd_in = dup(pipeline[0]);
+			close(pipeline[0]);
+			printf("fd_in=%d\n", fd_in);
 			cmds_cpy = cmds_cpy->next;
 		}
+//		if (pipeline[0] && cmds_cpy->next)
+//			close(pipeline[0]);
 	}
+	close(fd_in);
 	while (i < count_cmd)
 	{
 		wait(&exitcode);

@@ -1,165 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   build_to_execute_lst.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/13 17:03:24 by igearhea          #+#    #+#             */
+/*   Updated: 2021/05/13 17:03:27 by igearhea         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
-static void parse_build(t_todo *all)
+static void	tok_next_add_to_2d(char ***str, t_tok **tok)
 {
-	all->to_execute = malloc(sizeof(t_to_execute));
-	all->to_execute->cmds = malloc(sizeof(t_cmds));
-	all->to_execute->cmds->cmd_str = NULL;
-	all->to_execute->cmds->args = NULL;
-	all->to_execute->cmds->input_files = NULL;
-	all->to_execute->cmds->output_files = NULL;
-	all->to_execute->cmds->append_files = NULL;
-	all->to_execute->cmds->file_type_flg = NONE;
-	all->to_execute->cmds->next = NULL;
+	*tok = (*tok)->next;
+	add_to_2d(str, *tok);
 }
 
-static void init_cmds_elem(t_cmds *cmds)
+static void	main_while(t_tok **tok, t_cmds *cmds)
 {
-    cmds->cmd_str = NULL;
-    cmds->args = NULL;
-    cmds->input_files = NULL;
-    cmds->output_files = NULL;
-    cmds->append_files = NULL;
-    cmds->file_type_flg = NONE;
-    cmds->next = NULL;
-}
-
-static t_cmds *get_new_cmds_elem(t_cmds *cmds)
-{
-    cmds->next = malloc(sizeof(t_cmds));
-    init_cmds_elem(cmds->next);
-    return (cmds->next);
-}
-
-static void get_cmd_str(t_cmds *cmds, t_tok *tok)
-{
-    cmds->cmd_str = ft_strdup(tok->data);
-    cmds->args = malloc(sizeof(char *) * 2);
-    cmds->args[0] = ft_strdup(tok->data);
-    cmds->args[1] = NULL;
-}
-
-static void add_to_2d(char ***src, t_tok *tok)
-{
-    char **str;
-    char **str_cpy;
-    char **new_str;
-    char **new_str_cpy;
-    size_t old_len;
-    str = *src;
-    if (str == NULL)
-    {
-        str = malloc(sizeof(char *) * 1);
-        str[0] = NULL;
-    }
-    old_len = 0;
-    str_cpy = str;
-    while (*str_cpy)
-    {
-        old_len++;
-        str_cpy++;
-    }
-    new_str = malloc(sizeof(char *) * (old_len + 2));
-    new_str_cpy = new_str;
-    str_cpy = str;
-    //cpy old data
-    while (*str_cpy)
-    {
-        *new_str_cpy = *str_cpy;
-        new_str_cpy++;
-        str_cpy++;
-    }
-    *new_str_cpy = ft_strdup(tok->data);
-    new_str_cpy++;
-    *new_str_cpy = NULL;
-    free(str);
-    *src = new_str;
-}
-
-void build_to_execute_lst(t_todo *all)
-{
-    //pipe_elem, tokens
-	t_pipelist *pipe_lst_elem;
-	pipe_lst_elem = all->parse_utils->pipelist;
-	t_tok *tok;
-    //to_execute
-	t_cmds *cmds;
-
-    parse_build(all);
-	//get cmds list elem
-	cmds = all->to_execute->cmds;
-	//for every pipe_elem
-	while (pipe_lst_elem)
+	while (*tok)
 	{
-    	tok = pipe_lst_elem->tok_lst;
-		//for every token in pipe_elem
-		get_cmd_str(cmds, tok);
-		tok = tok->next;
-		while (tok)
-		{
-			if (tok->type == TOKEN)
-				strip_quotes_and_bslashes(&tok->data);
-            if (tok->type == CHAR_GREATER)
-            {
-            	tok = tok->next;
-				add_to_2d(&cmds->output_files, tok);
-				cmds->file_type_flg = O_WRONLY | O_TRUNC | O_CREAT;
-			}
-            else if (tok->type == CHAR_LESSER)
-            {
-            	tok = tok->next;
-				add_to_2d(&cmds->input_files, tok);
-			}
-            else if (tok->type == CHAR_DGREATER)
-            {
-            	tok = tok->next;
-				add_to_2d(&cmds->append_files, tok);
-				cmds->file_type_flg = O_WRONLY | O_APPEND | O_CREAT;
-			}
-            else
-                add_to_2d(&cmds->args, tok);
-            tok = tok->next;
-        }
-		//next pipe_elem
-		pipe_lst_elem = pipe_lst_elem->next;
-		//get new cmds elem;
-		if (pipe_lst_elem)
-			cmds = get_new_cmds_elem(cmds);
+		if ((*tok)->type == TOKEN)
+			strip_quotes_and_bslashes(&(*tok)->data);
+		if ((*tok)->type == CHAR_GREATER)
+			tok_next_add_to_2d(&(cmds->output_files), &(*tok));
+		else if ((*tok)->type == CHAR_LESSER)
+			tok_next_add_to_2d(&(cmds->input_files), &(*tok));
+		else if ((*tok)->type == CHAR_DGREATER)
+			tok_next_add_to_2d(&(cmds->append_files), &(*tok));
+		else
+			add_to_2d(&cmds->args, *tok);
+		*tok = (*tok)->next;
 	}
 }
 
-static void destroy_2d(char **str)
+void	build_to_execute_lst(t_todo *all)
 {
-    char **str_cpy;
-    str_cpy = str;
-    if (str != NULL)
-    {
-        while (*str != NULL)
-        {
-            free(*str);
-            str++;
-        }
-        free(str_cpy);
-    }
-}
+	t_pipelist	*pipe_lst_elem;
+	t_tok		*tok;
+	t_cmds		*cmds;
 
-static void destroy_cmds(t_cmds *cmds)
-{
-    if (cmds != NULL)
-    {
-        if (cmds->cmd_str != NULL)
-            free(cmds->cmd_str);
-        destroy_2d(cmds->args);
-        destroy_2d(cmds->input_files);
-        destroy_2d(cmds->output_files);
-        destroy_2d(cmds->append_files);
-        destroy_cmds(cmds->next);
-        free(cmds);
-    }
-}
-
-void destroy_to_execute_lst(t_todo *all)
-{
-    destroy_cmds(all->to_execute->cmds);
-	free(all->to_execute);
+	pipe_lst_elem = all->parse_utils->pipelist;
+	parse_build(all, &cmds);
+	while (pipe_lst_elem)
+	{
+		tok = pipe_lst_elem->tok_lst;
+		get_cmd_str(cmds, tok);
+		tok = tok->next;
+		main_while(&tok, cmds);
+		pipe_lst_elem = pipe_lst_elem->next;
+		if (pipe_lst_elem)
+			cmds = get_new_cmds_elem(cmds);
+	}
 }

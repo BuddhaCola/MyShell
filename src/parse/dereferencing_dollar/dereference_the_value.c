@@ -1,196 +1,89 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dereference_the_value.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/13 17:05:08 by igearhea          #+#    #+#             */
+/*   Updated: 2021/05/13 17:05:09 by igearhea         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
-//allocates answer if exist
-static char *search_key(t_todo *all, char *key)
+static void	if_general_do(t_todo *all)
 {
-	char *ret;
-
-	ret = env_get_value(all, key);
-	if (ret == NULL)
-		return NULL;
-	return (ft_strdup(ret));
-}
-
-//allocates tokens str with modefying it 
-static char *put_nothing(char *src, char *start, char **stop)
-{
-	char *ret;
-	int i;
-	int len_for_start;
-
-	ret = malloc(sizeof(char) * (ft_strlen(src) + 1));
-	i = 0;
-	len_for_start = start - src;
-	while (i < (len_for_start))
-		ret[i++] = *src++;
-	src += *stop - src;
-	if (i != 0)
-		*stop = &(ret[i - 1]);
-	else
-		*stop = ret;
-	while (*src)
-		ret[i++] = *src++;
-	ret[i] = '\0';
-	return (ret);
-}
-
-//allocates tokens str with dereferenced string
-static char *put_answer(char *src, char *start, char **stop, char *answer)
-{
-	char *ret;
-	int i;
-	int len_for_start;
-
-	ret = malloc(sizeof(char) * (ft_strlen(src) + ft_strlen(answer)
-			* 2 + 1));
-	//cpy to start		from src
-	i = 0;
-	len_for_start = start - src;
-	while (i < (len_for_start))
-		ret[i++] = *src++;
-	//cpy answer
-	while (*answer)
+	if (*(all->d_u.str) == '\\')
 	{
-		if (*answer == '\'' || *answer == '\"' || *answer == '\\'
-			|| *answer == '|' || *answer == '>' || *answer == '<')
-		{
-			ret[i++] = '\\';
-			ret[i++] = *answer++;
-		}
+		if (*(all->d_u.str + 1) == '\0' || *(all->d_u.str + 2) == '\0')
+			all->d_u.break_flg = 1;
 		else
-			ret[i++] = *answer++;
+			(all->d_u.str)++;
 	}
-	//set new *stop pos
-	src += *stop - src;
-	*stop = &(ret[i - 1]);
-	//cpy after answer	from src
-	while (*src)
-		ret[i++] = *src++;
-	//nool terminate ret
-	ret[i] = '\0';
-	//ret result
-	return (ret);
+	else if (*(all->d_u.str) == '$' && *(all->d_u.str + 1) != '\0'
+		&& (ft_isalpha(*(all->d_u.str + 1))
+			 || ft_strchr("?_", *(all->d_u.str + 1))))
+		get_key(all);
+	else if (*(all->d_u.str) == '\'')
+		all->d_u.state = STATE_IN_QUOTE;
+	else if (*(all->d_u.str) == '\"')
+		all->d_u.state = STATE_IN_DQUOTE;
 }
 
-static void try_dereference(t_todo *all, char **src)
+static void	if_dquote_do(t_todo *all)
 {
-	char *str;
-	char *start;
-	char *key;
-	char *answer;
-	char *new_src;
-	int key_iter;
-	//state mashine
-	int state;
-	int state_general;
-	int state_q;
-	int state_dq;
-	state_general = 0;
-	state_q = 1;
-	state_dq = 2;
-
-	state = state_general;
-	str = *src;
-	key = malloc (sizeof(char) * ft_strlen(str) + 1);
-	while (*str)
+	if (*(all->d_u.str) == '\\')
 	{
-		if (state == state_general)
-		{
-			if (*str == '\\')
-			{
-				if (*(str + 1) == '\0' || *(str + 2) == '\0')
-					break;
-				str++;
-			}
-			else if (*str == '$' && *(str + 1) != '\0'
-			&& (ft_isalpha(*(str + 1)) || ft_strchr("?_", *(str + 1))))
-			{
-				start = str++;
-				key_iter = 0;
-				while (*str && (ft_isalpha(*str) || ft_isdigit(*str)
-				|| *str == '_' || *str == '?'))
-					key[key_iter++] = *str++;
-				key[key_iter] = '\0';
-				answer = search_key(all, key);
-				if (answer != NULL && key_iter != 0)
-				{
-					//put answer, refresh src, str must be at the (and - 1)
-					//of answer in the src.
-					new_src = put_answer(*src, start, &str, answer);
-					free(*src);
-					*src = new_src;
-					free(answer);
-				}
-				else if (answer == NULL && key_iter != 0)
-				{
-					//put "", refresh src, str must be at the (and - 1)
-					//of answer in the src.
-					new_src = put_nothing(*src, start, &str);
-					free(*src);
-					*src = new_src;
-				}
-			}
-			else if (*str == '\'')
-				state = state_q;
-			else if (*str == '\"')
-				state = state_dq;
-		}
-		else if (state == state_q)
-		{
-			if (*str == '\'')
-				state = state_general;
-		}
-		else if (state == state_dq)
-		{
-			if (*str == '\\')
-			{
-				if (*(str + 1) == '\0' || *(str + 2) == '\0')
-					break;
-				str++;
-			}
-			else if (*str == '$' && *(str + 1) != '\0'
-					 && (ft_isalpha(*(str + 1)) || ft_strchr("?_", *(str + 1))))
-			{
-				start = str++;
-				key_iter = 0;
-				while (*str && (ft_isalpha(*str) || ft_isdigit(*str)
-								|| ft_strchr("?_", *(str))))
-					key[key_iter++] = *str++;
-				key[key_iter] = '\0';
-				answer = search_key(all, key);
-				if (answer != NULL && key_iter != 0)
-				{
-					//put answer, refresh src, str must be at the (and - 1)
-					//of answer in the src.
-					new_src = put_answer(*src, start, &str, answer);
-					free(*src);
-					*src = new_src;
-					free(answer);
-				}
-				else if (answer == NULL && key_iter != 0)
-				{
-					//put "", refresh src, str must be at the (and - 1)
-					//of answer in the src.
-					new_src = put_nothing(*src, start, &str);
-					free(*src);
-					*src = new_src;
-				}
-			}
-			else if (*str == '\"')
-				state = state_general;
-		}
-		str++;
+		if (*(all->d_u.str + 1) == '\0' || *(all->d_u.str + 2) == '\0')
+			all->d_u.break_flg = 1;
+		else
+			(all->d_u.str)++;
 	}
-	free(key);
+	else if (*(all->d_u.str) == '$' && *(all->d_u.str + 1) != '\0'
+		&& (ft_isalpha(*(all->d_u.str + 1))
+			|| ft_strchr("?_", *(all->d_u.str + 1))))
+		get_key(all);
+	else if (*(all->d_u.str) == '\"')
+		all->d_u.state = STATE_GENERAL;
 }
 
-void dereference_the_value(t_todo *all)
+static void	body(t_todo *all)
 {
-	t_pipelist *pipe_elem;
-	t_tok *token;
+	if (all->d_u.state == STATE_GENERAL)
+		if_general_do(all);
+	else if (all->d_u.state == STATE_IN_QUOTE
+		&& *(all->d_u.str) == '\'')
+		all->d_u.state = STATE_GENERAL;
+	else if (all->d_u.state == STATE_IN_DQUOTE)
+		if_dquote_do(all);
+}
+
+static void	try_dereference(t_todo *all, char **src)
+{
+	all->d_u.str = *src;
+	all->d_u.state = STATE_GENERAL;
+	all->d_u.key = malloc(sizeof(char)
+			* ft_strlen(all->d_u.str) + 1);
+	all->d_u.break_flg = 0;
+	all->d_u.src = src;
+	while (*(all->d_u.str))
+	{
+		body(all);
+		if (all->d_u.break_flg == 0)
+			(all->d_u.str)++;
+		else
+			all->d_u.break_flg = 0;
+	}
+	free(all->d_u.key);
+}
+
+void	dereference_the_value(t_todo *all)
+{
+	t_pipelist	*pipe_elem;
+	t_tok		*token;
 
 	pipe_elem = all->parse_utils->pipelist;
-	//for every token try_dereference
 	while (pipe_elem != NULL)
 	{
 		token = pipe_elem->tok_lst;

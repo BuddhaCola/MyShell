@@ -8,7 +8,10 @@ src/parse/strip_quotes_and_bslashes/strip_quotes_and_bslashes.c\
 src/parse/tokenizer/if_state_in_general/if_state_in_general.c\
 src/parse/tokenizer/if_state_in_general/if_state_in_general_utils.c\
 src/parse/tokenizer/lexer_destroy.c src/parse/tokenizer/tokenizer_utils.c\
-src/parse/tokenizer/tokenizer_utils2.c
+src/parse/tokenizer/tokenizer_utils2.c src/parse/parse_pipes/destroy_parse_pipes.c\
+src/parse/parse_pipes/init_pipe_list.c src/parse/build_to_execute_lst/detroy_to_excute_list.c\
+src/parse/build_to_execute_lst/build_to_execute_lst_utils.c src/parse/build_to_execute_lst/add_to_2d.c\
+src/parse/check_syntax/validate_quotation.c src/parse/dereferencing_dollar/deref_utils.c
 
 NAME	=	minishell
 

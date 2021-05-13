@@ -21,6 +21,20 @@
 #define APPEND_FILE 521
 #define OUTPUT_FILE 1537
 
+//dereferencing the dollar
+typedef struct	s_dereference_utils
+{
+	char	*str;
+	char	*start;
+	char	*key;
+	char	*answer;
+	char	*new_src;
+	char	**src;
+	int		key_iter;
+	int		state;
+	int		break_flg;
+}				t_dereference_utils;
+
 //parser
 typedef struct s_cmds
 {
@@ -29,7 +43,6 @@ typedef struct s_cmds
 	char					**input_files;
 	char					**output_files;
 	char                    **append_files;
-	int 					file_type_flg;
 	struct s_cmds		    *next;
 }				t_cmds;
 
@@ -95,6 +108,7 @@ typedef	struct s_exec
 
 typedef	struct			s_todo
 {
+	t_dereference_utils	d_u;
 	t_to_execute		*to_execute;
 	t_exec				exec;
 	t_lexer				*lex_buf;
@@ -104,8 +118,6 @@ typedef	struct			s_todo
 	int 				exit_code;
 	t_history			*hist_curr;
 	t_cmds				*cur_cmds;
-	int					orig_stdin;
-	int					orig_stdout;
 }						t_todo;
 
 enum e_token_type
@@ -136,12 +148,22 @@ enum e_states
 //build to execute lst
 void build_to_execute_lst(t_todo *all);
 void destroy_to_execute_lst(t_todo *all);
+void parse_build(t_todo *all, t_cmds **cmds);
+void init_cmds_elem(t_cmds *cmds);
+t_cmds *get_new_cmds_elem(t_cmds *cmds);
+void get_cmd_str(t_cmds *cmds, t_tok *tok);
+void add_to_2d(char ***src, t_tok *tok);
 
 //strip quotes and bslashes
 void strip_quotes_and_bslashes(char **src);
 
 //dereference the value
 void dereference_the_value(t_todo *all);
+char *search_key(t_todo *all, char *key);
+char *put_nothing(char *src, char *start, char **stop);
+char *put_answer(char *src, char *start, char **stop, char *answer);
+void get_key(t_todo *all);
+
 
 //build exec list
 int build_tokens(t_todo *all, char *line, int size
@@ -168,15 +190,17 @@ void init_tokenizer(t_lexer *lexer, int size);
 void if_char_null_set_zero(t_lexer *lexer);
 void if_last_char_is_not_zero_do_line_pp(char **line);
 
-
-
-
 //check syntax
 int check_syntax(t_todo *all, t_tok *token);
+int validate_quotation(char *str);
 
 //parse pipes
 void    parse_pipes(t_todo *all);
 void    destroy_parse_pipes(t_todo *all);
+void    init_pipe_list(t_todo *all, t_tok **src_lst, t_tok **pipe_lst_tok, t_pipelist **pipelist);
+void init_tok(t_tok *lst);
+t_pipelist  *get_next_pipe_list_elem(t_pipelist *pipe_lst);
+t_tok   *get_next_tok_list_elem(t_tok *lst);
 
 char	**clone_env(char **env, const char *new_env);
 void	handle_signals();

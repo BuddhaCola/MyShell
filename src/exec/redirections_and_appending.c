@@ -22,6 +22,7 @@ int	output_redirect(t_todo *all)
 	char	**output;
 	int		filefd;
 	int		orig_stdout;
+
 	orig_stdout = dup(STDOUT_FILENO);
 	append = all->cur_cmds->append_files;
 	output = all->cur_cmds->output_files;

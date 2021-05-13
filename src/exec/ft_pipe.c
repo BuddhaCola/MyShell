@@ -12,22 +12,22 @@
 
 #include "../minishell.h"
 
-static int	go_through_redirections(t_todo *all, char ***type, int mode)
-{
-	int	filefd;
-
-	while (*type && **type)
-	{
-		filefd = open(**type, mode, 0644);
-		if (filefd == -1)
-		{
-			ft_putendl_fd("failed to open!", 1);
-			return (-1);
-		}
-		(*type)++;
-	}
-	return (filefd);
-}
+//static int	go_through_redirections(t_todo *all, char ***type, int mode)
+//{
+//	int	filefd;
+//
+//	while (*type && **type)
+//	{
+//		filefd = open(**type, mode, 0644);
+//		if (filefd == -1)
+//		{
+//			ft_putendl_fd("failed to open!", 1);
+//			return (-1);
+//		}
+//		(*type)++;
+//	}
+//	return (filefd);
+//}
 
 //int	ft_pipe(t_todo *all)
 //{
@@ -84,9 +84,9 @@ int	ft_pipe(t_todo *all)
 
 	int	fd_to_close[20];
 
-	t_cmds *cmds_cpy;
-	cmds_cpy = all->to_execute->cmds;
-	while(cmds_cpy)
+//	t_cmds *cmds_cpy;
+//	cmds_cpy = all->cur_cmds;
+	while(all->cur_cmds)
 	{
 		count_cmd++;
 		pipe(pipeline);
@@ -96,29 +96,29 @@ int	ft_pipe(t_todo *all)
 			exit (-1);
 		else if (pid == 0)
 		{
-//			if (!cmds_cpy->next)
+//			if (!all->cur_cmds->next)
 			if (fd_in > 0)
 			{
 				dup2(fd_in, 0);
 				close(fd_in);
 			}
-			if (cmds_cpy->next != NULL)
+			if (all->cur_cmds->next != NULL)
 				dup2(pipeline[1], 1);
 			close(pipeline[0]);
 			close(pipeline[1]);
-			if (cmds_cpy->input_files)
+			if (all->cur_cmds->input_files)
 				input_redirect(all);
-			if (cmds_cpy->output_files)
+			if (all->cur_cmds->output_files)
 			{
 				output_redirect(all);
 			}
-			execvp(cmds_cpy->cmd_str, cmds_cpy->args);
+			execvp(all->cur_cmds->cmd_str, all->cur_cmds->args);
 			exit(EXIT_FAILURE);
 		}
 		else
 		{
 			close(pipeline[1]);
-//			if (!cmds_cpy->next)
+//			if (!all->cur_cmds->next)
 //			{
 //				close(pipeline[0]);
 //				pipeline[0] = 0;
@@ -126,7 +126,7 @@ int	ft_pipe(t_todo *all)
 			close(fd_in);
 			fd_in = dup(pipeline[0]);
 			close(pipeline[0]);
-			cmds_cpy = cmds_cpy->next;
+			all->cur_cmds = all->cur_cmds->next;
 		}
 //		if (pipeline[0] && cmds_cpy->next)
 //			close(pipeline[0]);

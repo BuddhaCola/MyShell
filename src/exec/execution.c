@@ -68,8 +68,8 @@ int	execute_cmd(t_todo *all)
 		if (try)
 			return (try);
 	}
-	if (is_builtin(all->cur_cmds->cmd_str))
-		return (do_builtin(all->cur_cmds->cmd_str, all));
+//	if (is_builtin(all->cur_cmds->cmd_str))
+//		return (do_builtin(all->cur_cmds->cmd_str, all));
 	bin_location = try_path(all);
 	if (bin_location)
 		return (start_process(all, bin_location));

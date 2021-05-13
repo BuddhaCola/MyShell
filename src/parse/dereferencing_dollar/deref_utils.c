@@ -52,13 +52,13 @@ static void	while_answer_do(char **answer, char	**ret, int *i)
 		if (**answer == '\'' || **answer == '\"' || **answer == '\\'
 			|| **answer == '|' || **answer == '>' || **answer == '<')
 		{
-			*ret[(*i)++] = '\\';
-			*ret[(*i)++] = **answer;
+			(*ret)[(*i)++] = '\\';
+			(*ret)[(*i)++] = **answer;
 			*answer = *answer + 1;
 		}
 		else
 		{
-			*ret[(*i)++] = **answer;
+			(*ret)[(*i)++] = **answer;
 			*answer = *answer + 1;
 		}
 	}

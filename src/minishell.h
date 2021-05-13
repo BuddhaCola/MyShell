@@ -179,7 +179,7 @@ void		lexer_destroy(t_lexer *list);
 void tok_init(t_tok *tok, int data_size);
 void if_char_quote_do(t_lexer *lexer);
 void if_char_dquote_do(t_lexer *lexer);
-void if_char_escape_or_general_do(t_lexer *lexer, const char *line);
+void if_char_escape_or_general_do(t_lexer *lexer, const char **line);
 void if_char_whitespace_do(t_lexer *lexer, const char *line);
 void if_semi_great_less_pipe_char_do(t_lexer *lexer, const char *line);
 int  get_num_of_type(char c);

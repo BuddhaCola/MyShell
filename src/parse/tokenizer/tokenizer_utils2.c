@@ -46,11 +46,11 @@ void	init_tokenizer(t_lexer *lexer, int size)
 
 void	if_char_null_set_zero(t_lexer *lexer)
 {
-	if (lexer->chtype == CHAR_NULL)
+	if (lexer->chtype == CHAR_NULL || lexer->chtype == CHAR_NEWLINE)
 	{
 		if (lexer->j > 0)
 		{
-			lexer->token->data[lexer->j] = 0;
+			lexer->token->data[lexer->j] = '\0';
 			lexer->j = 0;
 		}
 	}

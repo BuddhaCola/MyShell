@@ -226,7 +226,7 @@ int		debug_promt(t_todo *all)
 		ret = read(0, &buf, 1000);
 		//TODO check ret from read
 		buf[ret] = '\0';
-		if (!build_tokens(all, buf, ret, all->lex_buf))
+		if (!build_tokens(all, buf, ft_strlen(buf), all->lex_buf))
 		{
 			while (all->parse_utils->cur_tok)
 			{

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   strip_quotes_and_bslashes.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/05/13 17:06:23 by igearhea          #+#    #+#             */
+/*   Updated: 2021/05/13 17:06:24 by igearhea         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
-static void if_general(int *state, char **str, char **new_str)
+static void	if_general(int *state, char **str, char **new_str)
 {
 	if (**str == '\\')
 	{
@@ -19,7 +31,7 @@ static void if_general(int *state, char **str, char **new_str)
 	}
 }
 
-static void if_quote(int *state, char **str, char **new_str)
+static void	if_quote(int *state, char **str, char **new_str)
 {
 	if (**str == '\'')
 		*state = STATE_GENERAL;
@@ -30,7 +42,7 @@ static void if_quote(int *state, char **str, char **new_str)
 	}
 }
 
-static void if_dquote(int *state, char **str, char **new_str)
+static void	if_dquote(int *state, char **str, char **new_str)
 {
 	if (**str == '\\')
 	{
@@ -47,12 +59,12 @@ static void if_dquote(int *state, char **str, char **new_str)
 	}
 }
 
-void strip_quotes_and_bslashes(char **src)
+void	strip_quotes_and_bslashes(char **src)
 {
-	char *str;
-	char *new_str;
-	char *ret;
-	int state;
+	char	*str;
+	char	*new_str;
+	char	*ret;
+	int		state;
 
 	str = *src;
 	new_str = malloc(sizeof(char) * ft_strlen(*src) + 1);

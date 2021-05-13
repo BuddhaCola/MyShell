@@ -17,6 +17,20 @@
 #define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
 #define PROMT "Minihell!🔥"
 
+//dereferencing the dollar
+typedef struct	s_dereference_utils
+{
+	char	*str;
+	char	*start;
+	char	*key;
+	char	*answer;
+	char	*new_src;
+	char	**src;
+	int		key_iter;
+	int		state;
+	int		break_flg;
+}				t_dereference_utils;
+
 //parser
 typedef struct s_cmds
 {
@@ -90,6 +104,7 @@ typedef	struct s_exec
 
 typedef	struct			s_todo
 {
+	t_dereference_utils	d_u;
     t_to_execute		*to_execute;
 	t_exec				exec;
 	t_lexer				*lex_buf;
@@ -140,6 +155,11 @@ void strip_quotes_and_bslashes(char **src);
 
 //dereference the value
 void dereference_the_value(t_todo *all);
+char *search_key(t_todo *all, char *key);
+char *put_nothing(char *src, char *start, char **stop);
+char *put_answer(char *src, char *start, char **stop, char *answer);
+void get_key(t_todo *all);
+
 
 //build exec list
 int build_tokens(t_todo *all, char *line, int size

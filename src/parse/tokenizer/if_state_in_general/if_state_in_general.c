@@ -34,7 +34,7 @@ static void	if_char_dgreater_do(t_lexer *lexer, char *line)
 	}
 }
 
-void	if_state_in_general(t_lexer *lexer, char *line)
+void	if_state_in_general(t_lexer *lexer, char **line)
 {
 	if (lexer->chtype == CHAR_QUOTE)
 		if_char_quote_do(lexer);
@@ -43,10 +43,10 @@ void	if_state_in_general(t_lexer *lexer, char *line)
 	else if (lexer->chtype == CHAR_ESCAPESEQ || lexer->chtype == CHAR_GENERAL)
 		if_char_escape_or_general_do(lexer, line);
 	else if (lexer->chtype == CHAR_WHITESPACE)
-		if_char_whitespace_do(lexer, line);
+		if_char_whitespace_do(lexer, *line);
 	else if (lexer->chtype == CHAR_SEMICOLON || lexer->chtype == CHAR_GREATER
 		|| lexer->chtype == CHAR_LESSER || lexer->chtype == CHAR_PIPE)
-		if_semi_great_less_pipe_char_do(lexer, line);
+		if_semi_great_less_pipe_char_do(lexer, *line);
 	else if (lexer->chtype == CHAR_DGREATER)
-		if_char_dgreater_do(lexer, line);
+		if_char_dgreater_do(lexer, *line);
 }

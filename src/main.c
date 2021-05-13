@@ -216,8 +216,8 @@ int		main(int argc, char **argv, char **env)
 //убрать 🚧
 int		debug_promt(t_todo *all)
 {
-	char	buf[1000];
-	int 	ret;
+	char buf[1000];
+	int ret;
 
 	all->lex_buf = malloc(sizeof(t_lexer));
 	while (all->environments)

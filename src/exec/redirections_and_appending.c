@@ -23,7 +23,6 @@ int	output_redirect(t_todo *all)
 	char	**output;
 	int		filefd;
 	int		orig_stdout;
-
 	orig_stdout = dup(STDOUT_FILENO);
 	append = all->cur_cmds->append_files;
 	output = all->cur_cmds->output_files;
@@ -32,14 +31,40 @@ int	output_redirect(t_todo *all)
 	if (all->cur_cmds->file_type_flg == APPEND_FILE)
 		filefd = open(*(append - 1), APPEND_FILE, 0644);
 	else if (all->cur_cmds->file_type_flg == OUTPUT_FILE)
-		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
-	dup2(filefd, STDOUT_FILENO);
-	printf("|file fd = |%d|\n", filefd);
-//	fflush(stdout);
+	{
+		filefd = open("oput", OUTPUT_FILE, 0644);
+//		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
+	}
+	dup2(filefd, 1);
 	close(filefd);
 	return (orig_stdout);
-//	return (filefd);
 }
+
+//int	output_redirect(t_todo *all)
+//{
+//	char	**files;
+//	int		filefd;
+//	int		orig_stdout;
+//	PROBE;
+//
+//	files = all->cur_cmds->output_files;
+//	while (*files)
+//	{
+//		filefd = open(*files, OUTPUT_FILE, 0644);
+//		if (filefd == -1)
+//		{
+//			errorhandle(all, "redirect", "file open error", "-1");
+//			return (1);
+//		}
+//		if (!*(files + 1))
+//		{
+//			orig_stdout = dup(STDOUT_FILENO);
+//			dup2(filefd, STDOUT_FILENO);
+//		}
+//		files++;
+//	}
+//	return (orig_stdout);
+//}
 
 int	input_redirect(t_todo *all)
 {

@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/04/11 15:54:29 by wtaylor           #+#    #+#              #
-#    Updated: 2021/04/20 21:36:09 by wtaylor          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 SRC = src/main.c \
 src/utils/get_next_line/get_next_line.c src/utils/get_next_line/get_next_line_utils.c src/utils/utils.c\
 src/exec/env_functions.c src/exec/execution.c src/exec/execution_utils.c src/exec/execution_utils_2.c src/exec/redirections_and_appending.c src/exec/ft_echo.c src/exec/ft_env.c src/exec/ft_exit.c src/exec/ft_export.c src/exec/ft_pipe.c src/exec/ft_pwd.c src/exec/path_parse.c src/exec/redirection.c src/exec/ft_unset.c src/exec/env_update.c src/exec/set_shlvl.c src/exec/env_search.c src/exec/ft_cd.c src/exec/history.c\

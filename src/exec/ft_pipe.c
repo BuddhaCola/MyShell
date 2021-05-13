@@ -91,8 +91,6 @@ int	ft_pipe(t_todo *all)
 		count_cmd++;
 		pipe(pipeline);
 
-		printf("pipe:[%d][%d]\n", pipeline[0], pipeline[1]);
-
 		pid = fork();
 		if (pid == -1)
 			exit (-1);
@@ -112,10 +110,7 @@ int	ft_pipe(t_todo *all)
 				input_redirect(all);
 			if (cmds_cpy->output_files)
 			{
-//				output_redirect(all);
-				filefd = open("oput", OUTPUT_FILE, 0644);
-				dup2(filefd, 1);
-				close(filefd);
+				output_redirect(all);
 			}
 			execvp(cmds_cpy->cmd_str, cmds_cpy->args);
 			exit(EXIT_FAILURE);
@@ -128,11 +123,9 @@ int	ft_pipe(t_todo *all)
 //				close(pipeline[0]);
 //				pipeline[0] = 0;
 //			}
-			cmds_cpy->pipeline_in = fd_in;
 			close(fd_in);
 			fd_in = dup(pipeline[0]);
 			close(pipeline[0]);
-			printf("fd_in=%d\n", fd_in);
 			cmds_cpy = cmds_cpy->next;
 		}
 //		if (pipeline[0] && cmds_cpy->next)

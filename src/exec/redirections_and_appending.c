@@ -7,9 +7,9 @@ static int	go_through_redirections(t_todo *all, char ***type, int mode)
 	while (*type && **type)
 	{
 		filefd = open(**type, mode, 0644);
+		printf("opening %s\n", **type);
 		if (filefd == -1)
 		{
-			ft_putendl_fd("failed to open!", 1);
 			return (-1);
 		}
 		(*type)++;
@@ -17,17 +17,17 @@ static int	go_through_redirections(t_todo *all, char ***type, int mode)
 	return (filefd);
 }
 
-//int	output_redirect(t_todo *all)
-//{
-//	char	**append;
-//	char	**output;
-//	int		filefd;
-//	int		orig_stdout;
-//	orig_stdout = dup(STDOUT_FILENO);
-//	append = all->cur_cmds->append_files;
-//	output = all->cur_cmds->output_files;
-//	filefd = go_through_redirections(all, &append, APPEND_FILE);
-//	filefd = go_through_redirections(all, &output, OUTPUT_FILE);
+int	output_redirect(t_todo *all)
+{
+	char	**append;
+	char	**output;
+	int		filefd;
+	int		orig_stdout;
+	orig_stdout = dup(STDOUT_FILENO);
+	append = all->cur_cmds->append_files;
+	output = all->cur_cmds->output_files;
+	filefd = go_through_redirections(all, &append, APPEND_FILE);
+	filefd = go_through_redirections(all, &output, OUTPUT_FILE);
 //	if (all->cur_cmds->file_type_flg == APPEND_FILE)
 //	{
 //		printf("|output: %s\n", *(append - 1));
@@ -41,34 +41,67 @@ static int	go_through_redirections(t_todo *all, char ***type, int mode)
 //	}
 //	dup2(filefd, 1);
 //	close(filefd);
+	return (orig_stdout);
+}
+
+//int	output_redirect(t_todo *all)
+//{
+//	char	**append;
+//	char	**output;
+//	int		filefd;
+//	int		orig_stdout;
+//
+////	append = all->cur_cmds->append_files;
+//	output = all->cur_cmds->output_files;
+////	filefd = go_through_redirections(all, &append, APPEND_FILE);
+//	filefd = go_through_redirections(all, &output, OUTPUT_FILE);
+////
+////	if (all->cur_cmds->file_type_flg == APPEND_FILE)
+////	{
+////		printf("|output: %s\n", *(append - 1));
+////		filefd = open(*(append - 1), APPEND_FILE, 0644);
+////	}
+////	else if (all->cur_cmds->file_type_flg == OUTPUT_FILE)
+////	{
+//		ft_putstr_fd(*(output - 1), 2);
+////		filefd = open("wtf", OUTPUT_FILE, 0644);
+////		filefd = open(*(output), OUTPUT_FILE, 0644);
+////		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
+////		if (filefd == -1)
+////			ft_putstr_fd("open failed!\n", log);
+////	}
+////	(dup2(filefd, 1));
+////		ft_putstr_fd("dup failed!\n", log);
+////	close(filefd);
 //	return (orig_stdout);
 //}
 
-int	output_redirect(t_todo *all)
-{
-	char	**files;
-	int		filefd;
-	int		orig_stdout;
-	PROBE;
-
-	files = all->cur_cmds->output_files;
-	while (*files)
-	{
-		filefd = open(*files, OUTPUT_FILE, 0644);
-		if (filefd == -1)
-		{
-			errorhandle(all, "redirect", "file open error", "-1");
-			return (1);
-		}
-		if (!*(files + 1))
-		{
-			orig_stdout = dup(STDOUT_FILENO);
-			dup2(filefd, STDOUT_FILENO);
-		}
-		files++;
-	}
-	return (orig_stdout);
-}
+//int	output_redirect(t_todo *all) из input
+//{
+//	char	**files;
+//	int		filefd;
+//	int		orig_stdin;
+//
+//	files = all->cur_cmds->output_files;
+//	while (*files)
+//	{
+//		filefd = open(*files, OUTPUT_FILE, 0644);
+//		printf("opening %s\n", *files);
+//		if (filefd == -1)
+//		{
+//			errorhandle(all, *files, "No such file or directory", "-1");
+//			return (-1);
+//		}
+//		if (!*(files + 1))
+//		{
+//			orig_stdin = dup(STDOUT_FILENO);
+//			dup2(filefd, STDOUT_FILENO);
+//		}
+//		files++;
+//	}
+//	PROBE
+//	return (orig_stdin);
+//}
 
 int	input_redirect(t_todo *all)
 {
@@ -85,7 +118,6 @@ int	input_redirect(t_todo *all)
 			errorhandle(all, *files, "No such file or directory", "0");
 			return (-1);
 		}
-		printf("|input: %s\n", *files);
 		if (!*(files + 1))
 		{
 			orig_stdin = dup(STDIN_FILENO);

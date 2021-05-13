@@ -109,10 +109,9 @@ int	ft_pipe(t_todo *all)
 			if (all->cur_cmds->input_files)
 				input_redirect(all);
 			if (all->cur_cmds->output_files)
-			{
-				output_redirect(all);
-			}
-			execvp(all->cur_cmds->cmd_str, all->cur_cmds->args);
+				if (output_redirect(all) == -1)
+					return (-1);
+			execve(all->cur_cmds->cmd_str, all->cur_cmds->args, all->environments);
 			exit(EXIT_FAILURE);
 		}
 		else

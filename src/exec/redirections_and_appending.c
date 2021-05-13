@@ -9,6 +9,7 @@ static int	go_through_redirections(t_todo *all, char ***type, int mode)
 		filefd = open(**type, mode, 0644);
 		if (filefd == -1)
 		{
+			errorhandle(all, "bash", "file open error", "-1");
 			return (-1);
 		}
 		(*type)++;
@@ -31,12 +32,17 @@ int	output_redirect(t_todo *all)
 	if (all->cur_cmds->file_type_flg == APPEND_FILE)
 	{
 		filefd = open(*(append - 1), APPEND_FILE, 0644);
+		if (filefd == -1)
+			return (-1);
 	}
 	else if (all->cur_cmds->file_type_flg == OUTPUT_FILE)
 	{
 		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
+		if (filefd == -1)
+			return (-1);
 	}
-	dup2(filefd, 1);
+	if (dup2(filefd, 1) == -1)
+		return (-1);
 	close(filefd);
 	return (orig_stdout);
 }

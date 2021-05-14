@@ -15,7 +15,6 @@ src/builtins/ft_pwd.c \
 src/builtins/ft_unset.c \
 src/exec/pipe_execution.c \
 src/exec/history.c \
-src/exec/path_parse.c \
 src/exec/promt.c \
 src/exec/promt_check_input_1.c \
 src/exec/promt_check_input_2.c \

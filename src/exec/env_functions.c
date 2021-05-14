@@ -29,9 +29,6 @@ static int	arg_insertion(char **oldenv, const char **new_env, int key_len)
 		*oldenv = ft_strdup(*new_env);
 		free(tmp);
 	}
-	tmp = (char *)*new_env;
-	free(tmp);
-	*new_env = NULL;
 	return (0);
 }
 
@@ -46,9 +43,12 @@ static int	add_env(char **env, const char **new_env)
 		key_len++;
 	while (env[i] && *new_env)
 	{
-		if (!ft_strncmp(env[i], *new_env, key_len)
-			&& (env[i][key_len] == '=' || env[i][key_len] == '\0'))
-			arg_insertion(&env[i], new_env, key_len);
+		if (!ft_strncmp(env[i], *new_env, key_len))
+		{
+			printf("env[i][key_len] = |%c|\n", env[i][key_len]);
+			if (env[i][key_len] == '=' || env[i][key_len] == '\0')
+				arg_insertion(&env[i], new_env, key_len);
+		}
 		i++;
 	}
 	return (1);

@@ -31,9 +31,9 @@ int	load_up(t_todo *all, char **env)
 int	main(int argc, char **argv, char **env)
 {
 	t_todo		all;
+
 	(void)argc;
 	(void)argv;
-
 	ft_bzero(&all, sizeof(all));
 	load_up(&all, env);
 	promt(&all);

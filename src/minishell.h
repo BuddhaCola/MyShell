@@ -1,26 +1,20 @@
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <dirent.h>
-#include <term.h>
-#include <string.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <stdlib.h>
+# include <errno.h>
+# include <dirent.h>
+# include <term.h>
+# include <string.h>
 
-//#include "utils/libft/libft.h"
+# define PROMT "Minihell!🔥"
+# define APPEND_FILE 521
+# define OUTPUT_FILE 1537
 
-#define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
-#define PROMT "Minihell!🔥"
-
-#define NONE 0
-#define APPEND_FILE 521
-#define OUTPUT_FILE 1537
-
-//dereferencing the dollar
-typedef struct	s_dereference_utils
+typedef struct s_dereference_utils
 {
 	char	*str;
 	char	*start;
@@ -41,14 +35,14 @@ typedef struct s_cmds
 	char					**input_files;
 	char					**output_files;
 	char					**append_files;
-	struct s_cmds		    *next;
+	struct s_cmds			*next;
 	int						file_type_flg;
 }				t_cmds;
 
 //to execute
 typedef struct s_to_execute
 {
-	t_cmds		            *cmds;
+	t_cmds		*cmds;
 }				t_to_execute;
 
 //lexer
@@ -60,11 +54,11 @@ typedef struct s_tok
 }					t_tok;
 
 //parser
-typedef struct  s_pipelist
+typedef struct			s_pipelist
 {
-	t_tok               *tok_lst;
-	struct s_pipelist   *next;
-}               t_pipelist;
+	t_tok				*tok_lst;
+	struct s_pipelist	*next;
+}						t_pipelist;
 
 //lexer
 typedef struct s_lexer
@@ -74,7 +68,7 @@ typedef struct s_lexer
 	int 	chtype;
 	t_tok	*token;
 	int		state;
-	int     size;
+	int		size;
 	int		j;
 }				t_lexer;
 
@@ -134,16 +128,16 @@ enum e_states
 };
 
 //build to execute lst
-void build_to_execute_lst(t_todo *all);
-void destroy_to_execute_lst(t_todo *all);
-void parse_build(t_todo *all, t_cmds **cmds);
-void init_cmds_elem(t_cmds *cmds);
-t_cmds *get_new_cmds_elem(t_cmds *cmds);
-void get_cmd_str(t_cmds *cmds, t_tok *tok);
-void add_to_2d(char ***src, t_tok *tok);
+void	build_to_execute_lst(t_todo *all);
+void	destroy_to_execute_lst(t_todo *all);
+void	parse_build(t_todo *all, t_cmds **cmds);
+void	init_cmds_elem(t_cmds *cmds);
+t_cmds	*get_new_cmds_elem(t_cmds *cmds);
+void	get_cmd_str(t_cmds *cmds, t_tok *tok);
+void	add_to_2d(char ***src, t_tok *tok);
 
 //strip quotes and bslashes
-void strip_quotes_and_bslashes(char **src);
+void	strip_quotes_and_bslashes(char **src);
 
 //dereference the value
 void dereference_the_value(t_todo *all);
@@ -158,48 +152,47 @@ int build_tokens(t_todo *all, char *line, int size
 		,t_lexer *lexer_list);
 
 //tokenize
-int         tokenize(char *line, int size, t_lexer *lexer_list);
-void 		if_state_in_general(t_lexer *lexer, char **line);
+int			tokenize(char *line, int size, t_lexer *lexer_list);
+void		if_state_in_general(t_lexer *lexer, char **line);
 void		lexer_destroy(t_lexer *list);
-void tok_init(t_tok *tok, int data_size);
-void if_char_quote_do(t_lexer *lexer);
-void if_char_dquote_do(t_lexer *lexer);
-void if_char_escape_or_general_do(t_lexer *lexer, char **line);
-void if_char_whitespace_do(t_lexer *lexer, const char *line);
-void if_semi_great_less_pipe_char_do(t_lexer *lexer, const char *line);
-int  get_num_of_type(char c);
-void tok_init(t_tok *tok, int data_size);
+void		tok_init(t_tok *tok, int data_size);
+void		if_char_quote_do(t_lexer *lexer);
+void		if_char_dquote_do(t_lexer *lexer);
+void		if_char_escape_or_general_do(t_lexer *lexer, char **line);
+void		if_char_whitespace_do(t_lexer *lexer, const char *line);
+void		if_semi_great_less_pipe_char_do(t_lexer *lexer, const char *line);
+int			get_num_of_type(char c);
+void		tok_init(t_tok *tok, int data_size);
 void		tok_destroy(t_tok *tok);
-int count_tokens(t_tok *token);
-void if_ch_is_quote_set_state_general(int *state, int *chtype);
-void if_ch_is_dquote_set_state_general(int *state, int *chtype);
-void get_chtype(char **line, int *chtype);
-void init_tokenizer(t_lexer *lexer, int size);
-void if_char_null_set_zero(t_lexer *lexer);
-void if_last_char_is_not_zero_do_line_pp(char **line);
+int			count_tokens(t_tok *token);
+void		if_ch_is_quote_set_state_general(int *state, int *chtype);
+void		if_ch_is_dquote_set_state_general(int *state, int *chtype);
+void		get_chtype(char **line, int *chtype);
+void		init_tokenizer(t_lexer *lexer, int size);
+void		if_char_null_set_zero(t_lexer *lexer);
+void		if_last_char_is_not_zero_do_line_pp(char **line);
 
 //check syntax
 int check_syntax(t_todo *all, t_tok *token);
 int validate_quotation(char *str);
 
 //parse pipes
-void    parse_pipes(t_todo *all);
-void    destroy_parse_pipes(t_todo *all);
-void    init_pipe_list(t_todo *all, t_tok **src_lst, t_tok **pipe_lst_tok, t_pipelist **pipelist);
-void init_tok(t_tok *lst);
-t_pipelist  *get_next_pipe_list_elem(t_pipelist *pipe_lst);
-t_tok   *get_next_tok_list_elem(t_tok *lst);
+void		parse_pipes(t_todo *all);
+void		destroy_parse_pipes(t_todo *all);
+void		init_pipe_list(t_todo *all, t_tok **src_lst, t_tok **pipe_lst_tok, t_pipelist **pipelist);
+void		init_tok(t_tok *lst);
+t_pipelist	*get_next_pipe_list_elem(t_pipelist *pipe_lst);
+t_tok		*get_next_tok_list_elem(t_tok *lst);
 
 // builtins
-int		ft_pwd(void);
-int		ft_export(t_todo *all);
-int		ft_cd(t_todo *all);
-int		execute_cmd_pipe(t_todo *all);
-//int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
-int 	ft_echo(t_todo *all);
-int		ft_env(t_todo *all);
-int		ft_exit(t_todo *all);
-int		ft_unset(t_todo *all);
+int			ft_pwd(void);
+int			ft_export(t_todo *all);
+int			ft_cd(t_todo *all);
+int			execute_cmd_pipe(t_todo *all);
+int 		ft_echo(t_todo *all);
+int			ft_env(t_todo *all);
+int			ft_exit(t_todo *all);
+int			ft_unset(t_todo *all);
 
 // utils
 void		i_want_to_be_freed(char **arr);
@@ -238,26 +231,26 @@ int			ctrlc(t_todo *all);
 int			ctrld(t_todo *all);
 
 //libft
-char	*ft_itoa(int n);
-int		ft_atoi(const char *s);
-void	ft_bzero(void *s, size_t n);
-void	*ft_calloc(size_t count, size_t size);
-int		ft_isalnum(int c);
-int		ft_isalpha(int c);
-int		ft_isdigit(int c);
-int		ft_isprint(int c);
-char	*ft_itoa(int n);
-void	ft_putchar_fd(char c, int fd);
-void	ft_putendl_fd(char *s, int fd);
-void	ft_putstr_fd(char *s, int fd);
-char	**ft_split(char const *s, char c);
-char	*ft_strchr(const char *s, int n);
-char	*ft_strdup(const char *s);
-char	*ft_strjoin(const char *s1, const char *s2);
-size_t	ft_strlcat(char *dst, const char *src, size_t dsize);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dsize);
-size_t	ft_strlen(const char *s);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
+char		*ft_itoa(int n);
+int			ft_atoi(const char *s);
+void		ft_bzero(void *s, size_t n);
+void		*ft_calloc(size_t count, size_t size);
+int			ft_isalnum(int c);
+int			ft_isalpha(int c);
+int			ft_isdigit(int c);
+int			ft_isprint(int c);
+char		*ft_itoa(int n);
+void		ft_putchar_fd(char c, int fd);
+void		ft_putendl_fd(char *s, int fd);
+void		ft_putstr_fd(char *s, int fd);
+char		**ft_split(char const *s, char c);
+char		*ft_strchr(const char *s, int n);
+char		*ft_strdup(const char *s);
+char		*ft_strjoin(const char *s1, const char *s2);
+size_t		ft_strlcat(char *dst, const char *src, size_t dsize);
+size_t		ft_strlcpy(char *dst, const char *src, size_t dsize);
+size_t		ft_strlen(const char *s);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif

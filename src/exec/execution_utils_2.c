@@ -1,5 +1,15 @@
 #include "../minishell.h"
 
+int	set_redirections(t_todo *all)
+{
+	if (all->cur_cmds->input_files)
+		input_redirect(all);
+	if (all->cur_cmds->output_files)
+		if (output_redirect(all) == -1)
+			return (-1);
+	return (0);
+}
+
 static char	*strjoin_path(char *path, char *bin)
 {
 	size_t			dst_size;
@@ -55,7 +65,7 @@ char	*try_path(t_todo *all)
 		while (path_decomposed[i])
 		{
 			bin = check_here
-				(path_decomposed[i], all->to_execute->cmds->cmd_str);
+				(path_decomposed[i], all->cur_cmds->cmd_str);
 			if (bin)
 				break ;
 			i++;

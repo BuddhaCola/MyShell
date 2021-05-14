@@ -21,9 +21,9 @@ void	env_insetion(t_todo *all, char *insertion, char *key)
 		free(tmp);
 	}
 }
+
 void	env_set_value(t_todo *all, char *key, char *value)
 {
-
 	char	*insertion;
 	char	*tmp;
 

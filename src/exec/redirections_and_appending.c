@@ -9,6 +9,7 @@ static int	go_through_redirections(t_todo *all, char ***type, int mode)
 		filefd = open(**type, mode, 0644);
 		if (filefd == -1)
 		{
+			errorhandle(all, "bash", "file open error", "-1");
 			return (-1);
 		}
 		(*type)++;
@@ -21,9 +22,8 @@ int	output_redirect(t_todo *all)
 	char	**append;
 	char	**output;
 	int		filefd;
-	int		orig_stdout;
 
-	orig_stdout = dup(STDOUT_FILENO);
+	all->orig_stdout = dup(STDOUT_FILENO);
 	append = all->cur_cmds->append_files;
 	output = all->cur_cmds->output_files;
 	filefd = go_through_redirections(all, &append, APPEND_FILE);
@@ -31,14 +31,19 @@ int	output_redirect(t_todo *all)
 	if (all->cur_cmds->file_type_flg == APPEND_FILE)
 	{
 		filefd = open(*(append - 1), APPEND_FILE, 0644);
+		if (filefd == -1)
+			return (-1);
 	}
 	else if (all->cur_cmds->file_type_flg == OUTPUT_FILE)
 	{
 		filefd = open(*(output - 1), OUTPUT_FILE, 0644);
+		if (filefd == -1)
+			return (-1);
 	}
-	dup2(filefd, 1);
+	if (dup2(filefd, 1) == -1)
+		return (-1);
 	close(filefd);
-	return (orig_stdout);
+	return (all->orig_stdout);
 }
 
 int	input_redirect(t_todo *all)
@@ -58,10 +63,10 @@ int	input_redirect(t_todo *all)
 		}
 		if (!*(files + 1))
 		{
-			orig_stdin = dup(STDIN_FILENO);
+			all->orig_stdin = dup(STDIN_FILENO);
 			dup2(filefd, STDIN_FILENO);
 		}
 		files++;
 	}
-	return (orig_stdin);
+	return (all->orig_stdin);
 }

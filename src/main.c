@@ -131,7 +131,7 @@ int		promt(t_todo *all)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			// printf("ret = %d\n", ret);
+//			printf("ret = %d\n", ret);
 			if (check_input(buf, all))
 				break;
 		}
@@ -184,7 +184,9 @@ void sigint_handler(int sig_num)
 	if (stat_loc == sig_num)
 	{
 		if (sig_num == SIGINT)
+		{
 			ft_putchar_fd('\n', 2);
+		}
 		else if (sig_num == SIGQUIT)
 		{
 			ft_putstr_fd("Quit: 3\n", 2);
@@ -243,58 +245,3 @@ int		debug_promt(t_todo *all)
 	}
 	return (0);
 }
-
-//char	*ft_dollarsign(char	*str, t_todo *all)
-//{
-//	int		i;
-//	int		len;
-//	char	*envp;
-//
-//	i = 0;
-//	if (!*str || !(len = ft_strlen(str)) || *str < 33 || *str > 126)
-//		return ("$");
-//	while (all->exec.env[i])
-//	{
-//		if ((envp = ft_envpsearch(all->exec.env[i], str)))
-//			return (envp);
-//		i++;
-//	}
-//	return (NULL);
-//}
-
-//void test_parse(char *buf, t_todo *all)
-//{
-//	int i = -1;
-//	while (buf[++i])
-//	{
-//		if (buf[i] == '!')
-//			execution(&buf[i+1], all);
-//		else if (buf[i] == '?')
-//		else if (buf[i] == '|')
-//		{
-//			char **args = ft_split(&buf[i+1], ' ');
-//			ft_pipe(args[0], 0, args[1], 0);
-//		}
-//		else if (buf[i] == '>')
-//			redirection("./test", "/bin/cat", 0, 2);
-//		else if (buf[i] == 'x')
-//			ft_export(all, buf + 2);
-//		else if (buf[i] == 'e')
-//			ft_env(all);
-//		else if (buf[i] == 'p')
-//			print_env(all);
-//		else if (buf[i] == 'w')
-//		{
-//			printf("%s\n", buf = path_parse(all, "ls"));
-//		}
-//	}
-//	free(buf);
-//}
-
-//int     ft_exit(t_todo *all)
-//{
-//	all->saved_attributes.c_lflag &= ~(ECHO);
-//	all->saved_attributes.c_lflag &= ~(ICANON);
-//	tcsetattr(0, TCSANOW, &all->saved_attributes);
-//	return (0);
-//}

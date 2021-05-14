@@ -3,7 +3,8 @@
 int	set_redirections(t_todo *all)
 {
 	if (all->cur_cmds->input_files)
-		input_redirect(all);
+		if (input_redirect(all) == -1)
+			return (-1);
 	if (all->cur_cmds->output_files)
 		if (output_redirect(all) == -1)
 			return (-1);

@@ -8,7 +8,8 @@ int	start_process(t_todo *all, char *bin)
 	pid = fork();
 	if (pid == 0)
 	{
-		set_redirections(all);
+		if (set_redirections(all) == -1)
+			return (1);
 		execve(bin, all->cur_cmds->args, all->environments);
 		exit(1);
 	}
@@ -39,7 +40,8 @@ int	execute_cmd_single(t_todo *all)
 	}
 	if (is_builtin(all->cur_cmds->cmd_str))
 	{
-		set_redirections(all);
+		if (set_redirections(all) == -1)
+			return (1);
 		return (do_builtin(all->cur_cmds->cmd_str, all));
 	}
 	bin_location = try_path(all);

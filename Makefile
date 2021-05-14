@@ -64,8 +64,6 @@ src/utils/ft_strcmp.c
 
 NAME	=	minishell
 
-#LIBFT	=	src/utils/libft
-
 OBJ		=	$(SRC:.c=.o)
 
 FLAGS	=	-Wall -Werror -Wextra

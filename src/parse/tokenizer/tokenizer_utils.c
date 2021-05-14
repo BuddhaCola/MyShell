@@ -41,7 +41,7 @@ int 	get_num_of_type(char c)
 
 void	tok_init(t_tok *tok, int data_size)
 {
-	tok->data = malloc(data_size + 1);
+	tok->data = ft_calloc(data_size + 1, sizeof(char));
 	tok->type = CHAR_NULL;
 	tok->next = NULL;
 }

@@ -26,10 +26,10 @@ int	ft_checkforbiddensymbols_arg(char *str, int mode)
 	return (0);
 }
 
-void	appendarg(char **str, const char **appendix, int key_len)
+void	appendarg(char **str, char **appendix, int key_len)
 {
 	char	*tmp;
-
+	
 	if (!ft_strchr(*str, '='))
 	{
 		tmp = *str;
@@ -39,6 +39,8 @@ void	appendarg(char **str, const char **appendix, int key_len)
 	tmp = *str;
 	*str = ft_strjoin(*str, *appendix + key_len + 2);
 	free(tmp);
+	free(*appendix);
+	*appendix = NULL;
 }
 
 int	swapstr(char **str1, char **str2)

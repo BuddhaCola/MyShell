@@ -205,7 +205,7 @@ int			is_builtin(char *path);
 int			try_rel_abs_path(t_todo *all);
 char		*try_path(t_todo *all);
 int			swapstr(char **str1, char **str2);
-void		appendarg(char **str, const char **appendix, int key_len);
+void		appendarg(char **str, char **appendix, int key_len);
 int			ft_strcmp(char *str1, char *str2);
 int			ft_putchar(int c);
 int			validate_arg(char *newenv, char mode);

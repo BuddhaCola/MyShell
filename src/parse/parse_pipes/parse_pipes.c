@@ -23,7 +23,7 @@ static void	if_semi_do(t_todo *all, t_tok *src_lst)
 	if (src_lst->next == NULL)
 		all->parse_utils->cur_tok = src_lst->next;
 	else
-		all->parse_utils->cur_tok = src_lst;
+		all->parse_utils->cur_tok = src_lst->next;
 }
 
 static void	set_data_and_type(t_tok *src_lst, t_tok *pipe_lst_tok)

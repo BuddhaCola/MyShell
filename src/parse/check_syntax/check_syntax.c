@@ -63,10 +63,7 @@ int	check_syntax(t_todo *all, t_tok *token)
 			return (-1);
 		}
 		if (validate_if(all, token, previous_token))
-		{
-			print_error_unexpctd_near_tok(all, token);
 			return (-1);
-		}
 		previous_token = token;
 		token = token->next;
 	}

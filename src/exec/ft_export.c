@@ -31,7 +31,9 @@ void	print_one(char *clone)
 {
 	if (ft_strncmp(clone, "_=", 2))
 	{
-		ft_putstr_fd("declare -x ", 1);
+
+		ft_putstr_fd("declare -xxx ", 1);
+
 		{
 			while (*clone && *clone != '=')
 				write(1, clone++, 1);

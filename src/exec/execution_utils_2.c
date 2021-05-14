@@ -1,5 +1,15 @@
 #include "../minishell.h"
 
+int	set_redirections(t_todo *all)
+{
+	if (all->cur_cmds->input_files)
+		input_redirect(all);
+	if (all->cur_cmds->output_files)
+		if (output_redirect(all) == -1)
+			return (-1);
+	return (0);
+}
+
 static char	*strjoin_path(char *path, char *bin)
 {
 	size_t			dst_size;

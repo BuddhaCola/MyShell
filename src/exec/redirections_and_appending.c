@@ -22,9 +22,8 @@ int	output_redirect(t_todo *all)
 	char	**append;
 	char	**output;
 	int		filefd;
-	int		orig_stdout;
 
-	orig_stdout = dup(STDOUT_FILENO);
+	all->orig_stdout = dup(STDOUT_FILENO);
 	append = all->cur_cmds->append_files;
 	output = all->cur_cmds->output_files;
 	filefd = go_through_redirections(all, &append, APPEND_FILE);
@@ -44,7 +43,7 @@ int	output_redirect(t_todo *all)
 	if (dup2(filefd, 1) == -1)
 		return (-1);
 	close(filefd);
-	return (orig_stdout);
+	return (all->orig_stdout);
 }
 
 int	input_redirect(t_todo *all)
@@ -64,10 +63,10 @@ int	input_redirect(t_todo *all)
 		}
 		if (!*(files + 1))
 		{
-			orig_stdin = dup(STDIN_FILENO);
+			all->orig_stdin = dup(STDIN_FILENO);
 			dup2(filefd, STDIN_FILENO);
 		}
 		files++;
 	}
-	return (orig_stdin);
+	return (all->orig_stdin);
 }

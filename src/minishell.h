@@ -11,7 +11,7 @@
 #include <string.h>
 
 
-#include "utils/get_next_line/get_next_line.h"
+//#include "utils/get_next_line/get_next_line.h"
 #include "utils/libft/libft.h"
 
 #define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
@@ -213,7 +213,7 @@ int		print_env(t_todo *all);
 int		ft_pwd(void);
 int		ft_export(t_todo *all);
 int		ft_cd(t_todo *all);
-int		ft_pipe(t_todo *all);
+int		execute_cmd_pipe(t_todo *all);
 //int		ft_pipe(char *program1, char **arg1, char *program2, char **arg2);
 int 	ft_echo(t_todo *all);
 int		ft_env(t_todo *all);
@@ -248,6 +248,7 @@ void	env_set_value(t_todo *all, char *key, char *value);
 void	set_shlvl(t_todo *all);
 int		errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code);
 char	*try_open(t_todo *all);
+int		set_redirections(t_todo *all);
 
 t_history 	*hist_new(char *content);
 void		hist_add(t_history **lst, t_history *new);

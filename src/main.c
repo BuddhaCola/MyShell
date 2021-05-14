@@ -131,7 +131,7 @@ int		promt(t_todo *all)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-			// printf("ret = %d\n", ret);
+//			printf("ret = %d\n", ret);
 			if (check_input(buf, all))
 				break;
 		}
@@ -184,7 +184,9 @@ void sigint_handler(int sig_num)
 	if (stat_loc == sig_num)
 	{
 		if (sig_num == SIGINT)
+		{
 			ft_putchar_fd('\n', 2);
+		}
 		else if (sig_num == SIGQUIT)
 		{
 			ft_putstr_fd("Quit: 3\n", 2);

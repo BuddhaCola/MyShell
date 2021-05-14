@@ -1,7 +1,5 @@
 #include "../minishell.h"
 
-
-
 char	**sort_env(char **env)
 {
 	int		i;
@@ -31,9 +29,7 @@ void	print_one(char *clone)
 {
 	if (ft_strncmp(clone, "_=", 2))
 	{
-
 		ft_putstr_fd("declare -x ", 1);
-
 		{
 			while (*clone && *clone != '=')
 				write(1, clone++, 1);
@@ -82,7 +78,7 @@ int	ft_export(t_todo *all)
 			if (!validate_arg(all->cur_cmds->args[i], '+'))
 			{
 				clone = clone_env(all->environments,
-					all->cur_cmds->args[i]);
+						all->cur_cmds->args[i]);
 				i_want_to_be_freed(all->environments);
 				all->environments = clone;
 			}

@@ -12,15 +12,15 @@
 
 #include "../minishell.h"
 
-int		ft_atoi(const char *s)
+int	ft_atoi(const char *s)
 {
-	int i;
-	int minus;
+	int	i;
+	int	minus;
 
 	i = 0;
 	minus = 1;
-	while (*s && (*s == ' ' || *s == '\n' || *s == '\t' ||
-			*s == '\v' || *s == '\f' || *s == '\r'))
+	while (*s && (*s == ' ' || *s == '\n' || *s == '\t'
+		|| *s == '\v' || *s == '\f' || *s == '\r'))
 		s++;
 	if (*s == '-' || *s == '+')
 	{

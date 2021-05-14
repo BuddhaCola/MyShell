@@ -59,6 +59,7 @@ src/utils/ft_strlen.c \
 src/utils/ft_strncmp.c \
 src/utils/ft_strlcpy.c \
 src/utils/ft_substr.c \
+src/utils/ft_strcmp.c
 
 NAME	=	minishell
 

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static char		*set_s(int n, int count)
+static char	*set_s(int n, int count)
 {
 	char	*ptr;
 	char	*save_ptr;
@@ -40,7 +40,7 @@ static char		*set_s(int n, int count)
 	return (save_ptr);
 }
 
-static int		do_count(int n)
+static int	do_count(int n)
 {
 	int		count;
 
@@ -55,7 +55,7 @@ static int		do_count(int n)
 	return (count);
 }
 
-char			*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char	*ptr;
 

@@ -52,7 +52,7 @@ static int	set_words(char **ptr, char const *s, char c)
 	return (0);
 }
 
-size_t		count_words(char const *s, char c)
+size_t	count_words(char const *s, char c)
 {
 	size_t	count;
 
@@ -69,7 +69,7 @@ size_t		count_words(char const *s, char c)
 	return (count);
 }
 
-char		**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	**ptr;
 	size_t	word_number;

@@ -14,7 +14,7 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	char *p;
+	char	*p;
 
 	p = (char *)malloc(count * size);
 	if (p == NULL)

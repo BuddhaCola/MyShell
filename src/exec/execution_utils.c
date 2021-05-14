@@ -81,18 +81,23 @@ char	*try_open(t_todo *all)
 	return (bin_location);
 }
 
-int	try_rel_abs_path(t_todo *all)
+int	try_rel_abs_path(t_todo *all, int *flg)
 {
 	char	*bin_location;
 
+	*flg = 0;
 	bin_location = try_open(all);
 	if (bin_location)
+	{
+		*flg = 1;
 		return (start_process(all, bin_location));
+	}
 	else if (ft_strchr("./", all->cur_cmds->cmd_str
 			[ft_strlen(all->cur_cmds->cmd_str) - 1]))
 	{
 		errorhandle
 			(all, all->cur_cmds->cmd_str, "is a directory", NULL);
+		*flg = 1;
 		return (126);
 	}
 	return (0);

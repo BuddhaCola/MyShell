@@ -202,7 +202,7 @@ int			output_redirect(t_todo *all);
 int			start_process(t_todo *all, char *bin);
 int			do_builtin(char *path, t_todo *all);
 int			is_builtin(char *path);
-int			try_rel_abs_path(t_todo *all);
+int			try_rel_abs_path(t_todo *all, int *flg);
 char		*try_path(t_todo *all);
 int			swapstr(char **str1, char **str2);
 void		appendarg(char **str, char **appendix, int key_len);
@@ -229,6 +229,7 @@ int			termcap_stuff(t_todo *all);
 int			check_input(char *buf, t_todo *all);
 int			ctrlc(t_todo *all);
 int			ctrld(t_todo *all);
+char		*find_location(t_todo *all);
 
 //libft
 char		*ft_itoa(int n);

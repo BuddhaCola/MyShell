@@ -28,6 +28,7 @@ static int	arg_change(char **oldenv, char **new_env, int key_len)
 		tmp = *oldenv;
 		*oldenv = ft_strdup(*new_env);
 		free(tmp);
+		free(*new_env);
 		*new_env = NULL;
 	}
 	return (0);

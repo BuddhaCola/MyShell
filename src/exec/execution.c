@@ -31,18 +31,19 @@ int	execute_cmd_single(t_todo *all)
 {
 	int		try;
 	char	*bin_location;
+	int		flg;
 
-	if (ft_strchr("./", all->cur_cmds->cmd_str[0]))
-	{
-		try = try_rel_abs_path(all);
-		if (try)
-			return (try);
-	}
 	if (is_builtin(all->cur_cmds->cmd_str))
 	{
 		if (set_redirections(all) == -1)
 			return (1);
 		return (do_builtin(all->cur_cmds->cmd_str, all));
+	}
+	if (ft_strchr("./", all->cur_cmds->cmd_str[0]))
+	{
+		try = try_rel_abs_path(all, &flg);
+		if (flg)
+			return (try);
 	}
 	bin_location = try_path(all);
 	if (bin_location)

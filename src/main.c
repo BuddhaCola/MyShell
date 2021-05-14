@@ -12,7 +12,7 @@ int	load_up(t_todo *all, char **env)
 {
 	char	*pwd;
 
-	all->environments = clone_env(env, NULL));
+	all->environments = clone_env(env, NULL);
 	if (!all->environments)
 		return (-1);
 	set_shlvl(all);

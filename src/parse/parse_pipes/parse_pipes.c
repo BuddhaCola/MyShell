@@ -20,7 +20,7 @@ static void	if_pipe_do(t_pipelist **pipelist, t_tok **pipe_lst_tok)
 
 static void	if_semi_do(t_todo *all, t_tok *src_lst)
 {
-	if (src_lst->next != NULL)
+	if (src_lst->next == NULL)
 		all->parse_utils->cur_tok = src_lst->next;
 	else
 		all->parse_utils->cur_tok = src_lst;

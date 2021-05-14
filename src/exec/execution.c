@@ -3,21 +3,26 @@
 int	start_process(t_todo *all, char *bin)
 {
 	pid_t	pid;
+	int		ret;
 
 	pid = fork();
 	if (pid == 0)
 	{
 		set_redirections(all);
 		execve(bin, all->cur_cmds->args, all->environments);
+		exit(1);
 	}
 	else
 	{
 		errno = 0;
-		wait(&(all->exit_code));
-		if (all->exit_code < 0)
-			errorhandle(all, all->cur_cmds->cmd_str, NULL, NULL);
+		wait(&ret);
 		free(bin);
 	}
+	if (WIFSIGNALED(ret))
+		all->exit_code = WTERMSIG(ret) + 128;
+	if (WIFEXITED(ret))
+		all->exit_code = WEXITSTATUS(ret);
+	all->exit_code = all->exit_code & 0377;
 	return (all->exit_code);
 }
 
@@ -68,10 +73,6 @@ int	define_and_execute(t_todo *all)
 			close(all->orig_stdin);
 		}
 	}
-	if (WIFSIGNALED(ret))
-		ret = WTERMSIG(ret) + 128;
-	else if (WIFEXITED(ret))
-		ret = WEXITSTATUS(ret);
 	return (ret);
 }
 

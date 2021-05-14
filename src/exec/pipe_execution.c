@@ -86,13 +86,19 @@ int	execute_cmd_pipe(t_todo *all)
 {
 	int		i;
 	int		count_cmd;
+	int		ret;
 
 	i = 0;
 	count_cmd = pipe_loop(all);
 	while (i < count_cmd)
 	{
-		wait(&all->exit_code);
+		wait(&ret);
 		i++;
 	}
+	if (WIFSIGNALED(ret))
+		all->exit_code = WTERMSIG(ret) + 128;
+	if (WIFEXITED(ret))
+		all->exit_code = WEXITSTATUS(ret);
+	all->exit_code = all->exit_code & 0377;
 	return (all->exit_code);
 }

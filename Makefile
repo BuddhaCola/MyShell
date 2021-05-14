@@ -17,7 +17,8 @@ src/exec/pipe_execution.c \
 src/exec/history.c \
 src/exec/path_parse.c \
 src/exec/promt.c \
-src/exec/redirection.c \
+src/exec/promt_check_input_1.c \
+src/exec/promt_check_input_2.c \
 src/exec/redirections_and_appending.c \
 src/exec/set_shlvl.c \
 src/parse/build_tokens.c \

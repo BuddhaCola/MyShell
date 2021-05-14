@@ -80,6 +80,8 @@ int	execution(t_todo *all)
 	int		ret;
 	char	*ret_ascii;
 
+	if (!all->to_execute->cmds)
+		return (0);
 	env_set_value(all, "?", "0");
 	all->cur_cmds = all->to_execute->cmds;
 	ret = define_and_execute(all);

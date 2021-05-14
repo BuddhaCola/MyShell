@@ -38,7 +38,7 @@ int	ft_unset(t_todo *all)
 		i = 1;
 		while (all->cur_cmds->args[i])
 		{
-			if (!validate_arg(all->cur_cmds->args[i], '-'))
+			if (!validate_arg(all, all->cur_cmds->args[i], '-'))
 				search_and_destroy(all, all->cur_cmds->args[i]);
 			i++;
 		}

@@ -131,13 +131,11 @@ int		promt(t_todo *all)
 		{
 			ret = read(0, &buf, 100);
 			buf[ret] = '\0';
-//			printf("ret = %d\n", ret);
 			if (check_input(buf, all))
 				break;
 		}
 		if (*all->hist_curr->temp)
 		{
-//			all->saved_attributes.c_lflag |= (ISIG | ECHO | ICANON);
 			tcsetattr(0, TCSANOW, &all->saved_attributes);
 			if (!build_tokens(all, all->hist_curr->temp, ft_strlen(all->hist_curr->temp), all->lex_buf))
 			{

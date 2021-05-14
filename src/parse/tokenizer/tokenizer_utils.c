@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 17:07:33 by igearhea          #+#    #+#             */
-/*   Updated: 2021/05/13 17:07:34 by igearhea         ###   ########.fr       */
+/*   Updated: 2021/05/14 19:09:26 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int 	get_num_of_type(char c)
 
 void	tok_init(t_tok *tok, int data_size)
 {
-	tok->data = malloc(data_size + 1);
+	tok->data = ft_calloc(data_size + 1, sizeof(char));
+	// tok->data = malloc(data_size + 1);
 	tok->type = CHAR_NULL;
 	tok->next = NULL;
 }

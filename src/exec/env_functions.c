@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int	validate_arg(char *newenv, char mode)
+int	validate_arg(t_todo *all, char *newenv, char mode)
 {
 	if (ft_strchr("+=$", newenv[0]) || (ft_isdigit(newenv[0]))
 		|| ft_checkforbiddensymbols_arg(newenv, mode))
@@ -11,6 +11,7 @@ int	validate_arg(char *newenv, char mode)
 			ft_putstr_fd("bash: unset: `", 1);
 		ft_putstr_fd(newenv, 1);
 		ft_putstr_fd("': not a valid identifier\n", 1);
+		env_set_value(all, "?", "1");
 		return (1);
 	}
 	return (0);

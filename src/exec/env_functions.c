@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int	validate_arg(t_todo *all, char *newenv, char mode)
+int	validate_arg(char *newenv, char mode)
 {
 	if (ft_strchr("+=$", newenv[0]) || (ft_isdigit(newenv[0]))
 		|| ft_checkforbiddensymbols_arg(newenv, mode))

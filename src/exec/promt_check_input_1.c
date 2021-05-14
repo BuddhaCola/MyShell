@@ -69,9 +69,6 @@ int	ft_backspace(char *str)
 
 int 	check_input(char *buf, t_todo *all)
 {
-	static int	quote;
-	t_history	*lst;
-
 	if (ft_isprint(*buf))
 	{
 		get_line(buf, all);

@@ -215,7 +215,7 @@ int			swapstr(char **str1, char **str2);
 void		appendarg(char **str, const char **appendix, int key_len);
 int			ft_strcmp(char *str1, char *str2);
 int			ft_putchar(int c);
-int			validate_arg(t_todo *all, char *newenv, char mode);
+int			validate_arg(char *newenv, char mode);
 int			ft_checkforbiddensymbols_arg(char *str, int mode);
 int			env_update(t_todo *all, char *key, char *change, char mode);
 char		**env_search(char **env, char *key);

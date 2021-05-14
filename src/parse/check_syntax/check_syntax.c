@@ -52,7 +52,6 @@ static int	validate_if(t_todo *all, t_tok *token, t_tok *previous_token)
 int	check_syntax(t_todo *all, t_tok *token)
 {
 	t_tok	*previous_token;
-	char	*err_str;
 
 	previous_token = token;
 	while (token)

@@ -68,7 +68,7 @@ NAME	=	minishell
 
 OBJ		=	$(SRC:.c=.o)
 
-FLAGS	=	#-Wall -Werror -Wextra
+FLAGS	=	-Wall -Werror -Wextra
 
 all:		$(NAME)
 

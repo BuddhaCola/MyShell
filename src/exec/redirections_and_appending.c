@@ -50,7 +50,6 @@ int	input_redirect(t_todo *all)
 {
 	char	**files;
 	int		filefd;
-	int		orig_stdin;
 
 	files = all->cur_cmds->input_files;
 	while (*files)

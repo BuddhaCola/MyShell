@@ -77,7 +77,7 @@ int	ft_export(t_todo *all)
 		i = 1;
 		while (all->cur_cmds->args[i])
 		{
-			ret = validate_arg(all, all->cur_cmds->args[i], '+');
+			ret = validate_arg(all->cur_cmds->args[i], '+');
 			if (!ret)
 			{
 				clone = clone_env(all->environments,

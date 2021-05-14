@@ -27,7 +27,6 @@ static char	*check_here(char *path, char *bin)
 {
 	struct dirent	*curr_dir;
 	DIR				*directory;
-	char			*found;
 
 	directory = opendir(path);
 	if (directory == NULL)

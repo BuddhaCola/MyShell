@@ -12,7 +12,6 @@
 
 #include "../../minishell.h"
 
-//allocates answer if exist
 char	*search_key(t_todo *all, char *key)
 {
 	char	*ret;

@@ -26,11 +26,11 @@ void	if_char_dquote_do(t_lexer *lexer)
 	lexer->token->type = TOKEN;
 }
 
-//TODO доделать для эскэйпа
 void	if_char_escape_or_general_do(t_lexer *lexer, char **line)
 {
 	lexer->token->data[lexer->j++] = **line;
-	if (lexer->chtype == CHAR_ESCAPESEQ && *(*line + 1) != '\0' && *(*line + 1) != '\n')
+	if (lexer->chtype == CHAR_ESCAPESEQ
+		&& *(*line + 1) != '\0' && *(*line + 1) != '\n')
 	{
 		*line = *line + 1;
 		lexer->token->data[lexer->j++] = **line;

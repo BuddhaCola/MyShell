@@ -28,36 +28,6 @@ int	load_up(t_todo *all, char **env)
 	return (0);
 }
 
-int		debug_promt(t_todo *all)
-{
-	char	buf[1000];
-	int 	ret;
-
-	all->lex_buf = malloc(sizeof(t_lexer));
-	while (all->environments)
-	{
-		ft_putstr_fd(PROMT, 1);
-		ret = read(0, &buf, 1000);
-		//TODO check ret from read
-		buf[ret] = '\0';
-		if (!build_tokens(all, buf, ret, all->lex_buf))
-		{
-			while (all->parse_utils->cur_tok)
-			{
-				parse_pipes(all);
-				dereference_the_value(all);
-				build_to_execute_lst(all);
-				execution(all);
-				destroy_to_execute_lst(all);
-				destroy_parse_pipes(all);
-			}
-			lexer_destroy(all->lex_buf);
-			free(all->parse_utils);
-		}
-	}
-	return (0);
-}
-
 int	main(int argc, char **argv, char **env)
 {
 	t_todo		all;
@@ -66,10 +36,6 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	ft_bzero(&all, sizeof(all));
 	load_up(&all, env);
-
-	if (argc > 1)
-		debug_promt(&all);
-	else
-		promt(&all);
+	promt(&all);
 	return (0);
 }

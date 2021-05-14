@@ -29,7 +29,7 @@ int	ft_checkforbiddensymbols_arg(char *str, int mode)
 void	appendarg(char **str, char **appendix, int key_len)
 {
 	char	*tmp;
-	
+
 	if (!ft_strchr(*str, '='))
 	{
 		tmp = *str;

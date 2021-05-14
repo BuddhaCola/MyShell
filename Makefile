@@ -70,13 +70,10 @@ FLAGS	=	-Wall -Werror -Wextra
 all:		$(NAME)
 
 $(NAME): $(OBJ) src/minishell.h
-	$(CC) -g -ltermcap $(OBJ) -o $(NAME)
-
-address_sanitize:	$(OBJ) src/minishell.h #убрать! 🚧
-	$(CC) -ggdb -fsanitize=address -fno-omit-frame-pointer -g -ltermcap  $(OBJ) -o $(NAME)
+	$(CC) -ltermcap $(OBJ) -o $(NAME)
 
 .c.o:
-	gcc $(FLAGS) -g -c $< -o $(<:.c=.o)
+	gcc $(FLAGS) -c $< -o $(<:.c=.o)
 
 clean:
 	rm -f $(OBJ)

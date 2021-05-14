@@ -88,11 +88,11 @@ int	try_rel_abs_path(t_todo *all)
 	bin_location = try_open(all);
 	if (bin_location)
 		return (start_process(all, bin_location));
-	else if (ft_strchr("./", all->to_execute->cmds->cmd_str
-			[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+	else if (ft_strchr("./", all->cur_cmds->cmd_str
+			[ft_strlen(all->cur_cmds->cmd_str) - 1]))
 	{
 		errorhandle
-			(all, all->to_execute->cmds->cmd_str, "is a directory", NULL);
+			(all, all->cur_cmds->cmd_str, "is a directory", NULL);
 		return (126);
 	}
 	return (0);

@@ -17,18 +17,18 @@ int ft_exit(t_todo *all)
 	unsigned char	exit_code;
 	int 			code;
 
-	if (all->to_execute->cmds->args && all->to_execute->cmds->args[1])
+	if (all->cur_cmds->args && all->cur_cmds->args[1])
 	{
-		if (ft_checkforbiddensymbols_exit(all->to_execute->cmds->args[1]))
+		if (ft_checkforbiddensymbols_exit(all->cur_cmds->args[1]))
 		{
-			errorhandle(all, all->to_execute->cmds->args[0], "numeric argument required", NULL);
+			errorhandle(all, all->cur_cmds->args[0], "numeric argument required", NULL);
 			exit (-1);
 		}
 		else
-			code = ft_atoi(all->to_execute->cmds->args[1]);
-		if (all->to_execute->cmds->args[2])
+			code = ft_atoi(all->cur_cmds->args[1]);
+		if (all->cur_cmds->args[2])
 		{
-			errorhandle(all, all->to_execute->cmds->args[0], "too many arguments", NULL);
+			errorhandle(all, all->cur_cmds->args[0], "too many arguments", NULL);
 			return (1);
 		}
 	}

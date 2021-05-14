@@ -15,7 +15,7 @@ int	start_process(t_todo *all, char *bin)
 		}
 		if (all->cur_cmds->output_files || all->cur_cmds->append_files)
 			all->orig_stdout = output_redirect(all);
-		execve(bin, all->to_execute->cmds->args, all->environments);
+		execve(bin, all->cur_cmds->args, all->environments);
 	}
 	else
 	{
@@ -23,7 +23,7 @@ int	start_process(t_todo *all, char *bin)
 		wait(&(all->exit_code));
 		all->exit_code /= 255;
 		if (all->exit_code < 0)
-			errorhandle(all, all->to_execute->cmds->cmd_str, NULL, NULL);
+			errorhandle(all, all->cur_cmds->cmd_str, NULL, NULL);
 		free(bin);
 		if (all->cur_cmds->input_files)
 			dup2(all->orig_stdin, STDIN_FILENO);
@@ -97,7 +97,6 @@ int	define_and_execute(t_todo *all)
 {
 	int		ret;
 
-	all->cur_cmds = all->to_execute->cmds;
 	if (all->cur_cmds->next)
 	{
 		ret = ft_pipe(all);
@@ -131,6 +130,7 @@ int	execution(t_todo *all)
 	char	*ret_ascii;
 
 	env_set_value(all, "?", "0");
+	all->cur_cmds = all->to_execute->cmds;
 	ret = define_and_execute(all);
 	ret_ascii = ft_itoa(ret);
 	env_set_value(all, "?", ret_ascii);

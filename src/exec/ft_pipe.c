@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_pipe.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/04/14 15:24:57 by wtaylor           #+#    #+#             */
-/*   Updated: 2021/04/18 21:53:48 by wtaylor          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 char	*find_location_pipe(t_todo *all)
@@ -21,11 +9,11 @@ char	*find_location_pipe(t_todo *all)
 		bin_location = try_open(all);
 		if (bin_location)
 			return (bin_location);
-		else if (ft_strchr("./", all->to_execute->cmds->cmd_str
-		[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+		else if (ft_strchr("./", all->cur_cmds->cmd_str
+		[ft_strlen(all->cur_cmds->cmd_str) - 1]))
 		{
 			errorhandle
-					(all, all->to_execute->cmds->cmd_str, "is a directory", "126");
+					(all, all->cur_cmds->cmd_str, "is a directory", "126");
 			exit (126);
 		}
 	}
@@ -77,8 +65,8 @@ int	ft_pipe(t_todo *all)
 					return (-1);
 			if (is_builtin(all->cur_cmds->cmd_str))
 			{
-				(do_builtin(all->cur_cmds->cmd_str, all));
-				exit(0);
+//				(do_builtin(all->cur_cmds->cmd_str, all));
+				exit((do_builtin(all->cur_cmds->cmd_str, all)));
 			}
 			else
 				to_execute = find_location_pipe(all);

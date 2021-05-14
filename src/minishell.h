@@ -54,7 +54,7 @@ typedef struct s_tok
 }					t_tok;
 
 //parser
-typedef struct			s_pipelist
+typedef struct s_pipelist
 {
 	t_tok				*tok_lst;
 	struct s_pipelist	*next;
@@ -65,7 +65,7 @@ typedef struct s_lexer
 {
 	t_tok	*tok_list;
 	int		num_of_tokens;
-	int 	chtype;
+	int		chtype;
 	t_tok	*token;
 	int		state;
 	int		size;
@@ -73,29 +73,29 @@ typedef struct s_lexer
 }				t_lexer;
 
 //parse utils
-typedef struct  s_parse_utils
+typedef struct s_parse_utils
 {
-	t_pipelist  *pipelist;
-	t_tok *cur_tok;
-}               t_parse_utils;
+	t_pipelist	*pipelist;
+	t_tok		*cur_tok;
+}				t_parse_utils;
 
-typedef struct			s_history
+typedef struct s_history
 {
-	char 				*temp;
+	char				*temp;
 	char				*orig;
 	struct s_history	*next;
 	struct s_history	*prev;
 }						t_history;
 
-typedef	struct			s_todo
+typedef struct s_todo
 {
 	t_dereference_utils	d_u;
 	t_to_execute		*to_execute;
 	t_lexer				*lex_buf;
 	t_parse_utils		*parse_utils;
-	char 				**environments;
+	char				**environments;
 	struct termios		saved_attributes;
-	int 				exit_code;
+	int					exit_code;
 	t_history			*hist_curr;
 	t_cmds				*cur_cmds;
 	int					orig_stdin;
@@ -128,28 +128,27 @@ enum e_states
 };
 
 //build to execute lst
-void	build_to_execute_lst(t_todo *all);
-void	destroy_to_execute_lst(t_todo *all);
-void	parse_build(t_todo *all, t_cmds **cmds);
-void	init_cmds_elem(t_cmds *cmds);
-t_cmds	*get_new_cmds_elem(t_cmds *cmds);
-void	get_cmd_str(t_cmds *cmds, t_tok *tok);
-void	add_to_2d(char ***src, t_tok *tok);
+void		build_to_execute_lst(t_todo *all);
+void		destroy_to_execute_lst(t_todo *all);
+void		parse_build(t_todo *all, t_cmds **cmds);
+void		init_cmds_elem(t_cmds *cmds);
+t_cmds		*get_new_cmds_elem(t_cmds *cmds);
+void		get_cmd_str(t_cmds *cmds, t_tok *tok);
+void		add_to_2d(char ***src, t_tok *tok);
 
 //strip quotes and bslashes
-void	strip_quotes_and_bslashes(char **src);
+void		strip_quotes_and_bslashes(char **src);
 
 //dereference the value
-void dereference_the_value(t_todo *all);
-char *search_key(t_todo *all, char *key);
-char *put_nothing(char *src, char *start, char **stop);
-char *put_answer(char *src, char *start, char **stop, char *answer);
-void get_key(t_todo *all);
-
+void		dereference_the_value(t_todo *all);
+char		*search_key(t_todo *all, char *key);
+char		*put_nothing(char *src, char *start, char **stop);
+char		*put_answer(char *src, char *start, char **stop, char *answer);
+void		get_key(t_todo *all);
 
 //build exec list
-int build_tokens(t_todo *all, char *line, int size
-		,t_lexer *lexer_list);
+int			build_tokens(t_todo *all, char *line, int size,
+				   t_lexer *lexer_list);
 
 //tokenize
 int			tokenize(char *line, int size, t_lexer *lexer_list);
@@ -173,13 +172,14 @@ void		if_char_null_set_zero(t_lexer *lexer);
 void		if_last_char_is_not_zero_do_line_pp(char **line);
 
 //check syntax
-int check_syntax(t_todo *all, t_tok *token);
-int validate_quotation(char *str);
+int			check_syntax(t_todo *all, t_tok *token);
+int			validate_quotation(char *str);
 
 //parse pipes
 void		parse_pipes(t_todo *all);
 void		destroy_parse_pipes(t_todo *all);
-void		init_pipe_list(t_todo *all, t_tok **src_lst, t_tok **pipe_lst_tok, t_pipelist **pipelist);
+void		init_pipe_list(t_todo *all, t_tok **src_lst,
+				 t_tok **pipe_lst_tok, t_pipelist **pipelist);
 void		init_tok(t_tok *lst);
 t_pipelist	*get_next_pipe_list_elem(t_pipelist *pipe_lst);
 t_tok		*get_next_tok_list_elem(t_tok *lst);
@@ -189,7 +189,7 @@ int			ft_pwd(void);
 int			ft_export(t_todo *all);
 int			ft_cd(t_todo *all);
 int			execute_cmd_pipe(t_todo *all);
-int 		ft_echo(t_todo *all);
+int			ft_echo(t_todo *all);
 int			ft_env(t_todo *all);
 int			ft_exit(t_todo *all);
 int			ft_unset(t_todo *all);
@@ -215,14 +215,14 @@ char		**env_search(char **env, char *key);
 char		*env_get_value(t_todo *all, char *key);
 void		env_set_value(t_todo *all, char *key, char *value);
 void		set_shlvl(t_todo *all);
-int			errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code);
+int			errorhandle(t_todo *all, char *program_name,
+				  char *uniqe_error, char *code);
 char		*try_open(t_todo *all);
 int			set_redirections(t_todo *all);
-t_history 	*hist_new(char *content);
+t_history	*hist_new(char *content);
 void		hist_add(t_history **lst, t_history *new);
 void		hist_move_to_end(t_todo *all);
 char		**clone_env(char **env, const char *new_env);
-void		handle_signals();
 int			print_env(t_todo *all);
 int			promt(t_todo *all);
 int			termcap_stuff(t_todo *all);

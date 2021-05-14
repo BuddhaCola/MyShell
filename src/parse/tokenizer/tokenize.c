@@ -27,6 +27,7 @@ static void	if_state_in_quote(t_lexer *lexer, const char *line)
 //TODO доделать для эскэйпсиквенса
 static void	if_state_in_dquote(t_lexer *lexer, char **line)
 {
+	lexer->token->data[lexer->j++] = **line;
 	if (lexer->chtype == CHAR_ESCAPESEQ && *(*line + 1) != '\0' && *(*line + 1) != '\n')
 	{
 		*line = *line + 1;
@@ -34,7 +35,6 @@ static void	if_state_in_dquote(t_lexer *lexer, char **line)
 		lexer->token->type = TOKEN;
 		return ;
 	}
-	lexer->token->data[lexer->j++] = **line;
 	if_ch_is_dquote_set_state_general(&lexer->state, &lexer->chtype);
 }
 

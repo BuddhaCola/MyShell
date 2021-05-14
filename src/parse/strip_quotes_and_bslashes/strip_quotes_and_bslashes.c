@@ -44,7 +44,7 @@ static void	if_quote(int *state, char **str, char **new_str)
 
 static void	if_dquote(int *state, char **str, char **new_str)
 {
-	if (**str == '\\')
+	if (**str == '\\' && ft_strchr("\"\'$", *(*str + 1)))
 	{
 		*str = *str + 1;
 		**new_str = **str;

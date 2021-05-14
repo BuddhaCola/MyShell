@@ -69,12 +69,12 @@ char	*try_open(t_todo *all)
 	char	*bin_location;
 
 	bin_location = NULL;
-	fd = open(all->to_execute->cmds->cmd_str, O_RDONLY);
+	fd = open(all->cur_cmds->cmd_str, O_RDONLY);
 	if (fd != -1 && !ft_strchr("./",
-			all->to_execute->cmds->cmd_str
-			[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+			all->cur_cmds->cmd_str
+			[ft_strlen(all->cur_cmds->cmd_str) - 1]))
 	{
-		bin_location = ft_strdup(all->to_execute->cmds->cmd_str);
+		bin_location = ft_strdup(all->cur_cmds->cmd_str);
 		close(fd);
 		return (bin_location);
 	}

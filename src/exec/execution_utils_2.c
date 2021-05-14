@@ -55,7 +55,7 @@ char	*try_path(t_todo *all)
 		while (path_decomposed[i])
 		{
 			bin = check_here
-				(path_decomposed[i], all->to_execute->cmds->cmd_str);
+				(path_decomposed[i], all->cur_cmds->cmd_str);
 			if (bin)
 				break ;
 			i++;

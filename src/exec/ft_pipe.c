@@ -12,80 +12,45 @@
 
 #include "../minishell.h"
 
-//static int	go_through_redirections(t_todo *all, char ***type, int mode)
-//{
-//	int	filefd;
-//
-//	while (*type && **type)
-//	{
-//		filefd = open(**type, mode, 0644);
-//		if (filefd == -1)
-//		{
-//			ft_putendl_fd("failed to open!", 1);
-//			return (-1);
-//		}
-//		(*type)++;
-//	}
-//	return (filefd);
-//}
+char	*find_location_pipe(t_todo *all)
+{
+	char	*bin_location;
 
-//int	ft_pipe(t_todo *all)
-//{
-//	int p[2];
-//	pid_t pid;
-//	int fd_in;
-//	int filefd;
-//
-//	t_cmds *cmds_cpy;
-//	cmds_cpy = all->to_execute->cmds;
-//	fd_in = 0;
-//	while (cmds_cpy)
-//	{
-//		pipe(p);
-//		if ((pid = fork()) == -1)
-//		{
-//			exit(EXIT_FAILURE);
-//		}
-//		else if (pid == 0)
-//		{
-//			dup2(fd_in, 0);
-//			close(fd_in);
-//			if (cmds_cpy->next != NULL)
-//				dup2(p[1], 1);
-//			close(p[0]);
-//			if (cmds_cpy->input_files)
-//				input_redirect(all);
-//			if (cmds_cpy->output_files)
-//				output_redirect(all);
-//			execvp(cmds_cpy->cmd_str, cmds_cpy->args);
-//			exit(EXIT_FAILURE);
-//		}
-//		else
-//		{
-//			wait(NULL);
-//			close(p[1]);
-//			fd_in = p[0];
-//			cmds_cpy = cmds_cpy->next;
-//		}
-//	}
-//}
+	if (ft_strchr("./", all->cur_cmds->cmd_str[0]))
+	{
+		bin_location = try_open(all);
+		if (bin_location)
+			return (bin_location);
+		else if (ft_strchr("./", all->to_execute->cmds->cmd_str
+		[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+		{
+			errorhandle
+					(all, all->to_execute->cmds->cmd_str, "is a directory", "126");
+			exit (126);
+		}
+	}
+	bin_location = try_path(all);
+	if (bin_location)
+		return (bin_location);
+	else
+	{
+		errorhandle(all, all->cur_cmds->cmd_str,
+					"command not found", "127");
+		exit (127);
+	}
+}
 
 int	ft_pipe(t_todo *all)
 {
 	int		pipeline[2];
 	pid_t	pid;
 	int		fd_in;
-	int		filefd;
-
 	int i = 0;
 	int count_cmd = 0;
 	int	exitcode;
 	fd_in = -1;
+	char	*to_execute;
 
-	int	fd_to_close[20];
-
-//	t_cmds *cmds_cpy;
-//	cmds_cpy = all->cur_cmds;
 	while(all->cur_cmds)
 	{
 		count_cmd++;
@@ -96,7 +61,6 @@ int	ft_pipe(t_todo *all)
 			exit (-1);
 		else if (pid == 0)
 		{
-//			if (!all->cur_cmds->next)
 			if (fd_in > 0)
 			{
 				dup2(fd_in, 0);
@@ -111,24 +75,26 @@ int	ft_pipe(t_todo *all)
 			if (all->cur_cmds->output_files)
 				if (output_redirect(all) == -1)
 					return (-1);
-			execve(all->cur_cmds->cmd_str, all->cur_cmds->args, all->environments);
+			if (is_builtin(all->cur_cmds->cmd_str))
+			{
+				(do_builtin(all->cur_cmds->cmd_str, all));
+				exit(0);
+			}
+			else
+				to_execute = find_location_pipe(all);
+			fprintf(stderr, "to_execute: %s\n", to_execute);
+//			execvp(to_execute, all->cur_cmds->args);
+			execve(to_execute, all->cur_cmds->args, all->environments);
 			exit(EXIT_FAILURE);
 		}
 		else
 		{
 			close(pipeline[1]);
-//			if (!all->cur_cmds->next)
-//			{
-//				close(pipeline[0]);
-//				pipeline[0] = 0;
-//			}
 			close(fd_in);
 			fd_in = dup(pipeline[0]);
 			close(pipeline[0]);
 			all->cur_cmds = all->cur_cmds->next;
 		}
-//		if (pipeline[0] && cmds_cpy->next)
-//			close(pipeline[0]);
 	}
 	close(fd_in);
 	while (i < count_cmd)

@@ -17,7 +17,10 @@ static void	if_general_do(t_todo *all)
 	if (*(all->d_u.str) == '\\')
 	{
 		if (*(all->d_u.str + 1) == '\0' || *(all->d_u.str + 2) == '\0')
+		{
 			all->d_u.break_flg = 1;
+			(all->d_u.str)++;
+		}
 		else
 			(all->d_u.str)++;
 	}
@@ -36,7 +39,10 @@ static void	if_dquote_do(t_todo *all)
 	if (*(all->d_u.str) == '\\')
 	{
 		if (*(all->d_u.str + 1) == '\0' || *(all->d_u.str + 2) == '\0')
+		{
 			all->d_u.break_flg = 1;
+			(all->d_u.str)++;
+		}
 		else
 			(all->d_u.str)++;
 	}

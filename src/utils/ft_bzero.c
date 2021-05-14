@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/07 14:16:40 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/08 15:38:57 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/10/30 16:32:25 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/01 17:11:52 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strjoin(const char *s1, const char *s2)
+void	ft_bzero(void *s, size_t n)
 {
-	char	*p;
-	size_t	len;
+	char *p;
 
-	if (!s1 || !s2)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2) + 1;
-	p = ft_calloc(len, sizeof(char));
-	if (p == NULL)
-		return (NULL);
-	ft_strlcat(p, s1, len);
-	ft_strlcat(p, s2, len + 1);
-	return (p);
+	while (n)
+	{
+		p = s;
+		*p = '\0';
+		n--;
+		s++;
+	}
 }

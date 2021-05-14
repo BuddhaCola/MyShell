@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/04 21:07:18 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/04 23:37:54 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/03 23:35:50 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 21:36:29 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strrchr(const char *s, int n)
+int	ft_isalpha(int c)
 {
-	int i;
-
-	i = ft_strlen(s) + 1;
-	while (i--)
-	{
-		if (s[i] == (char)n)
-			return ((char *)s + i);
-	}
-	return (0);
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	else
+		return (0);
 }

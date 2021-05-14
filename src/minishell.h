@@ -10,9 +10,7 @@
 #include <term.h>
 #include <string.h>
 
-
-//#include "utils/get_next_line/get_next_line.h"
-#include "utils/libft/libft.h"
+//#include "utils/libft/libft.h"
 
 #define PROBE printf("🤘Got here🤘\n"); //убрать на продакшне!
 #define PROMT "Minihell!🔥"
@@ -95,25 +93,12 @@ typedef struct			s_history
 	struct s_history	*prev;
 }						t_history;
 
-//typedef struct	s_env
-//{
-//	char *name;
-//	char *value;
-//}				t_env;
-
-typedef	struct s_exec
-{
-	char				**env;
-	int 				err;
-}						t_exec;
-
 typedef	struct			s_todo
 {
 	t_dereference_utils	d_u;
 	t_to_execute		*to_execute;
-	t_exec				exec;
 	t_lexer				*lex_buf;
-	t_parse_utils       *parse_utils;
+	t_parse_utils		*parse_utils;
 	char 				**environments;
 	struct termios		saved_attributes;
 	int 				exit_code;
@@ -205,10 +190,6 @@ void init_tok(t_tok *lst);
 t_pipelist  *get_next_pipe_list_elem(t_pipelist *pipe_lst);
 t_tok   *get_next_tok_list_elem(t_tok *lst);
 
-char	**clone_env(char **env, const char *new_env);
-void	handle_signals();
-int		print_env(t_todo *all);
-
 // builtins
 int		ft_pwd(void);
 int		ft_export(t_todo *all);
@@ -230,13 +211,8 @@ int		do_builtin(char *path, t_todo *all);
 int		is_builtin(char *path);
 int		try_rel_abs_path(t_todo *all);
 char	*try_path(t_todo *all);
-int		redirection(char *filepath, char *program, char **args, int append);
-int		count_environments(t_todo *all);
 int		swapstr(char **str1, char **str2);
 void	appendarg(char **str, const char **appendix, int key_len);
-//char	*get_env_value(t_todo *all, char *name);
-char	*path_parse(t_todo *all, char *arg);
-
 int		ft_strcmp(char *str1, char *str2);
 int		ft_putchar(int c);
 int		validate_arg(char *newenv, char mode);
@@ -249,11 +225,34 @@ void	set_shlvl(t_todo *all);
 int		errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code);
 char	*try_open(t_todo *all);
 int		set_redirections(t_todo *all);
-
 t_history 	*hist_new(char *content);
 void		hist_add(t_history **lst, t_history *new);
 void		hist_move_to_end(t_todo *all);
+char		**clone_env(char **env, const char *new_env);
+void		handle_signals();
+int			print_env(t_todo *all);
 
-//void	hist_print(t_todo *all);
+//libft
+char	*ft_itoa(int n);
+int		ft_atoi(const char *s);
+void	ft_bzero(void *s, size_t n);
+void	*ft_calloc(size_t count, size_t size);
+int		ft_isalnum(int c);
+int		ft_isalpha(int c);
+int		ft_isdigit(int c);
+int		ft_isprint(int c);
+char	*ft_itoa(int n);
+void	ft_putchar_fd(char c, int fd);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_putstr_fd(char *s, int fd);
+char	**ft_split(char const *s, char c);
+char	*ft_strchr(const char *s, int n);
+char	*ft_strdup(const char *s);
+char	*ft_strjoin(const char *s1, const char *s2);
+size_t	ft_strlcat(char *dst, const char *src, size_t dsize);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dsize);
+size_t	ft_strlen(const char *s);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif

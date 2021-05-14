@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/06 21:10:41 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/06 21:51:22 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/09 17:32:47 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/09 22:16:49 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-void	*ft_calloc(size_t count, size_t size)
+void	ft_putstr_fd(char *s, int fd)
 {
-	char *p;
-
-	p = (char *)malloc(count * size);
-	if (p == NULL)
-		return (NULL);
-	ft_bzero(p, (count * size));
-	return (p);
+	if (!s || !fd)
+		return ;
+	while (*s)
+	{
+		ft_putchar_fd(*s, fd);
+		s++;
+	}
 }

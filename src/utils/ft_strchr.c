@@ -1,31 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strmapi.c                                       :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/09 16:49:51 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/09 17:31:20 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/04 20:09:10 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 23:22:09 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
+char	*ft_strchr(const char *s, int n)
 {
-	char	*p;
-	size_t	i;
-
-	i = 0;
-	if (!s || !f)
-		return (NULL);
-	if (!(p = (char *)ft_calloc(ft_strlen((char *)s) + 1, sizeof(char))))
-		return (NULL);
-	while (i < ft_strlen((char *)s))
-	{
-		p[i] = f(i, s[i]);
-		i++;
-	}
-	return (p);
+	if (*s != '\0' && *s != (char)n)
+		while (*++s)
+		{
+			if (*s == (char)n)
+				return ((char *)s);
+		}
+	if (*s == (char)n)
+		return ((char *)s);
+	return (0);
 }

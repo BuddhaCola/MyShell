@@ -39,6 +39,26 @@ src/parse/build_to_execute_lst/detroy_to_excute_list.c \
 src/parse/build_to_execute_lst/build_to_execute_lst_utils.c \
 src/parse/build_to_execute_lst/build_to_execute_lst.c \
 src/parse/build_to_execute_lst/add_to_2d.c \
+src/utils/ft_atoi.c \
+src/utils/ft_bzero.c \
+src/utils/ft_calloc.c \
+src/utils/ft_isalnum.c \
+src/utils/ft_isalpha.c \
+src/utils/ft_isdigit.c \
+src/utils/ft_isprint.c \
+src/utils/ft_itoa.c \
+src/utils/ft_putchar_fd.c \
+src/utils/ft_putendl_fd.c \
+src/utils/ft_putstr_fd.c \
+src/utils/ft_split.c \
+src/utils/ft_strchr.c \
+src/utils/ft_strdup.c \
+src/utils/ft_strjoin.c \
+src/utils/ft_strlcat.c \
+src/utils/ft_strlen.c \
+src/utils/ft_strncmp.c \
+src/utils/ft_strlcpy.c \
+src/utils/ft_substr.c \
 
 NAME	=	minishell
 
@@ -51,7 +71,6 @@ FLAGS	=	#-Wall -Werror -Wextra
 all:		$(NAME)
 
 $(NAME): $(OBJ) src/minishell.h
-	#make bonus -C $(LIBFT)
 	$(CC) -g -ltermcap $(OBJ) -o $(NAME)
 
 #address_sanitize:	$(OBJ) src/minishell.h #убрать! 🚧
@@ -63,11 +82,9 @@ $(NAME): $(OBJ) src/minishell.h
 
 clean:
 	rm -f $(OBJ)
-	#make clean -C $(LIBFT)
 
 fclean: clean
 	rm -f $(NAME)
-	#make fclean -C $(LIBFT)
 
 re: fclean all
 

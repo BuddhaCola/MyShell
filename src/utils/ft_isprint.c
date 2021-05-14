@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/11 21:20:46 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/12 19:03:25 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/03 23:35:50 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 21:36:38 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+int	ft_isprint(int c)
 {
-	t_list	*set;
-
-	if (!lst || !new)
-		return ;
-	if (!*lst)
-		*lst = new;
-	set = ft_lstlast(*lst);
-	set->next = new;
-	new->next = NULL;
+	if (c >= 32 && c <= 126)
+		return (1);
+	else
+		return (0);
 }

@@ -1,24 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/09 17:32:47 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/09 22:16:49 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/06 13:23:09 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/06 15:54:35 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+int		ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	if (!s || !fd)
-		return ;
-	while (*s)
+	if (!n)
+		return (0);
+//	if (!s1 || !s2)
+//		return (-1);
+	while (n)
 	{
-		ft_putchar_fd(*s, fd);
-		s++;
+		if (*s1 != *s2 || *s1 == '\0' || *s2 == '\0')
+			return (*(unsigned char *)s1 - *(unsigned char *)s2);
+		n--;
+		s1++;
+		s2++;
 	}
+	return (0);
 }

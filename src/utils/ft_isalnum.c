@@ -1,31 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap.c                                        :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/11 22:21:03 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/12 19:27:41 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/03 23:35:50 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 21:36:26 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+int	ft_isalnum(int c)
 {
-	t_list	*newlist;
-
-	if (!lst)
-		return (NULL);
-	newlist = ft_lstnew(f(lst->content));
-	if (newlist == NULL)
-		return (NULL);
-	if (lst->next)
-	{
-		newlist->next = ft_lstmap(lst->next, f, del);
-		if (!newlist->next)
-			ft_lstdelone(newlist, del);
-	}
-	return (newlist);
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	else if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
 }

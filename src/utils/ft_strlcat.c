@@ -1,26 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/06 20:44:27 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/06 22:41:50 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/04 18:09:33 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 18:19:20 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strdup(const char *s)
+size_t	ft_strlcat(char *dst, const char *src, size_t dsize)
 {
-	size_t	len;
-	char	*dup;
+	const char	*d;
+	const char	*s;
+	size_t		n;
+	size_t		dlen;
 
-	len = (ft_strlen(s) + 1);
-	dup = ft_calloc(len, sizeof(char));
-	if (dup == NULL)
-		return (NULL);
-	ft_strlcpy(dup, s, len);
-	return (dup);
+	d = dst;
+	s = src;
+	n = dsize;
+	while (n-- && *dst)
+		dst++;
+	dlen = dst - d;
+	n = dsize - dlen;
+	if (n-- == 0)
+		return (dlen + ft_strlen(src));
+	while (*src)
+	{
+		if (n)
+		{
+			*dst++ = *src;
+			n--;
+		}
+		src++;
+	}
+	*dst = '\0';
+	return (dlen + (src - s));
 }

@@ -1,25 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/31 18:34:10 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/01 17:08:36 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/06 19:05:59 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/08 14:55:19 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+int		ft_atoi(const char *s)
 {
-	if (src == 0 && dest == 0)
-		return (0);
-	if (src <= dest)
-		while (n--)
-			((unsigned char *)dest)[n] = ((unsigned char *)src)[n];
-	else
-		ft_memcpy(dest, src, n);
-	return ((void *)dest);
+	int i;
+	int minus;
+
+	i = 0;
+	minus = 1;
+	while (*s && (*s == ' ' || *s == '\n' || *s == '\t' ||
+			*s == '\v' || *s == '\f' || *s == '\r'))
+		s++;
+	if (*s == '-' || *s == '+')
+	{
+		if (*s == '-')
+			minus = -1;
+		s++;
+	}
+	while (*s && *s >= '0' && *s <= '9')
+	{
+		i *= 10;
+		i += (*s++ - '0');
+	}
+	return (i * minus);
 }

@@ -1,30 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcmp.c                                        :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/02 21:55:01 by wtaylor           #+#    #+#             */
-/*   Updated: 2020/11/06 23:12:01 by wtaylor          ###   ########.fr       */
+/*   Created: 2020/11/07 14:15:42 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/08 15:57:49 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-int		ft_memcmp(const void *str1, const void *str2, size_t n)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	const unsigned char	*s1;
-	const unsigned char	*s2;
+	char	*p;
 
-	s1 = str1;
-	s2 = str2;
-	if (n == 0)
-		return (0);
-	while (--n)
-	{
-		if (*s1++ != *s2++)
-			return (*--s1 - *--s2);
-	}
-	return (*s1 - *s2);
+	if (!s)
+		return (NULL);
+	if (ft_strlen(s) <= start)
+		len = 0;
+	s = s + start;
+	p = ft_calloc(len + 1, sizeof(char));
+	if (!p)
+		return (NULL);
+	ft_strlcpy(p, s, len + 1);
+	return (p);
 }

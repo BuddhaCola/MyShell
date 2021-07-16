@@ -1,4 +1,4 @@
-# MyShell ⌨️\
+# MyShell ⌨️
 **Subject**\
 A project task was to make small Bash-like command-line interpreter capable of starting binaries, including piped and sequenced execution.\
 It reads line entered by user, parse it and execute command in a same way as your favorite shell like Zsh, Bash etc.\

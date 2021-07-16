@@ -9,7 +9,11 @@ He made a parser part and I did all the back-end logic, including piped executio
 I also programmed command line behaviour with using of Termcap library. It includes replacing currently entered text with another when moving through History with UP and DOWN arrows.\
 **Usage**\
 This is a Makefile project\
-Clone it, cd into it and enter\
+In your Terminal, clone it\
+$ git clone https://github.com/BuddhaCola/MyShell.git\
+cd into it\
+$ cd MyShell
+and enter\
 $ make\
 and then lauch by entering\
 $ ./myshell

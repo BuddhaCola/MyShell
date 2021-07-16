@@ -1,4 +1,9 @@
 # MyShell ⌨️
+This is Makefile project.
+Clone it, cd into it and enter
+$ make
+and then lauch by entering
+$ ./myshell
 A project task was to make small Bash-like command-line interpreter capable of starting binaries, including piped and sequenced execution.
 It reads line entered by user, parse it and execute command in a same way as your favorite shell like Zsh, Bash etc.
 It include history (use UP and DOWN arrows to navigate previously entered commands), it handles multiple commands execution, either separetad by ; sign, or with | sign, which is piped execution (allowing one program transfer data to another) as such as "ls -la | grep somethingsomething"

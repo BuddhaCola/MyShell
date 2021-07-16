@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_destroy.c                                    :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 17:07:09 by igearhea          #+#    #+#             */
-/*   Updated: 2021/05/13 17:07:11 by igearhea         ###   ########.fr       */
+/*   Created: 2020/11/09 18:37:28 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/09 22:16:36 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
-void	lexer_destroy(t_lexer *list)
+void	ft_putendl_fd(char *s, int fd)
 {
-	if (list == NULL)
+	if (!s || !fd)
 		return ;
-	tok_destroy(list->tok_list);
+	while (*s)
+	{
+		ft_putchar_fd(*s, fd);
+		s++;
+	}
+	ft_putchar_fd('\n', fd);
 }

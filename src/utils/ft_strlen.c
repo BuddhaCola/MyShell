@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_destroy.c                                    :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 17:07:09 by igearhea          #+#    #+#             */
-/*   Updated: 2021/05/13 17:07:11 by igearhea         ###   ########.fr       */
+/*   Created: 2020/11/03 15:34:37 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 21:36:53 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
-void	lexer_destroy(t_lexer *list)
+size_t	ft_strlen(const char *s)
 {
-	if (list == NULL)
-		return ;
-	tok_destroy(list->tok_list);
+	size_t	i;
+
+	i = 0;
+	while (*s++)
+	{
+		i++;
+	}
+	return (i);
 }

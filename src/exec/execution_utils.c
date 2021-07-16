@@ -2,23 +2,23 @@
 
 int	errorhandle(t_todo *all, char *program_name, char *uniqe_error, char *code)
 {
-	ft_putstr_fd("minishell", 1);
+	ft_putstr_fd("minishell", 2);
 	if (program_name)
 	{
-		ft_putstr_fd(": ", 1);
-		ft_putstr_fd(program_name, 1);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(program_name, 2);
 	}
 	if (uniqe_error)
 	{
-		ft_putstr_fd(": ", 1);
-		ft_putstr_fd(uniqe_error, 1);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(uniqe_error, 2);
 	}
 	if (errno && ft_strcmp(code, "0"))
 	{
-		ft_putstr_fd(": ", 1);
-		ft_putstr_fd(strerror(errno), 1);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(strerror(errno), 2);
 	}
-	ft_putstr_fd("\n", 1);
+	ft_putstr_fd("\n", 2);
 	if (code)
 		env_set_value(all, "?", code);
 	return (0);
@@ -69,30 +69,35 @@ char	*try_open(t_todo *all)
 	char	*bin_location;
 
 	bin_location = NULL;
-	fd = open(all->to_execute->cmds->cmd_str, O_RDONLY);
+	fd = open(all->cur_cmds->cmd_str, O_RDONLY);
 	if (fd != -1 && !ft_strchr("./",
-			all->to_execute->cmds->cmd_str
-			[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+			all->cur_cmds->cmd_str
+			[ft_strlen(all->cur_cmds->cmd_str) - 1]))
 	{
-		bin_location = ft_strdup(all->to_execute->cmds->cmd_str);
+		bin_location = ft_strdup(all->cur_cmds->cmd_str);
 		close(fd);
 		return (bin_location);
 	}
 	return (bin_location);
 }
 
-int	try_rel_abs_path(t_todo *all)
+int	try_rel_abs_path(t_todo *all, int *flg)
 {
 	char	*bin_location;
 
+	*flg = 0;
 	bin_location = try_open(all);
 	if (bin_location)
+	{
+		*flg = 1;
 		return (start_process(all, bin_location));
-	else if (ft_strchr("./", all->to_execute->cmds->cmd_str
-			[ft_strlen(all->to_execute->cmds->cmd_str) - 1]))
+	}
+	else if (ft_strchr("./", all->cur_cmds->cmd_str
+			[ft_strlen(all->cur_cmds->cmd_str) - 1]))
 	{
 		errorhandle
-			(all, all->to_execute->cmds->cmd_str, "is a directory", NULL);
+			(all, all->cur_cmds->cmd_str, "is a directory", NULL);
+		*flg = 1;
 		return (126);
 	}
 	return (0);

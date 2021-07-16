@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_destroy.c                                    :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 17:07:09 by igearhea          #+#    #+#             */
-/*   Updated: 2021/05/13 17:07:11 by igearhea         ###   ########.fr       */
+/*   Created: 2020/11/03 23:35:50 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 21:36:26 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
-void	lexer_destroy(t_lexer *list)
+int	ft_isalnum(int c)
 {
-	if (list == NULL)
-		return ;
-	tok_destroy(list->tok_list);
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	else if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
 }

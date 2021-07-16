@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_destroy.c                                    :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 17:07:09 by igearhea          #+#    #+#             */
-/*   Updated: 2021/05/13 17:07:11 by igearhea         ###   ########.fr       */
+/*   Created: 2020/11/06 21:10:41 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/06 21:51:22 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
-void	lexer_destroy(t_lexer *list)
+void	*ft_calloc(size_t count, size_t size)
 {
-	if (list == NULL)
-		return ;
-	tok_destroy(list->tok_list);
+	char	*p;
+
+	p = (char *)malloc(count * size);
+	if (p == NULL)
+		return (NULL);
+	ft_bzero(p, (count * size));
+	return (p);
 }

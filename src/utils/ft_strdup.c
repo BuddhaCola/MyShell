@@ -1,20 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_destroy.c                                    :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 17:07:09 by igearhea          #+#    #+#             */
-/*   Updated: 2021/05/13 17:07:11 by igearhea         ###   ########.fr       */
+/*   Created: 2020/11/06 20:44:27 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/06 22:41:50 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
-void	lexer_destroy(t_lexer *list)
+char	*ft_strdup(const char *s)
 {
-	if (list == NULL)
-		return ;
-	tok_destroy(list->tok_list);
+	size_t	len;
+	char	*dup;
+
+	if (!s)
+		return (NULL);
+	len = (ft_strlen(s) + 1);
+	dup = ft_calloc(len, sizeof(char));
+	if (dup == NULL)
+		return (NULL);
+	ft_strlcpy(dup, s, len);
+	return (dup);
 }

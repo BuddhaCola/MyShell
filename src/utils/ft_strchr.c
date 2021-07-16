@@ -1,20 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_destroy.c                                    :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igearhea <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wtaylor <wtaylor@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 17:07:09 by igearhea          #+#    #+#             */
-/*   Updated: 2021/05/13 17:07:11 by igearhea         ###   ########.fr       */
+/*   Created: 2020/11/04 20:09:10 by wtaylor           #+#    #+#             */
+/*   Updated: 2020/11/04 23:22:09 by wtaylor          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
-void	lexer_destroy(t_lexer *list)
+char	*ft_strchr(const char *s, int n)
 {
-	if (list == NULL)
-		return ;
-	tok_destroy(list->tok_list);
+	if (*s != '\0' && *s != (char)n)
+	{
+		while (*++s)
+		{
+			if (*s == (char) n)
+				return ((char *) s);
+		}
+	}
+	if (*s == (char)n)
+		return ((char *)s);
+	return (0);
 }

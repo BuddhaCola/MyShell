@@ -16,26 +16,25 @@ int	validate_arg(char *newenv, char mode)
 	return (0);
 }
 
-static int	arg_insertion(char **oldenv, const char **new_env, int key_len)
+static int	arg_change(char **oldenv, char **new_env, int key_len)
 {
 	char	*tmp;
 
 	if (!ft_strncmp(&(*new_env)[key_len], "+=", 2)
 		&& (*new_env)[key_len + 2])
 		appendarg(oldenv, new_env, key_len);
-	if ((*new_env)[key_len] == '=')
+	else if ((*new_env)[key_len] == '=')
 	{
 		tmp = *oldenv;
 		*oldenv = ft_strdup(*new_env);
 		free(tmp);
+		free(*new_env);
+		*new_env = NULL;
 	}
-	tmp = (char *)*new_env;
-	free(tmp);
-	*new_env = NULL;
 	return (0);
 }
 
-static int	add_env(char **env, const char **new_env)
+static int	add_env(char **env, char **new_env)
 {
 	int		key_len;
 	int		i;
@@ -44,11 +43,19 @@ static int	add_env(char **env, const char **new_env)
 	i = 0;
 	while ((*new_env)[key_len] && !ft_strchr("+=", (*new_env)[key_len]))
 		key_len++;
-	while (env[i] && *new_env)
+	while (env[i])
 	{
-		if (!ft_strncmp(env[i], *new_env, key_len)
-			&& (env[i][key_len] == '=' || env[i][key_len] == '\0'))
-			arg_insertion(&env[i], new_env, key_len);
+		if (!ft_strncmp(env[i], *new_env, key_len))
+		{
+			if ((*new_env)[key_len] == '=' || (*new_env)[key_len] == '+')
+				arg_change(&env[i], new_env, key_len);
+			else
+			{
+				free(*new_env);
+				*new_env = NULL;
+			}
+			return (0);
+		}
 		i++;
 	}
 	return (1);
@@ -73,11 +80,13 @@ char	*add_last_env(char const *env)
 	return (new);
 }
 
-char	**clone_env(char **env, const char *new_env)
+char	**clone_env(char **env, const char *arg)
 {
 	int		i;
 	char	**clone;
+	char	*new_env;
 
+	new_env = ft_strdup(arg);
 	i = 0;
 	while (env[i])
 		i++;
@@ -94,6 +103,7 @@ char	**clone_env(char **env, const char *new_env)
 	}
 	if (new_env)
 		clone[i++] = add_last_env(new_env);
+	free(new_env);
 	clone[i] = NULL;
 	return (clone);
 }

@@ -21,9 +21,9 @@ void	env_insetion(t_todo *all, char *insertion, char *key)
 		free(tmp);
 	}
 }
+
 void	env_set_value(t_todo *all, char *key, char *value)
 {
-
 	char	*insertion;
 	char	*tmp;
 
@@ -39,7 +39,7 @@ void	env_set_value(t_todo *all, char *key, char *value)
 	env_insetion(all, insertion, key);
 }
 
-void	increment_num_env(char **orig, char *key, int keylen)
+void	increment_num_env(char **orig, char *key)
 {
 	int		nu;
 	char	*tmp;
@@ -85,7 +85,7 @@ int	env_update(t_todo *all, char *key, char *change, char mode)
 		if (!env_in_arr)
 			create_leftside(all, key, change, mode);
 		else
-			increment_num_env(env_in_arr, key, ft_strlen(key));
+			increment_num_env(env_in_arr, key);
 	}
 	else if (mode == '?' && !env_in_arr)
 	{

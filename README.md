@@ -12,4 +12,4 @@ This is a Makefile project\
 Clone it, cd into it and enter\
 $ make\
 and then lauch by entering\
-$ ./myshell\
+$ ./myshell

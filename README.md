@@ -7,6 +7,7 @@ It also include history (use UP and DOWN arrows to navigate previously entered c
 It was made in a team of me and my pertner.\
 He made a parser part and I did all the back-end logic, including piped execution, evironment variables handling.\
 I also programmed command line behaviour with using of Termcap library. It includes replacing currently entered text with another when moving through History with UP and DOWN arrows.\
+\
 **Usage**\
 This is a Makefile project\
 In your Terminal, clone it\

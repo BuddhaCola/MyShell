@@ -10,7 +10,7 @@ I also programmed command line behaviour with using of Termcap library. It inclu
 ## **Usage**
 This is a Makefile project\
 In your Terminal, clone it\
-$ git clone https://github.com/BuddhaCola/MyShell.git\
+$ git clone https://github.com/BuddhaCola/MyShell.git \
 cd into it\
 $ cd MyShell
 and enter\
